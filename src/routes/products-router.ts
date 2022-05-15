@@ -45,6 +45,5 @@ productsRouter.delete('/:id', (req: Request, res: Response) => {
             return
         }
     }
-    // let oneProduct = products.filter(p => p.id === searchProductId)
     res.send(404)
 })
