@@ -1,4 +1,7 @@
-import { Request,Response} from 'express'
+import {Request, Response} from 'express'
+import {productsRouter} from "./routes/products-router";
+import {addressesRouter} from "./routes/addresses-router";
+
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -14,11 +17,16 @@ const videos = [
 const app = express()
 const port = process.env.PORT || 5000
 
+
+const products: Array<{ id:number,title: string }> = [{id:1,title: 'tomato'}, {id:2,title: "orange"}]
+const addresses: Array<{ id:number,value: string }> = [{id:1,value: 'Angarskay 12'}, {id:2,value: "Poletnay 10"}]
+
+
 app.use(cors())
 app.use(bodyParser.json({type: 'application/*+json'}))
 
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
     let helloWorldWORLD11 = 'Hello World! WORLD!';
@@ -46,6 +54,7 @@ app.post('/videos', (req: Request, res: Response) => {
     videos.push(newVideo)
     res.send(newVideo)
 })
+
 app.delete('/videos/:id', (req: Request, res: Response) => {
 
     const newVideos = videos.filter(v => v.id !== +req.params.id)
@@ -55,16 +64,20 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     }
     res.send(404)
 })
-app.put('/videos/:id',(req: Request, res: Response)=>{
-        const id  = +req.params.id
-        const findVideo = videos.find(v=> v.id === id)
-         if(findVideo){
-            findVideo.title = req.body.title
-            res.send(videos)
-        }else {
-            res.send(404)
-        }
+app.put('/videos/:id', (req: Request, res: Response) => {
+    const id = +req.params.id
+    const findVideo = videos.find(v => v.id === id)
+    if (findVideo) {
+        findVideo.title = req.body.title
+        res.send(videos)
+    } else {
+        res.send(404)
+    }
 })
+
+
+app.use('/products',productsRouter)
+app.use('/addresses',addressesRouter)
 
 
 app.listen(port, () => {
