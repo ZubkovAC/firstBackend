@@ -2,6 +2,8 @@ import {productsRouter} from "./routes/products-router";
 import {addressesRouter} from "./routes/addresses-router";
 import {videosRouter} from "./routes/videos-router";
 import {lesson_01_Router} from "./routes/lesson_01";
+import {bloggers_01_Router} from "./routes/blogers_01";
+
 
 const express = require('express')
 const cors = require('cors')
@@ -27,6 +29,7 @@ app.use('/videos',videosRouter)
 app.use('/products',productsRouter)
 app.use('/addresses',addressesRouter)
 app.use('/lesson_01',lesson_01_Router)
+app.use('/hs_01',bloggers_01_Router)
 
 
 app.listen(port, () => {
