@@ -48,6 +48,7 @@ lesson_01_Router.get('/api/videos/:id',(req: Request, res: Response) => {
     }
     res.status(404).send("If video for passed id doesn't exist")
 })
+
 lesson_01_Router.put('/api/videos/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const newTitle = req.body.title
