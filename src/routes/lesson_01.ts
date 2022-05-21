@@ -93,4 +93,5 @@ lesson_01_Router.delete('/api/videos/:id',(req: Request, res: Response) => {
         res.status(204)
         return
     }
+    res.send(200)
 })
