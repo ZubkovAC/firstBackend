@@ -3,6 +3,7 @@ import {addressesRouter} from "./routes/addresses-router";
 import {videosRouter} from "./routes/videos-router";
 import {lesson_01_Router} from "./routes/lesson_01";
 import {bloggers_01_Router} from "./routes/blogers_01";
+import {posts_01_Router} from "./routes/posts_01";
 
 
 const express = require('express')
@@ -30,6 +31,7 @@ app.use('/products',productsRouter)
 app.use('/addresses',addressesRouter)
 app.use('/lesson_01',lesson_01_Router)
 app.use('/hs_01',bloggers_01_Router)
+app.use('/hs_01',posts_01_Router)
 
 
 app.listen(port, () => {

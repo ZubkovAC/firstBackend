@@ -5,7 +5,7 @@ export const bloggers_01_Router = Router({})
 const bloggers = [
     {
         "id": 0,
-        "name": "Dumich",
+        "name": "Dumych",
         "youtubeUrl": "https://www.youtube.com/c/ITINCUBATOR"
     },{
         "id": 1,
