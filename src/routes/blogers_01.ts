@@ -98,5 +98,6 @@ bloggers_01_Router.delete('/api/bloggers/:id',(req: Request, res: Response) => {
         res.status(204)
         return
     }
-    res.status(204).send(newBloggers)
+    res.status(200).send(newBloggers)
+    return;
 })

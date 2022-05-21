@@ -22,6 +22,7 @@ videosRouter.get('/:videoId', (req: Request, res: Response) => {
         return
     }
     res.send(404)
+    return;
 
 })
 videosRouter.post('', (req: Request, res: Response) => {
@@ -32,6 +33,7 @@ videosRouter.post('', (req: Request, res: Response) => {
     }
     videos.push(newVideo)
     res.send(newVideo)
+    return;
 })
 
 videosRouter.delete('/:id', (req: Request, res: Response) => {
@@ -42,6 +44,7 @@ videosRouter.delete('/:id', (req: Request, res: Response) => {
         return
     }
     res.send(404)
+    return;
 })
 videosRouter.put('/:id', (req: Request, res: Response) => {
     const id = +req.params.id

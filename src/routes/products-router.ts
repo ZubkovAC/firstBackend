@@ -46,4 +46,5 @@ productsRouter.delete('/:id', (req: Request, res: Response) => {
         }
     }
     res.send(404)
+    return;
 })
