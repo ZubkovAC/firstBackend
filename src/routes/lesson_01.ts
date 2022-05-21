@@ -15,10 +15,10 @@ export const lesson_01_Router = Router({})
         },
     ]
 
-lesson_01_Router.get('api/videos',(req: Request, res: Response) => {
+lesson_01_Router.get('/api/videos',(req: Request, res: Response) => {
     res.status(200).send(videosLesson01)
 })
-lesson_01_Router.post('api/videos',(req: Request, res: Response) => {
+lesson_01_Router.post('/api/videos',(req: Request, res: Response) => {
     if(req.body.title.length <= 40){
         const newVideo = {
             "id": 2,
@@ -39,7 +39,7 @@ lesson_01_Router.post('api/videos',(req: Request, res: Response) => {
         "resultCode": 0
     })
 })
-lesson_01_Router.get('api/videos/:id',(req: Request, res: Response) => {
+lesson_01_Router.get('/api/videos/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const videoId = videosLesson01.find(v=>v.id === id)
     if(videoId){
@@ -48,7 +48,7 @@ lesson_01_Router.get('api/videos/:id',(req: Request, res: Response) => {
     }
     res.status(404).send("If video for passed id doesn't exist")
 })
-lesson_01_Router.put('api/videos/:id',(req: Request, res: Response) => {
+lesson_01_Router.put('/api/videos/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const newTitle = req.body.title
     const videoId = videosLesson01.find(v=>v.id === id)
