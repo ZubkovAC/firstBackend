@@ -16,18 +16,18 @@ export const lesson_01_Router = Router({})
     ]
 
 lesson_01_Router.get('/api/videos',(req: Request, res: Response) => {
-    res.status(201).send(videosLesson01)
+    res.status(200).send(videosLesson01)
 })
 
 lesson_01_Router.post('/api/videos',(req: Request, res: Response) => {
-    if(req.body.title.length <= 40){
+    if(req.body.title.length <= 40 || !req.body.title.trim() ){
         const newVideo = {
-            "id": 2,
+            "id": Math.floor(Math.random()*10000) ,
             "title":req.body.title,
             "author": "Peter Farrelly-moc"
         }
         videosLesson01.push(newVideo)
-        res.status(204).send(newVideo)
+        res.status(200).send(newVideo)
         return
     }
     res.status(400).send({
@@ -36,8 +36,7 @@ lesson_01_Router.post('/api/videos',(req: Request, res: Response) => {
                 "message": "string",
                 "field": "string"
             }
-        ],
-        "resultCode": 0
+        ]
     })
 })
 lesson_01_Router.get('/api/videos/:id',(req: Request, res: Response) => {
