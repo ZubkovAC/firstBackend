@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 
 export const lesson_01_Router = Router({})
 
-const videosLesson01 = [
+let videosLesson01 = [
     {
         "id": 0,
         "title": "The Green Mile",
@@ -16,7 +16,7 @@ const videosLesson01 = [
 ]
 
 lesson_01_Router.get('/api/videos', (req: Request, res: Response) => {
-    res.status(201).send(videosLesson01)
+    res.status(200).send(videosLesson01)
 })
 
 lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
@@ -86,10 +86,12 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
 lesson_01_Router.delete('/api/videos/:id', (req: Request, res: Response) => {
     const videoDeleteId = +req.params.id
     const newVideo = videosLesson01.filter(v => v.id !== videoDeleteId)
-    if (newVideo.length === videosLesson01.length) {
+    if (newVideo.length < videosLesson01.length) {
+        videosLesson01 = newVideo
         res.status(204)
         return
     }
-    res.status(204).send(newVideo)
+    // res.status(404).send(newVideo)
+    res.send(404)
     return;
 })
