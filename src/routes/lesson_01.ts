@@ -51,7 +51,7 @@ lesson_01_Router.get('/api/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id
     const videoId = videosLesson01.find(v => v.id === id)
     if (videoId) {
-        res.status(200).send(videoId)
+        res.status(201).send(videoId)
         return
     }
     res.status(404).send("If video for passed id doesn't exist")
