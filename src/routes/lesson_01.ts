@@ -23,7 +23,7 @@ lesson_01_Router.post('/api/videos',(req: Request, res: Response) => {
     if( req.body.title.trim().length !== 0 || req.body.title.length <= 40 || typeof req.body.title === 'string'){
         const newVideo = {
             "id": Math.floor(Math.random()*10000) ,
-            "title":req.body.title,
+            "title":req.body.title.trim(),
             "author": "Peter Farrelly-moc"
         }
         videosLesson01.push(newVideo)
