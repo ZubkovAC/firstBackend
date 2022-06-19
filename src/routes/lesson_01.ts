@@ -51,7 +51,7 @@ lesson_01_Router.get('/api/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id
     const videoId = videosLesson01.find(v => v.id === id)
     if (videoId) {
-        res.status(204).send(videoId)
+        res.status(200).send(videoId)
         return
     }
     res.status(404).send("If video for passed id doesn't exist")
@@ -59,9 +59,9 @@ lesson_01_Router.get('/api/videos/:id', (req: Request, res: Response) => {
 
 lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
 
-    const title = req.body.title !== null ? req.body.title : 1
+    let title = req.body.title !== null ? req.body.title : 1
 
-    if (!title && title?.trim() || typeof req.body.title === 'string' || title.length > 40) {
+    if (!title && title?.trim() || typeof req.body.title !== 'string' || title.length > 40) {
         res.status(400).send({
             "errorsMessages": [
                 {
@@ -77,6 +77,7 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id
     const videoId = videosLesson01.find(v => v.id === id)
     if (videoId) {
+        videoId.title = title
         res.send(204)
     }else{
         res.send(404)
