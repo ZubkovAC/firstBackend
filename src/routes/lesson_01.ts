@@ -23,22 +23,22 @@ lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
 
     let title = req.body.title
 
-    if (!title.trim() || typeof title !== 'string' || typeof title === null || title.length > 40) {
+    if (!title && title.trim() || typeof title !== 'string' || typeof title === null || title.length > 40) {
         res.status(400).send({
             "errorsMessages": [
                 {
                     "message": "string",
                     "field": "string"
                 }
-            ],
-            resultCode: 1
+            ]
+            // , resultCode: 1
         })
         return;
     }
 
     const newVideo = {
         "id": Math.floor(Math.random() * 10000),
-        "title": req.body.title.trim(),
+        "title": req.body.title,
         "author": "Peter Farrelly-moc"
     }
     videosLesson01.push(newVideo)
@@ -61,15 +61,15 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
 
     const title = req.body.title
 
-    if (!title.trim() || typeof req.body.title === 'string' ||  typeof title === null || title.length > 40) {
+    if (!title && title.trim() || typeof req.body.title === 'string' ||  typeof title === null || title.length > 40) {
         res.status(400).send({
             "errorsMessages": [
                 {
                     "message": "string",
                     "field": "string"
                 }
-            ],
-            resultCode: 1
+            ]
+            // , resultCode: 1
         })
         return;
     }
