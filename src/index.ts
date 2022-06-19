@@ -8,16 +8,16 @@ import {posts_01_Router} from "./routes/posts_01";
 
 const express = require('express')
 const cors = require('cors')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 
 const app = express()
 const port = process.env.PORT || 5000
 
 app.use(cors())
-app.use(bodyParser.json({type: 'application/*+json'}))
+// app.use(bodyParser)
 
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+// app.use(express.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
     let helloWorldWORLD11 = 'Hello World! WORLD!';
