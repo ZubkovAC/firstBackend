@@ -96,3 +96,7 @@ lesson_01_Router.delete('/api/videos/:id', (req: Request, res: Response) => {
     }
 
 })
+lesson_01_Router.delete('/api/videos/', (req: Request, res: Response) => {
+        videosLesson01 = []
+        res.send(204)
+})
