@@ -58,7 +58,6 @@ lesson_01_Router.get('/api/videos/:id', (req: Request, res: Response) => {
 })
 
 lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
-
     let title = req.body.title !== null ? req.body.title : 1
 
     if (!title && title?.trim() || typeof req.body.title !== 'string' || title.length > 40) {
