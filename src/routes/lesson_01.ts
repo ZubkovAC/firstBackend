@@ -3,16 +3,16 @@ import {Request, Response, Router} from "express";
 export const lesson_01_Router = Router({})
 
 let videosLesson01 = [
-    {
-        "id": 0,
-        "title": "The Green Mile",
-        "author": "Frank Darabont"
-    },
-    {
-        "id": 1,
-        "title": "Green Book",
-        "author": "Peter Farrelly"
-    },
+    // {
+    //     "id": 0,
+    //     "title": "The Green Mile",
+    //     "author": "Frank Darabont"
+    // },
+    // {
+    //     "id": 1,
+    //     "title": "Green Book",
+    //     "author": "Peter Farrelly"
+    // },
 ]
 
 lesson_01_Router.get('/api/videos', (req: Request, res: Response) => {
