@@ -16,7 +16,7 @@ export const lesson_01_Router = Router({})
     ]
 
 lesson_01_Router.get('/api/videos',(req: Request, res: Response) => {
-    res.status(200).send(videosLesson01)
+    res.status(201).send(videosLesson01)
 })
 
 lesson_01_Router.post('/api/videos',(req: Request, res: Response) => {
@@ -43,7 +43,7 @@ lesson_01_Router.get('/api/videos/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const videoId = videosLesson01.find(v=>v.id === id)
     if(videoId){
-        res.status(200).send(videoId)
+        res.status(204).send(videoId)
         return
     }
     res.status(404).send("If video for passed id doesn't exist")
@@ -58,7 +58,7 @@ lesson_01_Router.put('/api/videos/:id',(req: Request, res: Response) => {
         res.status(200).send(videoId)
         return
     }
-    if(videoId && newTitle.length > 40 ){
+    if(videoId && newTitle.length > 40 || !req.body.title.trim()){
         res.status(400).send({
             "errorsMessages": [
                 {
