@@ -16,7 +16,7 @@ let videosLesson01 = [
 ]
 
 lesson_01_Router.get('/api/videos', (req: Request, res: Response) => {
-    res.status(200).send(videosLesson01)
+    res.status(201).send(videosLesson01)
 })
 
 lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
@@ -27,7 +27,7 @@ lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
         res.status(400).send({
             "errorsMessages": [
                 {
-                    "message": "string",
+                    "message": "If the inputModel has incorrect values",
                     "field": "string"
                 }
             ]
@@ -38,7 +38,7 @@ lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
 
     const newVideo = {
         "id": videosLesson01.length +1,
-        "title": req.body.title,
+        "title": title,
         "author": "Peter Farrelly-moc"
     }
     videosLesson01.push(newVideo)
@@ -65,7 +65,7 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
         res.status(400).send({
             "errorsMessages": [
                 {
-                    "message": "string",
+                    "message": "If the inputModel has incorrect values",
                     "field": "string"
                 }
             ]
