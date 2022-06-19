@@ -85,14 +85,14 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
 })
 
 lesson_01_Router.delete('/api/videos/:id', (req: Request, res: Response) => {
-    const videoDeleteId = +req.params.id
-    const newVideo = videosLesson01.filter(v => v.id !== videoDeleteId)
+    let videoDeleteId = +req.params.id
+    let newVideo = videosLesson01.filter(v => v.id !== videoDeleteId)
     if (newVideo.length < videosLesson01.length) {
         videosLesson01 = newVideo
-        res.status(204)
-        return
+        res.send(204)
+    }else{
+        // res.status(404).send(newVideo)
+        res.send(404)
     }
-    // res.status(404).send(newVideo)
-    res.send(404)
-    return;
+
 })
