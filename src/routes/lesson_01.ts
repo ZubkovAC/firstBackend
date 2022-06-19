@@ -37,7 +37,7 @@ lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
     }
 
     const newVideo = {
-        "id": videosLesson01.length +1,
+        "id": videosLesson01.length +2,
         "title": title,
         "author": "Peter Farrelly-moc"
     }
