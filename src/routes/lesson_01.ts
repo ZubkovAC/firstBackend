@@ -53,12 +53,12 @@ lesson_01_Router.put('/api/videos/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const newTitle = req.body.title
     const videoId = videosLesson01.find(v=>v.id === id)
-    if(videoId && newTitle.length <= 40 ){
+    if(videoId && newTitle.length <= 40 || !req.body.title.trim() || typeof req.body.title !== 'string'){
         videoId.title = newTitle
         res.status(200).send(videoId)
         return
     }
-    if(videoId && newTitle.length > 40 || !req.body.title.trim() || typeof req.body.title !== 'string'){
+    if(videoId && newTitle.length > 40 ){
         res.status(400).send({
             "errorsMessages": [
                 {
