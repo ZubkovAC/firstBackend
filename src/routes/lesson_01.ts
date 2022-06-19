@@ -37,7 +37,7 @@ lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
     }
 
     const newVideo = {
-        "id": Math.floor(Math.random() * 10000),
+        "id": videosLesson01.length +1,
         "title": req.body.title,
         "author": "Peter Farrelly-moc"
     }
