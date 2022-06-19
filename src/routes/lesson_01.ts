@@ -20,7 +20,7 @@ lesson_01_Router.get('/api/videos',(req: Request, res: Response) => {
 })
 
 lesson_01_Router.post('/api/videos',(req: Request, res: Response) => {
-    if(req.body.title.length <= 40 || !req.body.title.trim() ){
+    if(!req.body.title.trim() || req.body.title.length <= 40 || typeof req.body.title !== 'string'){
         const newVideo = {
             "id": Math.floor(Math.random()*10000) ,
             "title":req.body.title,
@@ -58,7 +58,7 @@ lesson_01_Router.put('/api/videos/:id',(req: Request, res: Response) => {
         res.status(200).send(videoId)
         return
     }
-    if(videoId && newTitle.length > 40 || !req.body.title.trim()){
+    if(videoId && newTitle.length > 40 || !req.body.title.trim() || typeof req.body.title !== 'string'){
         res.status(400).send({
             "errorsMessages": [
                 {
