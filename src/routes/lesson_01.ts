@@ -23,7 +23,7 @@ lesson_01_Router.post('/api/videos', (req: Request, res: Response) => {
 
     let title = req.body.title
 
-    if (!title.trim() || typeof title !== 'string' || title.length > 40) {
+    if (!title.trim() || typeof title !== 'string' || typeof title === null || title.length > 40) {
         res.status(400).send({
             "errorsMessages": [
                 {
@@ -61,7 +61,7 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
 
     const title = req.body.title
 
-    if (!title.trim() || typeof req.body.title === 'string' || title.length > 40) {
+    if (!title.trim() || typeof req.body.title === 'string' ||  typeof title === null || title.length > 40) {
         res.status(400).send({
             "errorsMessages": [
                 {
