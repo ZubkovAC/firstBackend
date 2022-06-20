@@ -24,6 +24,7 @@ bloggers_01_Router.get('/api/bloggers',(req: Request, res: Response) => {
 
 bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
     let name = req.body.name
+
     let youtubeUrl = req.body.youtubeUrl
 
     if(name.length <= 15 && youtubeUrl.length < 101){
@@ -42,8 +43,7 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
                 "message": "string",
                 "field": "string"
             }
-        ],
-        "resultCode": 0
+        ]
     })
 })
 bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
@@ -64,7 +64,7 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     if(videoId && newName.length <= 15 && newYoutubeUrl.length <= 100 ){
         videoId.name = newName
         videoId.youtubeUrl = newYoutubeUrl
-        res.status(200).send(videoId)
+        res.status(204).send(videoId)
         return
     }
     if(videoId || newName.length > 15 || newYoutubeUrl.length > 100){
@@ -74,13 +74,12 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
                     "message": "string",
                     "field": "string"
                 }
-            ],
-            "resultCode": 0
+            ]
         })
         return
     }
     if(!videoId){
-        res.status(204).send('No Content')
+        res.send(404)
         return;
     }
 })
@@ -134,8 +133,7 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
                     "message": "If the inputModel has incorrect values",
                     "field": "string"
                 }
-            ],
-            "resultCode": 0
+            ]
         })
         return;
     }
@@ -180,8 +178,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
                     "message": "If the inputModel has incorrect values",
                     "field": "string"
                 }
-            ],
-            "resultCode": 0
+            ]
         })
         return;
     }
