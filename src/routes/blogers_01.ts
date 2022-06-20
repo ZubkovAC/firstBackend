@@ -27,6 +27,31 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
 
     let youtubeUrl = req.body.youtubeUrl
 
+    let expression = '/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/'
+    let regex = new RegExp(expression);
+    let t = req.body.youtubeUrl;
+    let validateUrl = false
+    if (t.match(regex)) {
+        validateUrl = true
+    } else {
+        console.log("No match");
+    }
+    if(!validateUrl || name.length > 15){
+        const errorsMessages =[]
+        if(!validateUrl){
+            errorsMessages.push({
+                "message": "non validation url",
+                "field": "youtubeUrl"
+            })
+        } if(name.length > 15){
+            errorsMessages.push({
+                "message": "non validation name ",
+                "field": "name"
+            })
+        }
+        res.status(400).send({"errorsMessages": errorsMessages})
+    }
+
     if(name.length <= 15 && youtubeUrl.length < 101){
         const newVideo = {
             "id": bloggers.length+1,
@@ -37,14 +62,7 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
         res.status(201).send(newVideo)
         return
     }
-    res.status(400).send({
-        "errorsMessages": [
-            {
-                "message": "string",
-                "field": "string"
-            }
-        ]
-    })
+
 })
 bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
     const id = +req.params.id
@@ -61,21 +79,35 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const newName = req.body.name
     const newYoutubeUrl = req.body.youtubeUrl
     const videoId = bloggers.find(v=>v.id === id)
+
+    let expression = '/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/'
+    let regex = new RegExp(expression);
+    let t = req.body.youtubeUrl;
+    let validateUrl = false
+    if (t.match(regex)) {
+        validateUrl = true
+    } else {
+        console.log("No match");
+    }
+    if(!validateUrl || newName.length > 15){
+        const errorsMessages =[]
+        if(!validateUrl){
+            errorsMessages.push({
+                "message": "non validation url",
+                "field": "youtubeUrl"
+            })
+        } if(newName.length > 15){
+            errorsMessages.push({
+                "message": "non validation name ",
+                "field": "name"
+            })
+        }
+        res.status(400).send({"errorsMessages": errorsMessages})
+    }
     if(videoId && newName.length <= 15 && newYoutubeUrl.length <= 100 ){
         videoId.name = newName
         videoId.youtubeUrl = newYoutubeUrl
         res.status(204).send(videoId)
-        return
-    }
-    if(videoId || newName.length > 15 || newYoutubeUrl.length > 100){
-        res.status(400).send({
-            "errorsMessages": [
-                {
-                    "message": "string",
-                    "field": "string"
-                }
-            ]
-        })
         return
     }
     if(!videoId){
