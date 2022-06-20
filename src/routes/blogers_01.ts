@@ -32,9 +32,9 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
     let t = req.body.youtubeUrl;
     let validateUrl = false
     if (t.match(regex)) {
-        validateUrl = true
+        validateUrl = false
     } else {
-        console.log("No match");
+        validateUrl = true
     }
     if(!validateUrl || name.length > 15){
         const errorsMessages =[]
@@ -81,13 +81,14 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const newYoutubeUrl = req.body.youtubeUrl
     const videoId = bloggers.find(v=>v.id === id)
 
-    let expression = '/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/'
+    let expression = '/^https:\/\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/'
     let regex = new RegExp(expression);
     let t = req.body.youtubeUrl;
     let validateUrl = false
     if (t.match(regex)) {
-        validateUrl = true
+        validateUrl = false
     } else {
+        validateUrl = true
         console.log("No match");
     }
     if(!validateUrl || newName.length > 15){
