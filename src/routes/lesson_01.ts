@@ -55,6 +55,7 @@ lesson_01_Router.get('/api/videos/:id', (req: Request, res: Response) => {
         return
     }
     res.send(404)
+    return;
 })
 
 lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
@@ -78,8 +79,10 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
     if (videoId) {
         videoId.title = title
         res.send(204)
+        return;
     }else{
         res.send(404)
+        return;
     }
 })
 
@@ -89,13 +92,16 @@ lesson_01_Router.delete('/api/videos/:id', (req: Request, res: Response) => {
     if (newVideo.length < videosLesson01.length) {
         videosLesson01 = newVideo
         res.send(204)
+        return;
     }else{
         // res.status(404).send(newVideo)
         res.send(404)
+        return;
     }
 
 })
 lesson_01_Router.delete('/api/videos/', (req: Request, res: Response) => {
         videosLesson01 = []
         res.send(204)
+        return;
 })
