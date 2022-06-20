@@ -50,6 +50,7 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
             })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
+        return;
     }
 
     if(name.length <= 15 && youtubeUrl.length < 101){
@@ -103,6 +104,7 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
             })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
+        return;
     }
     if(videoId && newName.length <= 15 && newYoutubeUrl.length <= 100 ){
         videoId.name = newName
