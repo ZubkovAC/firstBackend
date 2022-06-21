@@ -164,14 +164,19 @@ bloggers_01_Router.get('/api/posts',(req: Request, res: Response) => {
     res.status(200).send(posts)
 })
 bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
-    if(!req.body.shortDescription || !req.body.title || !req.body.content || req.body.title?.length > 30 || req.body.shortDescription?.length > 100 || req.body.content?.length > 1000){
+
+    let shortDescription = req.body.shortDescription ? req.body.shortDescription?.trim() : ''
+    let title = req.body.title ? req.body.title?.trim() : ''
+    let content = req.body.content ? req.body.content?.trim() : ''
+
+    if(!shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
-        if(!req.body.title || req.body.title.length > 30 || !req.body.title){
+        if( !title || req.body.title.length > 30 ){
             errorsMessages.push({message: "If the inputModel has incorrect title", field: "title"})
-        }if(!req.body.shortDescription ||  req.body.shortDescription.length > 100 || !req.body.shortDescription){
+        }if( !shortDescription ||  req.body.shortDescription.length > 100 ){
             errorsMessages.push({message: "If the inputModel has incorrect shortDescription", field: "shortDescription"})
-        }if( !req.body.content || req.body.content > 1000 || !req.body.content){
-            errorsMessages.push({message: "max bloggerId 1000 ", field: "content"})
+        }if( !req.body.content || req.body.content.length > 1000 ){
+            errorsMessages.push({message: "max length content 1000 ", field: "content"})
         }
         res.status(400).send({errorsMessages:errorsMessages})
         return;
@@ -210,14 +215,18 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     let searchPost = posts.find(p =>p.id === id)
 
-    if(!req.body.shortDescription || !req.body.title || !req.body.content || req.body.title?.length > 30 || req.body.shortDescription?.length > 100 || req.body.content?.length > 1000){
+    let shortDescription = req.body.shortDescription ? req.body.shortDescription?.trim() : ''
+    let title = req.body.title ? req.body.title?.trim() : ''
+    let content = req.body.content ? req.body.content?.trim() : ''
+
+    if(!shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
-        if(!req.body.title || req.body.title.length > 30 || !req.body.title){
+        if( !title || req.body.title.length > 30 ){
             errorsMessages.push({ message: "incorrect value title", field: "title" })
-        }if(!req.body.shortDescription ||  req.body.shortDescription.length > 100 || !req.body.shortDescription){
+        }if( !shortDescription ||  req.body.shortDescription.length > 100 ){
             errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
-        }if( !req.body.content || req.body.content?.length > 1000 || !req.body.content ){
-            errorsMessages.push({ message: "max id 1000 bloggerId", field: "content" })
+        }if( !content || req.body.content?.length > 1000  ){
+            errorsMessages.push({ message: "max length content 1000 ", field: "content" })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
         return;
