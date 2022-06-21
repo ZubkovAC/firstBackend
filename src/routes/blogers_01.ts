@@ -28,18 +28,24 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
 
     let youtubeUrl = req.body.youtubeUrl
 
-    let expression = '/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/'
+    // let expression = "/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/"
+    let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
     let regex = new RegExp(expression);
+
+    let test  = req.body.youtubeUrl.replace('/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/')
+    console.log(test)
     let t = req.body.youtubeUrl;
     let validateUrl = false
     if (t.match(regex)) {
         validateUrl = false
+        console.log('false')
     } else {
         validateUrl = true
+        console.log('true')
     }
-    if(!validateUrl || !name || name.length > 15){
+    if(validateUrl || !name || name.length > 15){
         const errorsMessages =[]
-        if(!validateUrl){
+        if(validateUrl){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
@@ -82,7 +88,8 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const newYoutubeUrl = req.body.youtubeUrl
     const videoId = bloggers.find(v=>v.id === id)
 
-    let expression = '/^https:\/\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/'
+    // let expression = '/^https:\/\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/'
+    let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
     let regex = new RegExp(expression);
     let t = req.body.youtubeUrl;
     let validateUrl = false
@@ -91,9 +98,9 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     } else {
         validateUrl = true
     }
-    if(!validateUrl || newName?.length > 15 || !newName){
+    if(validateUrl || newName?.length > 15 || !newName){
         const errorsMessages =[]
-        if(!validateUrl){
+        if(validateUrl){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
