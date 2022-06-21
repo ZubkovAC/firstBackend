@@ -40,13 +40,13 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
         const errorsMessages =[]
         if(!validateUrl){
             errorsMessages.push({
-                "message": "non validation url",
-                "field": "youtubeUrl"
+                message: "non validation url",
+                field: "youtubeUrl"
             })
         } if(name.length > 15){
             errorsMessages.push({
-                "message": "non validation name ",
-                "field": "name"
+                message: "non validation name ",
+                field: "name"
             })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
@@ -63,8 +63,8 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
         res.status(201).send(newVideo)
         return
     }
-
 })
+
 bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const videoId = bloggers.find(v=>v.id === id)
@@ -89,25 +89,24 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
         validateUrl = false
     } else {
         validateUrl = true
-        console.log("No match");
     }
-    if(!validateUrl || newName.length > 15){
+    if(!validateUrl || newName?.length > 15){
         const errorsMessages =[]
         if(!validateUrl){
             errorsMessages.push({
-                "message": "non validation url",
-                "field": "youtubeUrl"
+                message: "non validation url",
+                field: "youtubeUrl"
             })
         } if(newName.length > 15){
             errorsMessages.push({
-                "message": "non validation name ",
-                "field": "name"
+                message: "non validation name ",
+                field: "name"
             })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
         return;
     }
-    if(videoId && newName.length <= 15 && newYoutubeUrl.length <= 100 ){
+    if(videoId && newName?.length <= 15 && newYoutubeUrl.length <= 100 ){
         videoId.name = newName
         videoId.youtubeUrl = newYoutubeUrl
         res.status(204).send(videoId)
@@ -162,6 +161,14 @@ bloggers_01_Router.get('/api/posts',(req: Request, res: Response) => {
 })
 bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
     if(req.body.title.length > 30 || req.body.shortDescription.length > 100 || +req.body.bloggerId > 1000){
+        const errorsMessages =[]
+        if(req.body.title.length > 30){
+            errorsMessages.push({message: "If the inputModel has incorrect title", field: "title"})
+        }if(req.body.shortDescription.length > 100){
+            errorsMessages.push({message: "If the inputModel has incorrect shortDescription", field: "shortDescription"})
+        }if(+req.body.bloggerId > 1000){
+            errorsMessages.push({message: "max bloggerId 1000 ", field: "bloggerId"})
+        }
         res.status(400).send({
             "errorsMessages": [
                 {
@@ -208,11 +215,11 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
 
     if(req.body.title.length > 30 || req.body.shortDescription.length > 100 || +req.body.bloggerId > 1000){
         const errorsMessages =[]
-        if(req.body.title > 30){
+        if(req.body.title.length > 30){
             errorsMessages.push({ message: "incorrect value title", field: "title" })
-        }if(req.body.shortDescription > 100){
+        }if(req.body.shortDescription.length > 100){
             errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
-        }if(req.body.bloggerId > 1000){
+        }if(+req.body.bloggerId > 1000){
             errorsMessages.push({ message: "max id 1000 bloggerId", field: "bloggerId" })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
