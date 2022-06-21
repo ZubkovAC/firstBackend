@@ -175,7 +175,7 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
             errorsMessages.push({message: "If the inputModel has incorrect title", field: "title"})
         }if( !shortDescription ||  req.body.shortDescription.length > 100 ){
             errorsMessages.push({message: "If the inputModel has incorrect shortDescription", field: "shortDescription"})
-        }if( !req.body.content || req.body.content.length > 1000 ){
+        }if( !content || content.length > 1000 ){
             errorsMessages.push({message: "max length content 1000 ", field: "content"})
         }
         res.status(400).send({errorsMessages:errorsMessages})
@@ -225,7 +225,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
             errorsMessages.push({ message: "incorrect value title", field: "title" })
         }if( !shortDescription ||  req.body.shortDescription.length > 100 ){
             errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
-        }if( !content || req.body.content?.length > 1000  ){
+        }if( !content || content.length > 1000  ){
             errorsMessages.push({ message: "max length content 1000 ", field: "content" })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
