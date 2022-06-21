@@ -24,28 +24,25 @@ bloggers_01_Router.get('/api/bloggers',(req: Request, res: Response) => {
 
 bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
 
-    let name = req.body.name ? req.body.name : false
+    let name = req.body.name.trim() ? req.body.name.trim() : false
 
-    let youtubeUrl = req.body.youtubeUrl
+    let youtubeUrl = req.body.youtubeUrl.trim()
 
     // let expression = "/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/"
     let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
     let regex = new RegExp(expression);
 
-    let test  = req.body.youtubeUrl.replace('/^https:\\/\\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$/')
-    console.log(test)
-    let t = req.body.youtubeUrl;
     let validateUrl = false
-    if (t.match(regex)) {
+    if (youtubeUrl.match(regex)) {
         validateUrl = false
         console.log('false')
     } else {
         validateUrl = true
         console.log('true')
     }
-    if(validateUrl || !name || name.length > 15 || req.body.youtubeUrl.length > 100){
+    if(validateUrl || !name || name.length > 15 || youtubeUrl.length > 100){
         const errorsMessages =[]
-        if(validateUrl || req.body.youtubeUrl.length > 100){
+        if(validateUrl || youtubeUrl.length > 100){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
@@ -64,7 +61,7 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
         const newVideo = {
             "id": bloggers.length+1,
             "name":req.body.name,
-            "youtubeUrl": req.body.youtubeUrl
+            "youtubeUrl": youtubeUrl
         }
         bloggers.push(newVideo)
         res.status(201).send(newVideo)
@@ -84,28 +81,28 @@ bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
 
 bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const id = +req.params.id
-    const newName = req.body.name ?  req.body.name : false
+    const newName = req.body.name.trim() ?  req.body.name.trim() : false
     const newYoutubeUrl = req.body.youtubeUrl
     const videoId = bloggers.find(v=>v.id === id)
 
     // let expression = '/^https:\/\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/'
     let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
     let regex = new RegExp(expression);
-    let t = req.body.youtubeUrl;
+    let youtubeUrl = req.body.youtubeUrl.trim();
     let validateUrl = false
-    if (t.match(regex)) {
+    if (youtubeUrl.match(regex)) {
         validateUrl = false
     } else {
         validateUrl = true
     }
-    if(validateUrl || newName?.length > 15 || !newName || req.body.youtubeUrl.length > 100){
+    if(validateUrl || newName.trim()?.length > 15 || !newName || req.body.youtubeUrl.length > 100){
         const errorsMessages =[]
         if(validateUrl || req.body.youtubeUrl.length > 100){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
             })
-        } if(newName.length > 15 || !newName){
+        } if(newName.length > 15 || !newName.trim()){
             errorsMessages.push({
                 message: "non validation name ",
                 field: "name"
