@@ -43,9 +43,9 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
         validateUrl = true
         console.log('true')
     }
-    if(validateUrl || !name || name.length > 15){
+    if(validateUrl || !name || name.length > 15 || req.body.youtubeUrl.length > 100){
         const errorsMessages =[]
-        if(validateUrl){
+        if(validateUrl || req.body.youtubeUrl.length > 100){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
@@ -98,9 +98,9 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     } else {
         validateUrl = true
     }
-    if(validateUrl || newName?.length > 15 || !newName){
+    if(validateUrl || newName?.length > 15 || !newName || req.body.youtubeUrl.length > 100){
         const errorsMessages =[]
-        if(validateUrl){
+        if(validateUrl || req.body.youtubeUrl.length > 100){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
