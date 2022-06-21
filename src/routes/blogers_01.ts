@@ -223,7 +223,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     let title = req.body.title ? req.body.title?.trim() : ''
     let content = req.body.content ? req.body.content?.trim() : ''
 
-    let searchBlogger = bloggers.find(b=>b.id === req.body.bloggerId)? bloggers.find(b=>b.id === req.body.bloggerId).name :''
+    let searchBlogger = bloggers.find(b=>b.id === id)? bloggers.find(b=>b.id === id).name :''
 
     if(!searchBlogger || !shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
@@ -242,13 +242,15 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
 
     if(searchPost){
         const updatePost = {
-            "id": searchPost.id,
+            // "id": searchPost.id,
+            "id": id,
             title:title,
             shortDescription:shortDescription,
             content:content,
-            bloggerId:id,
-            "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
+            bloggerId:req.body.bloggerId,
+            "bloggerName": bloggers.find(b=>b.id === id).name
         }
+        bloggers = bloggers.map(b=> b.id === id ? {...b,id:id} : b)
         posts = posts.map(p=> p.id === updatePost.id ? {...updatePost} : p)
         res.send(204)
         return
