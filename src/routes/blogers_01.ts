@@ -188,7 +188,7 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
         "shortDescription": req.body.shortDescription,
         "content": req.body.content,
         "bloggerId": req.body.bloggerId,
-        "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name,
+        "bloggerName": "JS",
     }
     posts.push(newVideo)
     res.status(201).send(newVideo)
@@ -239,7 +239,8 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
             shortDescription:req.body.shortDescription,
             content:req.body.content,
             bloggerId:id,
-            "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
+            // "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
+            "bloggerName": "JS"
         }
         searchPost = updatePost
         res.send(204)
