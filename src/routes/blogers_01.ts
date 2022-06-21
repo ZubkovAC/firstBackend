@@ -224,7 +224,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     let title = req.body.title ? req.body.title?.trim() : ''
     let content = req.body.content ? req.body.content?.trim() : ''
 
-    let searchBlogger = bloggers.find(b=>b.id === req.body.bloggerId)? bloggers.find(b=>b.id === req.body.bloggerId).name :''
+    let searchBlogger = bloggers.find(b=>b.id === id)? bloggers.find(b=>b.id === id).name :''
 
     if(!searchBlogger || !shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
