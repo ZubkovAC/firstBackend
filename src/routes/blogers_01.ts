@@ -199,6 +199,7 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
     return
 
 })
+
 bloggers_01_Router.get('/api/posts/:id',(req: Request, res: Response) => {
     // if(typeof +req.params.id === "number"){
     //     res.send(400)
@@ -223,7 +224,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     let title = req.body.title ? req.body.title?.trim() : ''
     let content = req.body.content ? req.body.content?.trim() : ''
 
-    let searchBlogger = bloggers.find(b=>b.id === id)? bloggers.find(b=>b.id === id).name :''
+    let searchBlogger = bloggers.find(b=>b.id === req.body.bloggerId)? bloggers.find(b=>b.id === req.body.bloggerId).name :''
 
     if(!searchBlogger || !shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
@@ -242,15 +243,13 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
 
     if(searchPost){
         const updatePost = {
-            // "id": searchPost.id,
-            "id": id,
+            "id": searchPost.id,
             title:title,
             shortDescription:shortDescription,
             content:content,
-            bloggerId:req.body.bloggerId,
-            "bloggerName": bloggers.find(b=>b.id === id).name
+            bloggerId:id,
+            "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
         }
-        bloggers = bloggers.map(b=> b.id === id ? {...b,id:id} : b)
         posts = posts.map(p=> p.id === updatePost.id ? {...updatePost} : p)
         res.send(204)
         return
