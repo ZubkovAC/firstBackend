@@ -239,7 +239,7 @@ bloggers_01_Router.delete('/api/posts/:id',(req: Request, res: Response) => {
     const bloggerDeleteId = +req.params.id
     const newPosts = posts.filter(v=>v.id !== bloggerDeleteId)
     if(newPosts.length < posts.length){
-        res.status(204)
+        res.send(204)
         return
     }
     res.send(404)
