@@ -24,7 +24,7 @@ bloggers_01_Router.get('/api/bloggers',(req: Request, res: Response) => {
 
 bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
 
-    let name = req.body.name.trim() ? req.body.name.trim() : false
+    let name = req.body.name?.trim() ? req.body.name.trim() : false
 
     let youtubeUrl = req.body.youtubeUrl.trim()
 
@@ -81,7 +81,7 @@ bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
 
 bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const id = +req.params.id
-    const newName = req.body.name.trim() ?  req.body.name.trim() : false
+    const newName = req.body.name?.trim() ?  req.body.name.trim() : false
     const newYoutubeUrl = req.body.youtubeUrl
     const videoId = bloggers.find(v=>v.id === id)
 
