@@ -207,14 +207,15 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     let searchPost = posts.find(p =>p.id === id)
 
     if(req.body.title.length > 30 || req.body.shortDescription.length > 100 || +req.body.bloggerId > 1000){
-        res.status(400).send({
-            "errorsMessages": [
-                {
-                    "message": "If the inputModel has incorrect values",
-                    "field": "string"
-                }
-            ]
-        })
+        const errorsMessages =[]
+        if(req.body.title > 30){
+            errorsMessages.push({ message: "incorrect value title", field: "title" })
+        }if(req.body.shortDescription > 100){
+            errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
+        }if(req.body.bloggerId > 1000){
+            errorsMessages.push({ message: "max id 1000 bloggerId", field: "bloggerId" })
+        }
+        res.status(400).send({"errorsMessages": errorsMessages})
         return;
     }
 
