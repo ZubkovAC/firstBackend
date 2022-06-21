@@ -191,7 +191,7 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
         "shortDescription": req.body.shortDescription,
         "content": req.body.content,
         "bloggerId": req.body.bloggerId,
-        "bloggerName": "JS",
+        "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
     }
     posts.push(newVideo)
     res.status(201).send(newVideo)
