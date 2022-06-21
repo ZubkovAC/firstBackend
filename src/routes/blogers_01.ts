@@ -247,7 +247,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
             title:title,
             shortDescription:shortDescription,
             content:content,
-            bloggerId:id,
+            bloggerId:req.body.bloggerId,
             "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
         }
         posts = posts.map(p=> p.id === updatePost.id ? {...updatePost} : p)
