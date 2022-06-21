@@ -186,7 +186,8 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
     }
 
     const newVideo = {
-        "id": posts.length+1,
+        // "id": posts.length+1,
+        "id": req.body.bloggerId,
         "title": req.body.title,
         "shortDescription": req.body.shortDescription,
         "content": req.body.content,
@@ -247,7 +248,6 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
             content:req.body.content,
             bloggerId:id,
             "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
-            // "bloggerName": "JS"
         }
         searchPost = updatePost
         res.send(204)
