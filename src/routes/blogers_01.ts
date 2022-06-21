@@ -168,8 +168,9 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
     let shortDescription = req.body.shortDescription ? req.body.shortDescription?.trim() : ''
     let title = req.body.title ? req.body.title?.trim() : ''
     let content = req.body.content ? req.body.content?.trim() : ''
+    let searchBlogger = bloggers.find(b=>b.id === req.body.bloggerId)? bloggers.find(b=>b.id === req.body.bloggerId).name :''
 
-    if(!shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
+    if(!searchBlogger ||!shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
         if( !title || req.body.title.length > 30 ){
             errorsMessages.push({message: "If the inputModel has incorrect title", field: "title"})
@@ -177,6 +178,8 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
             errorsMessages.push({message: "If the inputModel has incorrect shortDescription", field: "shortDescription"})
         }if( !content || content.length > 1000 ){
             errorsMessages.push({message: "max length content 1000 ", field: "content"})
+        }if( !searchBlogger ){
+            errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
         }
         res.status(400).send({errorsMessages:errorsMessages})
         return;
@@ -219,7 +222,9 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     let title = req.body.title ? req.body.title?.trim() : ''
     let content = req.body.content ? req.body.content?.trim() : ''
 
-    if(!shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
+    let searchBlogger = bloggers.find(b=>b.id === req.body.bloggerId)? bloggers.find(b=>b.id === req.body.bloggerId).name :''
+
+    if(!searchBlogger || !shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
         const errorsMessages =[]
         if( !title || req.body.title.length > 30 ){
             errorsMessages.push({ message: "incorrect value title", field: "title" })
@@ -227,6 +232,8 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
             errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
         }if( !content || content.length > 1000  ){
             errorsMessages.push({ message: "max length content 1000 ", field: "content" })
+        }if( !searchBlogger ){
+            errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
         return;
@@ -239,8 +246,8 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
             shortDescription:req.body.shortDescription,
             content:req.body.content,
             bloggerId:id,
-            // "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
-            "bloggerName": "JS"
+            "bloggerName": bloggers.find(b=>b.id === req.body.bloggerId).name
+            // "bloggerName": "JS"
         }
         searchPost = updatePost
         res.send(204)
