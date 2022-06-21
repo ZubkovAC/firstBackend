@@ -23,7 +23,8 @@ bloggers_01_Router.get('/api/bloggers',(req: Request, res: Response) => {
 })
 
 bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
-    let name = req.body.name
+
+    let name = req.body.name ? req.body.name : false
 
     let youtubeUrl = req.body.youtubeUrl
 
@@ -36,14 +37,14 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
     } else {
         validateUrl = true
     }
-    if(!validateUrl || name.length > 15){
+    if(!validateUrl || !name || name.length > 15){
         const errorsMessages =[]
         if(!validateUrl){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
             })
-        } if(name.length > 15){
+        } if(name.length > 15 || !name){
             errorsMessages.push({
                 message: "non validation name ",
                 field: "name"
@@ -77,7 +78,7 @@ bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
 
 bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const id = +req.params.id
-    const newName = req.body.name
+    const newName = req.body.name ?  req.body.name : false
     const newYoutubeUrl = req.body.youtubeUrl
     const videoId = bloggers.find(v=>v.id === id)
 
@@ -90,14 +91,14 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     } else {
         validateUrl = true
     }
-    if(!validateUrl || newName?.length > 15){
+    if(!validateUrl || newName?.length > 15 || !newName){
         const errorsMessages =[]
         if(!validateUrl){
             errorsMessages.push({
                 message: "non validation url",
                 field: "youtubeUrl"
             })
-        } if(newName.length > 15){
+        } if(newName.length > 15 || !newName){
             errorsMessages.push({
                 message: "non validation name ",
                 field: "name"
@@ -162,21 +163,14 @@ bloggers_01_Router.get('/api/posts',(req: Request, res: Response) => {
 bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
     if(req.body.title.length > 30 || req.body.shortDescription.length > 100 || +req.body.bloggerId > 1000){
         const errorsMessages =[]
-        if(req.body.title.length > 30){
+        if(req.body.title.length > 30 || !req.body.title){
             errorsMessages.push({message: "If the inputModel has incorrect title", field: "title"})
-        }if(req.body.shortDescription.length > 100){
+        }if(req.body.shortDescription.length > 100 || !req.body.shortDescription){
             errorsMessages.push({message: "If the inputModel has incorrect shortDescription", field: "shortDescription"})
-        }if(+req.body.bloggerId > 1000){
+        }if(+req.body.bloggerId > 1000 || !req.body.bloggerId){
             errorsMessages.push({message: "max bloggerId 1000 ", field: "bloggerId"})
         }
-        res.status(400).send({
-            "errorsMessages": [
-                {
-                    "message": "If the inputModel has incorrect values",
-                    "field": "string"
-                }
-            ]
-        })
+        res.status(400).send({errorsMessages:errorsMessages})
         return;
     }
 
@@ -215,11 +209,11 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
 
     if(req.body.title.length > 30 || req.body.shortDescription.length > 100 || +req.body.bloggerId > 1000){
         const errorsMessages =[]
-        if(req.body.title.length > 30){
+        if(req.body.title.length > 30 || !req.body.title){
             errorsMessages.push({ message: "incorrect value title", field: "title" })
-        }if(req.body.shortDescription.length > 100){
+        }if(req.body.shortDescription.length > 100 || !req.body.shortDescription){
             errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
-        }if(+req.body.bloggerId > 1000){
+        }if(+req.body.bloggerId > 1000 || !req.body.bloggerId){
             errorsMessages.push({ message: "max id 1000 bloggerId", field: "bloggerId" })
         }
         res.status(400).send({"errorsMessages": errorsMessages})
@@ -247,6 +241,7 @@ bloggers_01_Router.delete('/api/posts/:id',(req: Request, res: Response) => {
     const bloggerDeleteId = +req.params.id
     const newPosts = posts.filter(v=>v.id !== bloggerDeleteId)
     if(newPosts.length < posts.length){
+        posts = newPosts
         res.send(204)
         return
     }
