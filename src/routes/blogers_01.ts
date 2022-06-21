@@ -141,21 +141,21 @@ let posts =[
         "title": "newMessage",
         "shortDescription": "new group 28 may",
         "content": "sale 20%",
-        "bloggerId": 0,
+        "bloggerId": 1,
         "bloggerName": "Dumich"
     },{
         "id": 2,
         "title": "new Video",
         "shortDescription": "react 18",
         "content": "new hooks",
-        "bloggerId": 1,
+        "bloggerId": 2,
         "bloggerName": "it-kamasutra"
     },{
         "id": 3,
         "title": "next js",
         "shortDescription": "one video project next js",
         "content": "next js start-end",
-        "bloggerId": 2,
+        "bloggerId": 3,
         "bloggerName": "UlbiTV"
     },
 ]
