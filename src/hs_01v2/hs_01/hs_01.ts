@@ -1,15 +1,23 @@
-import {Request, Response, Router} from "express";
+import {NextFunction, Request, Response, Router} from "express";
 import {bloggersRepositories} from "./repositories/bloggers-repositories";
 import {postsRepositories} from "./repositories/posts-repositories";
 
-export const bloggers_01_Router = Router({})
+export const hs_01_Router = Router({})
 
-bloggers_01_Router.get('/api/bloggers',(req: Request, res: Response) => {
+let count = 0
+
+const countResponse = (req: Request, res: Response ,next: NextFunction)=>{
+    count++
+    next()
+}
+
+hs_01_Router.get('/api/bloggers',countResponse,(req: Request, res: Response) => {
     const bloggers = bloggersRepositories.findBloggers()
+    console.log(count)
     res.status(200).send(bloggers)
 })
 
-bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
+hs_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
 
     const bloggers = bloggersRepositories.findBloggerId(+req.params.id)
     if(bloggers){
@@ -20,7 +28,7 @@ bloggers_01_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
     return
 })
 
-bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
+hs_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
 
     let name = req.body.name?.trim() ? req.body.name.trim() : ''
     let youtubeUrl = req.body.youtubeUrl.trim()
@@ -32,9 +40,7 @@ bloggers_01_Router.post('/api/bloggers',(req: Request, res: Response) => {
     res.status(201).send(createBlogger.newVideo)
 })
 
-
-
-bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
+hs_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const newName = req.body.name?.trim() ?  req.body.name.trim() : ''
     const newYoutubeUrl = req.body.youtubeUrl.trim()
@@ -53,7 +59,7 @@ bloggers_01_Router.put('/api/bloggers/:id',(req: Request, res: Response) => {
     }
 })
 
-bloggers_01_Router.delete('/api/bloggers/:id',(req: Request, res: Response) => {
+hs_01_Router.delete('/api/bloggers/:id',(req: Request, res: Response) => {
     const bloggerDeleteId = +req.params.id
     const removeBlogger = bloggersRepositories.removeBloggerId(bloggerDeleteId)
     if(removeBlogger){
@@ -64,12 +70,11 @@ bloggers_01_Router.delete('/api/bloggers/:id',(req: Request, res: Response) => {
     return;
 })
 
-
-bloggers_01_Router.get('/api/posts',(req: Request, res: Response) => {
+hs_01_Router.get('/api/posts',(req: Request, res: Response) => {
    const posts =  postsRepositories.findPosts()
     res.status(200).send(posts)
 })
-bloggers_01_Router.get('/api/posts/:id',(req: Request, res: Response) => {
+hs_01_Router.get('/api/posts/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     const post = postsRepositories.findPostId(id)
     if(post.status){
@@ -80,7 +85,7 @@ bloggers_01_Router.get('/api/posts/:id',(req: Request, res: Response) => {
     return;
 })
 
-bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
+hs_01_Router.post('/api/posts',(req: Request, res: Response) => {
 
     let shortDescription = req.body.shortDescription ? req.body.shortDescription?.trim() : ''
     let title = req.body.title ? req.body.title?.trim() : ''
@@ -95,9 +100,7 @@ bloggers_01_Router.post('/api/posts',(req: Request, res: Response) => {
     res.status(newPost.status).send(newPost.newVideo)
 })
 
-
-
-bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
+hs_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     const id = +req.params.id
     let shortDescription = req.body.shortDescription ? req.body.shortDescription?.trim() : ''
     let title = req.body.title ? req.body.title?.trim() : ''
@@ -116,7 +119,7 @@ bloggers_01_Router.put('/api/posts/:id',(req: Request, res: Response) => {
     }
 })
 
-bloggers_01_Router.delete('/api/posts/:id',(req: Request, res: Response) => {
+hs_01_Router.delete('/api/posts/:id',(req: Request, res: Response) => {
     const postDeleteId = +req.params.id
     const statusRemovePostId = postsRepositories.deletePostId(postDeleteId)
 
