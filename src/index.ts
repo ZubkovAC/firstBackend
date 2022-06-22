@@ -25,13 +25,13 @@ app.get('/', (req, res) => {
 })
 
 app.use('/videos',videosRouter)
-
-
 app.use('/products',productsRouter)
 app.use('/addresses',addressesRouter)
+
+
 app.use('/lesson_01',lesson_01_Router)
 app.use('/hs_01',bloggers_01_Router)
-// app.use('/hs_01',posts_01_Router)
+app.use('/hs_01v2',posts_01_Router)
 
 
 app.listen(port, () => {
