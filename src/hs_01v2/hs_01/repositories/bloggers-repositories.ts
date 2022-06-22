@@ -38,65 +38,17 @@ export const bloggersRepositories = {
 
     },
     createBlogger(name:string, youtubeUrl:string){
-        let regex = new RegExp(expression);
-        let validateUrl = false
-        if (youtubeUrl.match(regex)) {
-            validateUrl = false
-        } else {
-            validateUrl = true
+        const newVideo = {
+            "id": bloggers.length+1,
+            "name":name,
+            "youtubeUrl": youtubeUrl
         }
-        if(validateUrl || !name || name.length > 15 || youtubeUrl.length > 100){
-            const errorsMessages =[]
-            if(validateUrl || youtubeUrl.length > 100){
-                errorsMessages.push({
-                    message: "non validation url",
-                    field: "youtubeUrl"
-                })
-            } if(name.length > 15 || !name){
-                errorsMessages.push({
-                    message: "non validation name ",
-                    field: "name"
-                })
-            }
-            return {"errorsMessages": errorsMessages ,error:true}
-        }
-
-        if(name.length <= 15 && youtubeUrl.length < 101){
-            const newVideo = {
-                "id": bloggers.length+1,
-                "name":name,
-                "youtubeUrl": youtubeUrl
-            }
-            bloggers.push(newVideo)
-            return {newVideo:newVideo,error:false}
-
-        }
+        bloggers.push(newVideo)
+        return {newVideo:newVideo,error:false}
     },
     updateBlogger(bloggerId:number,newName:string,newYoutubeUrl:string){
         const videoId = bloggers.find(v=>v.id === bloggerId)
-        let regex = new RegExp(expression);
-        let validateUrl = false
-        if (newYoutubeUrl.match(regex)) {
-            validateUrl = false
-        } else {
-            validateUrl = true
-        }
-        if(validateUrl || newName.trim()?.length > 15 || !newName || newYoutubeUrl.length > 100){
-            const errorsMessages =[]
-            if(validateUrl || newYoutubeUrl.length > 100){
-                errorsMessages.push({
-                    message: "non validation url",
-                    field: "youtubeUrl"
-                })
-            } if(newName.length > 15 || !newName.trim()){
-                errorsMessages.push({
-                    message: "non validation name ",
-                    field: "name"
-                })
-            }
-            return({"errorsMessages": errorsMessages,error:400})
-        }
-        if(videoId && newName.length <= 15 && newYoutubeUrl.length <= 100 ){
+        if(videoId){
             videoId.name = newName
             videoId.youtubeUrl = newYoutubeUrl
             return {videoId:videoId,error:204}

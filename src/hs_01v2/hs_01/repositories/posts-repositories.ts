@@ -45,18 +45,8 @@ export const postsRepositories ={
     },
     createPost(title:string,shortDescription:string,content:string ,bloggerId:number){
         let searchBlogger = bloggers.find(b=>b.id === bloggerId)? bloggers.find(b=>b.id === bloggerId).name :''
-        if(!searchBlogger ||!shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
-            const errorsMessages =[]
-            if( !title || title.length > 30 ){
-                errorsMessages.push({message: "If the inputModel has incorrect title", field: "title"})
-            }if( !shortDescription ||  shortDescription.length > 100 ){
-                errorsMessages.push({message: "If the inputModel has incorrect shortDescription", field: "shortDescription"})
-            }if( !content || content.length > 1000 ){
-                errorsMessages.push({message: "max length content 1000 ", field: "content"})
-            }if( !searchBlogger ){
-                errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
-            }
-            return {errorsMessages:errorsMessages ,status:400}
+        if(!searchBlogger ){
+            return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
         }
         const newVideo = {
             "id": posts.length+1,
@@ -72,18 +62,8 @@ export const postsRepositories ={
     updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){
         let searchPost = posts.find(p =>p.id === postId)
         let searchBlogger = bloggers.find(b=>b.id === bloggerId)? bloggers.find(b=>b.id === bloggerId).id :''
-        if(!searchBlogger || !shortDescription || !title || !content || title.length > 30 || shortDescription.length > 100 || content.length > 1000){
-            const errorsMessages =[]
-            if( !title || title.length > 30 ){
-                errorsMessages.push({ message: "incorrect value title", field: "title" })
-            }if( !shortDescription ||  shortDescription.length > 100 ){
-                errorsMessages.push({ message: "incorrect value shortDescription", field: "shortDescription" })
-            }if( !content || content.length > 1000  ){
-                errorsMessages.push({ message: "max length content 1000 ", field: "content" })
-            }if( !searchBlogger ){
-                errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
-            }
-            return {"errorsMessages": errorsMessages,status:400}
+        if(!searchBlogger ){
+            return {"errorsMessages": { message: "non found bloggerId ", field: "bloggerId" },status:400}
         }
 
         if(searchPost){
