@@ -38,7 +38,7 @@ export const postsRepositories ={
     },
     deletePostId(postId:number){
         const newPosts = posts.filter(v=>v.id !== postId)
-        if(newPosts.length < posts.length){
+        if(newPosts.length+1 === posts.length){
             return true
         }
         return false
