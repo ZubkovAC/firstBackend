@@ -35,7 +35,8 @@ ht_02_Router.get('/api/bloggers/:id',(req: Request, res: Response) => {
 ht_02_Router.post('/api/bloggers',
     authorizationMiddleware,
     body('name').trim().isLength({min:5,max:15}).withMessage('must be at least 15 chars long'),
-    body('youtubeUrl').trim().isLength({max:100}).isURL().withMessage('must be at least 100 chars long'),
+    body('youtubeUrl').trim().isLength({min:5,max:100}).withMessage('must be at least 100 chars long'),
+    // body('youtubeUrl').trim().isURL().withMessage('no url address '), ??
     (req: Request, res: Response) => {
 
         const error = validationResult(req)

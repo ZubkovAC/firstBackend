@@ -30,8 +30,10 @@ export const bloggersRepositories = {
 
     },
     removeBloggerId(bloggerId:number){
-        const findBloggerId = bloggers.filter(v=>v.id === bloggerId)
+        const findBloggerId = bloggers.filter(v=>v.id !== bloggerId)
         if(findBloggerId.length < bloggers.length){
+            console.log(bloggers,findBloggerId)
+            bloggers = [...findBloggerId]
             return true
         }
         return false
