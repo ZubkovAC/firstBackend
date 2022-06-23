@@ -156,6 +156,7 @@ ht_02_Router.put('/api/posts/:id',
 ht_02_Router.delete('/api/posts/:id',
     authorizationMiddleware,
     (req: Request, res: Response) => {
+
     const postDeleteId = +req.params.id
     const statusRemovePostId = postsRepositories.deletePostId(postDeleteId)
 
