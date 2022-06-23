@@ -71,7 +71,9 @@ ht_02_Router.put('/api/bloggers/:id',
         }
     })
 
-ht_02_Router.delete('/api/bloggers/:id',(req: Request, res: Response) => {
+ht_02_Router.delete('/api/bloggers/:id',
+    authorizationMiddleware,
+    (req: Request, res: Response) => {
     const bloggerDeleteId = +req.params.id
     const removeBlogger = bloggersRepositories.removeBloggerId(bloggerDeleteId)
     if(removeBlogger){
@@ -151,7 +153,9 @@ ht_02_Router.put('/api/posts/:id',
         res.send(204)
     })
 
-ht_02_Router.delete('/api/posts/:id',(req: Request, res: Response) => {
+ht_02_Router.delete('/api/posts/:id',
+    authorizationMiddleware,
+    (req: Request, res: Response) => {
     const postDeleteId = +req.params.id
     const statusRemovePostId = postsRepositories.deletePostId(postDeleteId)
 
