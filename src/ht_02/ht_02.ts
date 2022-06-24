@@ -41,7 +41,7 @@ ht_02_Router.post('/api/bloggers',
 
         const error = validationResult(req)
         if(!error.isEmpty()){
-            return res.status(400).json({errorsMessages:error.array().map( err=>({message:err.msg, field:err.param}))})
+            return res.status(400).json({errorsMessages:error.array({onlyFirstError:true}).map( err=>({message:err.msg, field:err.param}))})
         }
         let name = req.body.name.trim()
         let youtubeUrl = req.body.youtubeUrl.trim()
@@ -56,7 +56,7 @@ ht_02_Router.put('/api/bloggers/:id',
     (req: Request, res: Response) => {
         const error = validationResult(req)
         if(!error.isEmpty()){
-            return res.status(400).json({errorsMessages:error.array().map( err=>({message:err.msg, field:err.param}))})
+            return res.status(400).json({errorsMessages:error.array({onlyFirstError:true}).map( err=>({message:err.msg, field:err.param}))})
         }
         const id = +req.params.id
         const newName = req.body.name
