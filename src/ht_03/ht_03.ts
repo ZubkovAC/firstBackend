@@ -9,6 +9,7 @@ import {
     validationTitle,
     validationYoutubeUrl
 } from "./validation/validation";
+import {bloggersInMemoryDb03} from "./service/service-bloggers";
 
 export const ht_03_Router = Router({})
 
@@ -22,14 +23,16 @@ const countResponse = (req: Request, res: Response ,next: NextFunction)=>{
 ht_03_Router.get('/api/bloggers',
     countResponse,
     async (req: Request, res: Response) => {
-    const bloggers = await bloggersRepositories03.findBloggers()
+    // const bloggers = await bloggersRepositories03.findBloggers()
+    const bloggers = await bloggersInMemoryDb03.findBloggers()
     console.log(count)
     res.status(200).send(bloggers)
 })
 
 ht_03_Router.get('/api/bloggers/:id',async (req: Request, res: Response) => {
 
-    const bloggers = await bloggersRepositories03.findBloggerId(+req.params.id)
+    // const bloggers = await bloggersRepositories03.findBloggerId(+req.params.id)
+    const bloggers = await bloggersInMemoryDb03.findBloggerId(+req.params.id)
     if(bloggers){
         res.status(200).send(bloggers)
         return
@@ -46,7 +49,8 @@ ht_03_Router.post('/api/bloggers',
     async (req: Request, res: Response) => {
         let name = req.body.name.trim()
         let youtubeUrl = req.body.youtubeUrl.trim()
-        const createBlogger = await bloggersRepositories03.createBlogger(name,youtubeUrl)
+        // const createBlogger = await bloggersRepositories03.createBlogger(name,youtubeUrl)
+        const createBlogger = await bloggersInMemoryDb03.createBlogger(name,youtubeUrl)
         res.status(201).send(createBlogger.newVideo)
     })
 

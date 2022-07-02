@@ -6,6 +6,7 @@ import {bloggers_01_Router} from "./routes/blogers_01";
 import {hs_01_Router} from "./hs_01v2/hs_01/hs_01";
 import {ht_02_Router} from "./ht_02/ht_02";
 import {ht_03_Router} from "./ht_03/ht_03";
+import {runDb} from "./ht_03/db";
 
 
 const express = require('express')
@@ -37,7 +38,8 @@ app.use('/hs_01v2',hs_01_Router)
 app.use('/ht_02',ht_02_Router)
 app.use('/ht_03',ht_03_Router)
 
-const startApp =  () => {
+const startApp = async () => {
+    await runDb()
     app.listen(port, () => {
         console.log(`Example app listening on port ${port}`)
     })
