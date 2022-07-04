@@ -58,5 +58,4 @@ export const bloggersInMemoryDb03 = {
         }
         return {error: 404}
     },
-
 }
