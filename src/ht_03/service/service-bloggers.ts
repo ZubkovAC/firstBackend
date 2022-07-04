@@ -1,10 +1,7 @@
-import {bloggersCollection} from "../db";
+import {bloggersCollection, BloggersType} from "../db";
+import {bloggersRepositoryDb03} from "../repositories/bloggers-repositories03";
 
-export type BloggersType = {
-    id:number
-    name:string
-    youtubeUrl:string
-}
+
 
 export let bloggers : Array<BloggersType> = [
     {
@@ -26,36 +23,21 @@ export let bloggers : Array<BloggersType> = [
 let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
 
 
-export const bloggersInMemoryDb03 = {
+export const bloggersServiceDb03 = {
     async findBloggers() : Promise<Array<{id:number, name:string,youtubeUrl:string}>>{
-        return bloggersCollection.find({}).toArray()
+        return bloggersRepositoryDb03.findBloggers()
     },
     async findBloggerId(bloggerId:number): Promise<{id:number, name:string,youtubeUrl:string} | string >{
-        let searchBloggerId : BloggersType | null = await bloggersCollection.findOne({id:bloggerId})
-        if(searchBloggerId){
-            return searchBloggerId
-        }
-        return  ""
+        return  bloggersRepositoryDb03.findBloggerId(bloggerId)
 
     },
     async removeBloggerId(bloggerId:number) : Promise<boolean>{
-        const  findBloggerId =  await bloggersCollection.deleteOne({id:bloggerId})
-        return findBloggerId.deletedCount === 1
+        return bloggersRepositoryDb03.removeBloggerId(bloggerId)
     },
     async createBlogger(name:string, youtubeUrl:string){
-        const newVideo = {
-            "id": bloggers.length+1,
-            "name":name,
-            "youtubeUrl": youtubeUrl
-        }
-        await bloggersCollection.insertOne(newVideo)
-        return {newVideo:newVideo,error:false}
+        return bloggersRepositoryDb03.createBlogger(name,youtubeUrl)
     },
     async updateBlogger(bloggerId:number,newName:string,newYoutubeUrl:string){
-        const newBloggerId = await bloggersCollection.updateOne({id:bloggerId},{ $set:{name:newName,youtubeUrl:newYoutubeUrl}})
-        if(newBloggerId.matchedCount === 1){
-            return {videoId:newBloggerId,error:204}
-        }
-        return {error: 404}
+        return bloggersRepositoryDb03.updateBlogger(bloggerId,newName,newYoutubeUrl)
     },
 }

@@ -1,4 +1,5 @@
 import {bloggers} from "../repositories/bloggers-repositories03";
+import {postsRepositories03} from "../repositories/posts-repositories03";
 
 let posts =[
     {
@@ -25,61 +26,20 @@ let posts =[
     },
 ]
 
-export const postsRepositories03 ={
-    findPosts(){
-        return posts
+export const postsService03 ={
+    async findPosts(){
+        return postsRepositories03.findPosts()
     },
-    findPostId(postId:number){
-        const post = posts.find(v=>v.id === postId)
-        if(post){
-            return {post:post,status:true}
-        }
-        return {status:false}
+    async findPostId(postId:number){
+        return postsRepositories03.findPostId(postId)
     },
-    deletePostId(postId:number){
-        console.log("postId",postId)
-        const newPosts = posts.filter(v=>v.id !== postId)
-        if(newPosts.length < posts.length){
-            posts = newPosts
-            return true
-        }
-        return false
+    async deletePostId(postId:number){
+        return postsRepositories03.deletePostId(postId)
     },
-    createPost(title:string,shortDescription:string,content:string ,bloggerId:number){
-        let searchBlogger = bloggers.find(b=>b.id === bloggerId)? bloggers.find(b=>b.id === bloggerId).name :''
-        if(!searchBlogger ){
-            return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
-        }
-        const newVideo = {
-            "id": posts.length+1,
-            "title": title,
-            "shortDescription": shortDescription,
-            "content": content,
-            "bloggerId": bloggerId,
-            "bloggerName": bloggers.find(b=>b.id === bloggerId).name
-        }
-        posts.push(newVideo)
-        return {newVideo:newVideo ,status:201}
+    async createPost(title:string,shortDescription:string,content:string ,bloggerId:number){
+        return postsRepositories03.createPost(title,shortDescription,content,bloggerId)
     },
-    updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){
-        let searchPost = posts.find(p =>p.id === postId)
-        let searchBlogger = bloggers.find(b=>b.id === bloggerId)? bloggers.find(b=>b.id === bloggerId).id :''
-        if(!searchBlogger ){
-            return {"errorsMessages": { message: "non found bloggerId ", field: "bloggerId" },status:400}
-        }
-
-        if(searchPost){
-            const updatePost = {
-                "id": postId,
-                title:title,
-                shortDescription:shortDescription,
-                content:content,
-                bloggerId:bloggerId,
-                "bloggerName": bloggers.find(b=>b.id === bloggerId).name
-            }
-            posts = posts.map(p=> p.id === updatePost.id ? {...updatePost} : p)
-            return {status:204}
-        }
-        return {status:404}
+    async updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){
+        return postsRepositories03.updatePostId(postId,title,content,shortDescription,bloggerId)
     }
 }

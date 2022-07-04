@@ -1,4 +1,12 @@
-export let bloggers = [
+import {bloggersCollection} from "../db";
+
+export type BloggersType = {
+    id:number
+    name:string
+    youtubeUrl:string
+}
+
+export let bloggers : Array<BloggersType> = [
     {
         "id": 1,
         "name": "Dumych",
@@ -17,46 +25,37 @@ export let bloggers = [
 // let expression = '/^https:\/\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/'
 let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
 
-export const bloggersRepositories03 = {
+
+export const bloggersRepositoryDb03 = {
     async findBloggers() : Promise<Array<{id:number, name:string,youtubeUrl:string}>>{
-        return bloggers
+        return bloggersCollection.find({}).toArray()
     },
-    async findBloggerId(bloggerId:number){
-        const findBloggerId = bloggers.find(v=>v.id === bloggerId)
-        if(findBloggerId){
-            return await findBloggerId
+    async findBloggerId(bloggerId:number): Promise<{id:number, name:string,youtubeUrl:string} | string >{
+        let searchBloggerId : BloggersType | null = await bloggersCollection.findOne({id:bloggerId})
+        if(searchBloggerId){
+            return searchBloggerId
         }
-        return  ''
-    },
-    async removeBloggerId(bloggerId:number){
-        const  findBloggerId =  bloggers.filter(v=>v.id !== bloggerId)
-        if(findBloggerId.length+1 === bloggers.length){
-            bloggers = findBloggerId
-            return true
-        }
-        return false
+        return  ""
 
     },
+    async removeBloggerId(bloggerId:number) : Promise<boolean>{
+        const  findBloggerId =  await bloggersCollection.deleteOne({id:bloggerId})
+        return findBloggerId.deletedCount === 1
+    },
     async createBlogger(name:string, youtubeUrl:string){
-        console.log(name,youtubeUrl)
         const newVideo = {
-            "id": bloggers.length+1,
+            "id": +new Date(),
             "name":name,
             "youtubeUrl": youtubeUrl
         }
-        await bloggers.push(newVideo)
+        await bloggersCollection.insertOne(newVideo)
         return {newVideo:newVideo,error:false}
     },
     async updateBlogger(bloggerId:number,newName:string,newYoutubeUrl:string){
-        const videoId = bloggers.find(v=>v.id === bloggerId)
-        if(videoId){
-            videoId.name = newName
-            videoId.youtubeUrl = newYoutubeUrl
-            return {videoId:videoId,error:204}
+        const newBloggerId = await bloggersCollection.updateOne({id:bloggerId},{ $set:{name:newName,youtubeUrl:newYoutubeUrl}})
+        if(newBloggerId.matchedCount === 1){
+            return {videoId:newBloggerId,error:204}
         }
-        if(!videoId){
-            return {error: 404}
-        }
+        return {error: 404}
     },
-
 }
