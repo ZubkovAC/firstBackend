@@ -16,7 +16,7 @@ export type PostsType = {
 
 // const mongoUri = process.env.mongoURI || 'mongodb://0.0.0.0:27017'
 // const mongoUri = "mongodb+srv://ZybkovAC:KalxotXic2bEZh4R@cluster0.ywntv.mongodb.net/expample?retryWrites=true&w=majority" || 'mongodb://0.0.0.0:27017'
-const mongoUri = "mongodb+srv://ZybkovAC:KalxotXic2bEZh4R@cluster0.ywntv.mongodb.net/expample?retryWrites=true&w=majority" || 'mongodb://0.0.0.0:27017'
+const mongoUri = "mongodb+srv://ZybkovAC:u2fvwZGQ60wsUru2@cluster0.ywntv.mongodb.net/expample" || 'mongodb://0.0.0.0:27017'
 
 export const client = new MongoClient(mongoUri)
 
