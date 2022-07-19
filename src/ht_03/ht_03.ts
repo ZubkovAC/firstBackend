@@ -53,6 +53,20 @@ ht_03_Router.get('/api/:idBloggers/posts',async (req: Request, res: Response) =>
     res.status(404).send("If video for passed id doesn't exist")
     return
 })
+ht_03_Router.post('/api/:idBlogger/posts',
+    authorizationMiddleware03,
+    validationTitle,
+    validationShortDescription,
+    validationContent,
+    async (req: Request, res: Response) => {
+    const postsBlogger = await postsService03.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,+req.params.idBlogger)
+    if(postsBlogger){
+        res.status(200).send(postsBlogger)
+        return
+    }
+    res.status(404).send("If video for passed id doesn't exist")
+    return
+})
 
 ht_03_Router.post('/api/bloggers',
     authorizationMiddleware03,

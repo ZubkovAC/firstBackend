@@ -39,6 +39,9 @@ export const postsService03 ={
     async createPost(title:string,shortDescription:string,content:string ,bloggerId:number){
         return postsRepositories03.createPost(title,shortDescription,content,bloggerId)
     },
+    async createBloggerIdPost(title:string,shortDescription:string,content:string ,bloggerId:number){
+        return postsRepositories03.createPost(title,shortDescription,content,bloggerId)
+    },
     async updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){
         return postsRepositories03.updatePostId(postId,title,content,shortDescription,bloggerId)
     }

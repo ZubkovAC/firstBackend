@@ -11,8 +11,8 @@ export const validationName15 =
 export const validationYoutubeUrl =
     body('youtubeUrl')
         .trim()
-        .isLength({min:5,max:100})
         .isURL()
+        .isLength({min:5,max:100})
         .withMessage('must be at least 100 chars long')
 
 
