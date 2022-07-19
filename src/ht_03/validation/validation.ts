@@ -5,7 +5,7 @@ import {Request, Response} from "express";
 export const validationName15 =
     body('name')
         .trim()
-        .isLength({min:5,max:15})
+        .isLength({min:3,max:15})
         .withMessage('must be at least 15 chars long')
 
 export const validationYoutubeUrl =

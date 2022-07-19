@@ -48,12 +48,23 @@ export const bloggersRepositoryDb03 = {
     async findBloggers(pageNumber,pageSize) : Promise<BloggersGetType >{
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await bloggersCollection.countDocuments()
+        const bloggersRestrict =
+            await bloggersCollection
+                .find({})
+                .skip(skipCount)
+                .limit(pageSize)
+                .toArray()
+
         return {
             totalCount : totalCount,
             pageSize : pageSize,
             page:pageNumber,
             pagesCount: Math.ceil(totalCount/ pageSize),
-            items: await bloggersCollection.find({}).skip(skipCount).limit(pageSize).toArray()
+            items: bloggersRestrict.map(b =>({
+                id:b.id,
+                name:b.name,
+                youtubeUrl:b.youtubeUrl
+            }))
         }
     },
     async findBloggerId(bloggerId:number): Promise<{id:number, name:string,youtubeUrl:string} | string >{
