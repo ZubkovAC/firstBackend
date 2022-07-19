@@ -1,5 +1,6 @@
 import {bloggers} from "./bloggers-repositories03";
 import {bloggersCollection, postsCollection} from "../db";
+import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
 
 let posts =[
     {
@@ -30,18 +31,19 @@ export const postsRepositories03 ={
     async findPosts(pageNumber:number, pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await postsCollection.countDocuments()
+        const postsMongo = await postsCollection.find({}).skip(skipCount).limit(pageSize).toArray()
         return {
             totalCount : totalCount,
             pageSize : pageSize,
             page:pageNumber,
             pagesCount: Math.ceil(totalCount/ pageSize),
-            items: await postsCollection.find({}).skip(skipCount).limit(pageSize).toArray()
+            items: convertBloggersPosts(postsMongo)
         }
     },
     async findPostId(postId:number){
         const post = await postsCollection.findOne({id:postId})
         if(post){
-            return {post:post,status:true}
+            return {post:convertBloggerPost(post),status:true}
         }
         return {status:false}
     },

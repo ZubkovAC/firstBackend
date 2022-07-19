@@ -1,4 +1,5 @@
 import {bloggersCollection, postsCollection} from "../db";
+import {convertBlogger, convertBloggerId, convertBloggers} from "../convert/convert";
 
 export type BloggersType = {
     id:number
@@ -60,17 +61,13 @@ export const bloggersRepositoryDb03 = {
             pageSize : pageSize,
             page:pageNumber,
             pagesCount: Math.ceil(totalCount/ pageSize),
-            items: bloggersRestrict.map(b =>({
-                id:b.id,
-                name:b.name,
-                youtubeUrl:b.youtubeUrl
-            }))
+            items: convertBloggers(bloggersRestrict)
         }
     },
     async findBloggerId(bloggerId:number): Promise<{id:number, name:string,youtubeUrl:string} | string >{
         let searchBloggerId : BloggersType | null = await bloggersCollection.findOne({id:bloggerId})
         if(searchBloggerId){
-            return searchBloggerId
+            return convertBloggerId(searchBloggerId)
         }
         return  ""
     },
