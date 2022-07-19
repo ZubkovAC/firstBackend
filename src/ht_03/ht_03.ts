@@ -63,7 +63,7 @@ ht_03_Router.post('/api/bloggers',
         let name = req.body.name.trim()
         let youtubeUrl = req.body.youtubeUrl.trim()
         const createBlogger = await bloggersServiceDb03.createBlogger(name,youtubeUrl)
-        res.status(201).send(createBlogger.newVideo)
+        res.status(201).send(createBlogger.newBlogger)
     })
 
 ht_03_Router.put('/api/bloggers/:id',
@@ -131,7 +131,7 @@ ht_03_Router.post('/api/posts',
         let bloggerId = req.body.bloggerId
         const newPost = await postsService03.createPost(title,shortDescription,content,bloggerId)
         validationErrorCreatePosts(req,res,newPost)
-        res.status(newPost.status).send(newPost.newVideo)
+        res.status(newPost.status).send(newPost.newPost)
     })
 
 ht_03_Router.put('/api/posts/:id',

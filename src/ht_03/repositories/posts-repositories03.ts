@@ -56,7 +56,7 @@ export const postsRepositories03 ={
         if(!searchBlogger ){
             return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
         }
-        const newVideo = {
+        const newPost = {
             "id": + new Date(),
             "title": title,
             "shortDescription": shortDescription,
@@ -64,9 +64,8 @@ export const postsRepositories03 ={
             "bloggerId": bloggerId,
             "bloggerName": searchBlogger.name
         }
-        posts.push(newVideo)
-        await postsCollection.insertOne(newVideo)
-        return {newVideo:newVideo ,status:201}
+        await postsCollection.insertOne(newPost)
+        return {newPost:convertBloggerPost(newPost) ,status:201}
     },
 
     async updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){

@@ -90,13 +90,13 @@ export const bloggersRepositoryDb03 = {
         return findBloggerId.deletedCount === 1
     },
     async createBlogger(name:string, youtubeUrl:string){
-        const newVideo = {
+        const newBlogger = {
             "id": +new Date(),
             "name":name,
             "youtubeUrl": youtubeUrl
         }
-        await bloggersCollection.insertOne(newVideo)
-        return {newVideo:newVideo,error:false}
+        await bloggersCollection.insertOne(newBlogger)
+        return {newBlogger:convertBlogger(newBlogger),error:false}
     },
     async updateBlogger(bloggerId:number,newName:string,newYoutubeUrl:string){
         const newBloggerId = await bloggersCollection.updateOne({id:bloggerId},{ $set:{name:newName,youtubeUrl:newYoutubeUrl}})
