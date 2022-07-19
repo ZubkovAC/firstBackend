@@ -1,5 +1,5 @@
 import {bloggersCollection, BloggersType} from "../db";
-import {bloggersRepositoryDb03} from "../repositories/bloggers-repositories03";
+import {BloggerGetPostType, BloggersGetType, bloggersRepositoryDb03} from "../repositories/bloggers-repositories03";
 
 
 
@@ -24,12 +24,15 @@ let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-
 
 
 export const bloggersServiceDb03 = {
-    async findBloggers() : Promise<Array<{id:number, name:string,youtubeUrl:string}>>{
-        return bloggersRepositoryDb03.findBloggers()
+    async findBloggers(pageNumber:number, pageSize:number) : Promise<BloggersGetType>{
+        return bloggersRepositoryDb03.findBloggers(pageNumber,pageSize)
     },
     async findBloggerId(bloggerId:number): Promise<{id:number, name:string,youtubeUrl:string} | string >{
         return  bloggersRepositoryDb03.findBloggerId(bloggerId)
 
+    },
+    async findIdBloggerPosts(pageNumber:number, pageSize:number ,bloggerId:number): Promise< BloggerGetPostType | string >{
+        return  bloggersRepositoryDb03.findBloggerIdPosts(pageNumber,pageSize, bloggerId)
     },
     async removeBloggerId(bloggerId:number) : Promise<boolean>{
         return bloggersRepositoryDb03.removeBloggerId(bloggerId)

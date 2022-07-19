@@ -27,8 +27,16 @@ let posts =[
 ]
 
 export const postsRepositories03 ={
-    async findPosts(){
-        return postsCollection.find({}).toArray()
+    async findPosts(pageNumber:number, pageSize:number){
+        let skipCount = (pageNumber-1) * pageSize
+        const totalCount = await postsCollection.countDocuments()
+        return {
+            totalCount : totalCount,
+            pageSize : pageSize,
+            page:pageNumber,
+            pagesCount: Math.ceil(totalCount/ pageSize),
+            items: await postsCollection.find({}).skip(skipCount).limit(pageSize).toArray()
+        }
     },
     async findPostId(postId:number){
         const post = await postsCollection.findOne({id:postId})

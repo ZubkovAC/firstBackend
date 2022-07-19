@@ -73,7 +73,6 @@ lesson_01_Router.put('/api/videos/:id', (req: Request, res: Response) => {
         })
         return;
     }
-
     const id = +req.params.id
     const videoId = videosLesson01.find(v => v.id === id)
     if (videoId) {

@@ -37,3 +37,4 @@ export async function runDb(){
         await client.close()
     }
 }
+

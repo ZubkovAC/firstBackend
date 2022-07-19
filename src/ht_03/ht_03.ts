@@ -19,17 +19,33 @@ const countResponse = (req: Request, res: Response ,next: NextFunction)=>{
     count++
     next()
 }
+const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
+const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
 
 ht_03_Router.get('/api/bloggers',
     countResponse,
     async (req: Request, res: Response) => {
-    const bloggers = await bloggersServiceDb03.findBloggers()
+    const searchNameTerm = req.query.SearchNameTerm ? req.query.SearchNameTerm : ''
+    const pageN = pageNumber(req.query.PageNumber as string)
+    const pageS = pageSize(req.query.PageSize as string)
+    const bloggers = await bloggersServiceDb03.findBloggers(pageN,pageS)
     console.log(count)
     res.status(200).send(bloggers)
 })
 
 ht_03_Router.get('/api/bloggers/:id',async (req: Request, res: Response) => {
     const bloggers = await bloggersServiceDb03.findBloggerId(+req.params.id)
+    if(bloggers){
+        res.status(200).send(bloggers)
+        return
+    }
+    res.status(404).send("If video for passed id doesn't exist")
+    return
+})
+ht_03_Router.get('/api/:idBloggers/posts',async (req: Request, res: Response) => {
+    const pageN = pageNumber(req.query.pageNumber as string)
+    const pageS = pageSize(req.query.PageSize as string)
+    const bloggers = await bloggersServiceDb03.findIdBloggerPosts(pageN, pageS,+req.params.idBloggers)
     if(bloggers){
         res.status(200).send(bloggers)
         return
@@ -61,7 +77,7 @@ ht_03_Router.put('/api/bloggers/:id',
         const newYoutubeUrl = req.body.youtubeUrl
         const updateBlogger = await bloggersServiceDb03.updateBlogger(id,newName,newYoutubeUrl)
         if(updateBlogger.error === 204){
-            res.status(204).send(updateBlogger.videoId)
+            res.status(204).send(updateBlogger.newBloggerId)
             return
         }
         if(updateBlogger.error === 404){
@@ -85,7 +101,9 @@ ht_03_Router.delete('/api/bloggers/:id',
 
 ht_03_Router.get('/api/posts',
     async (req: Request, res: Response) => {
-    const posts = await postsService03.findPosts()
+        const pageN = pageNumber(req.query.PageNumber as string)
+        const pageS = pageSize(req.query.PageSize as string)
+        const posts = await postsService03.findPosts(pageN,pageS)
     res.status(200).send(posts)
 })
 ht_03_Router.get('/api/posts/:id',

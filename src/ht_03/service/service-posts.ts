@@ -27,8 +27,8 @@ let posts =[
 ]
 
 export const postsService03 ={
-    async findPosts(){
-        return postsRepositories03.findPosts()
+    async findPosts(pageNumber:number, pageSize:number){
+        return postsRepositories03.findPosts(pageNumber,pageSize)
     },
     async findPostId(postId:number){
         return postsRepositories03.findPostId(postId)
