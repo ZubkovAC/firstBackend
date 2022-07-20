@@ -59,10 +59,10 @@ export const bloggersRepositoryDb03 = {
                 .toArray()
 
         return {
-            totalCount : totalCount,
-            pageSize : pageSize,
-            page:pageNumber,
             pagesCount: Math.ceil(totalCount/ pageSize),
+            page:pageNumber,
+            pageSize : pageSize,
+            totalCount : totalCount,
             items: convertBloggers(bloggersRestrict)
         }
     },
@@ -78,10 +78,10 @@ export const bloggersRepositoryDb03 = {
         let postsBlogger = await  postsCollection.find({bloggerId:bloggerId}).toArray()
         if(searchBloggerId && postsBlogger){
             return {
-                totalCount : postsBlogger.length,
-                pageSize : pageSize,
-                page: pageNumber,
                 pagesCount: Math.ceil(postsBlogger.length / pageSize),
+                page: pageNumber,
+                pageSize : pageSize,
+                totalCount : postsBlogger.length,
                 items: convertBloggersPosts(postsBlogger)
             }
         }
