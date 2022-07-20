@@ -1,5 +1,5 @@
 import {bloggersCollection, postsCollection} from "../db";
-import {convertBlogger, convertBloggerId, convertBloggers} from "../convert/convert";
+import {convertBlogger, convertBloggerId, convertBloggers, convertBloggersPosts} from "../convert/convert";
 
 export type BloggersType = {
     id:number
@@ -82,7 +82,7 @@ export const bloggersRepositoryDb03 = {
                 pageSize : pageSize,
                 page: pageNumber,
                 pagesCount: Math.ceil(postsBlogger.length / pageSize),
-                items: postsBlogger
+                items: convertBloggersPosts(postsBlogger)
             }
         }
         return  ""
