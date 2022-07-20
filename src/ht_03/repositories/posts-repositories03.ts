@@ -53,7 +53,7 @@ export const postsRepositories03 ={
     },
     async createPost(title:string,shortDescription:string,content:string ,bloggerId:number){
         let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
-        if(!searchBlogger ){
+        if(!searchBlogger && searchBlogger === null){
             return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
         }
         const newPost = {
