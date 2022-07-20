@@ -35,7 +35,7 @@ ht_03_Router.get('/api/bloggers/:id',async (req: Request, res: Response) => {
     res.status(404).send("If video for passed id doesn't exist")
     return
 })
-ht_03_Router.get('/api/:idBloggers/posts',async (req: Request, res: Response) => {
+ht_03_Router.get('/api/bloggers/:idBloggers/posts',async (req: Request, res: Response) => {
     const pageN = pageNumber(req.query.pageNumber as string)
     const pageS = pageSize(req.query.PageSize as string)
     const bloggers = await bloggersServiceDb03.findIdBloggerPosts(pageN, pageS,+req.params.idBloggers)
@@ -46,7 +46,7 @@ ht_03_Router.get('/api/:idBloggers/posts',async (req: Request, res: Response) =>
     res.status(404).send("If video for passed id doesn't exist")
     return
 })
-ht_03_Router.post('/api/:idBlogger/posts',
+ht_03_Router.post('/api/bloggers/:idBlogger/posts',
     authorizationMiddleware03,
     validationTitle,
     validationShortDescription,
