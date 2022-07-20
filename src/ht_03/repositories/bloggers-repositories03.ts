@@ -45,6 +45,7 @@ export type BloggerGetPostType = {
         "bloggerId": number
         "bloggerName": string}>
 }
+
 export const bloggersRepositoryDb03 = {
     async findBloggers(pageNumber,pageSize,searchNameTerm) : Promise<BloggersGetType >{
         let skipCount = (pageNumber-1) * pageSize
