@@ -46,12 +46,13 @@ export type BloggerGetPostType = {
         "bloggerName": string}>
 }
 export const bloggersRepositoryDb03 = {
-    async findBloggers(pageNumber,pageSize) : Promise<BloggersGetType >{
+    async findBloggers(pageNumber,pageSize,searchNameTerm) : Promise<BloggersGetType >{
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await bloggersCollection.countDocuments()
+        const search = searchNameTerm !== '' ? searchNameTerm : ''
         const bloggersRestrict =
             await bloggersCollection
-                .find({})
+                .find({name: search})
                 .skip(skipCount)
                 .limit(pageSize)
                 .toArray()

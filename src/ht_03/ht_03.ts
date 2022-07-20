@@ -13,23 +13,16 @@ import {postsService03} from "./service/service-posts";
 
 export const ht_03_Router = Router({})
 
-let count = 0
-
-const countResponse = (req: Request, res: Response ,next: NextFunction)=>{
-    count++
-    next()
-}
 const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
+const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 
 ht_03_Router.get('/api/bloggers',
-    countResponse,
     async (req: Request, res: Response) => {
-    const searchNameTerm = req.query.SearchNameTerm ? req.query.SearchNameTerm : ''
     const pageN = pageNumber(req.query.PageNumber as string)
     const pageS = pageSize(req.query.PageSize as string)
-    const bloggers = await bloggersServiceDb03.findBloggers(pageN,pageS)
-    console.log(count)
+    const searchNT = searchNameTerm(req.query.SearchNameTerm as string)
+    const bloggers = await bloggersServiceDb03.findBloggers(pageN,pageS,searchNT)
     res.status(200).send(bloggers)
 })
 
@@ -61,7 +54,7 @@ ht_03_Router.post('/api/:idBlogger/posts',
     async (req: Request, res: Response) => {
     const postsBlogger = await postsService03.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,+req.params.idBlogger)
     if(postsBlogger){
-        res.status(200).send(postsBlogger)
+        res.status(201).send(postsBlogger.newPost)
         return
     }
     res.status(404).send("If video for passed id doesn't exist")

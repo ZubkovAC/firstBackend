@@ -24,8 +24,8 @@ let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-
 
 
 export const bloggersServiceDb03 = {
-    async findBloggers(pageNumber:number, pageSize:number) : Promise<BloggersGetType>{
-        return bloggersRepositoryDb03.findBloggers(pageNumber,pageSize)
+    async findBloggers(pageNumber:number, pageSize:number,searchNameTerm:string) : Promise<BloggersGetType>{
+        return bloggersRepositoryDb03.findBloggers(pageNumber,pageSize,searchNameTerm)
     },
     async findBloggerId(bloggerId:number): Promise<{id:number, name:string,youtubeUrl:string} | string >{
         return  bloggersRepositoryDb03.findBloggerId(bloggerId)

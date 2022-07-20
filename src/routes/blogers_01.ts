@@ -159,7 +159,7 @@ let posts =[
         "bloggerName": "UlbiTV"
     },
 ]
-
+posts.push({...posts[0]})
 bloggers_01_Router.get('/api/posts',(req: Request, res: Response) => {
     res.status(200).send(posts)
 })
