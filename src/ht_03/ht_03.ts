@@ -148,15 +148,15 @@ ht_03_Router.put('/api/posts/:id',
     validationContent,
     async (req: Request, res: Response) => {
 
-        const id = +req.params.id
+        const postId = +req.params.id
         let shortDescription = req.body.shortDescription.trim()
         let title = req.body.title.trim()
         let content = req.body.content.trim()
         let bloggerId = req.body.bloggerId
-        const updatePostId  = await postsService03.updatePostId(id,title,content,shortDescription,bloggerId)
+        const updatePostId  = await postsService03.updatePostId(postId,title,content,shortDescription,bloggerId)
         const result = validationErrorUpdatePosts(req,res,updatePostId)
-        console.log("updatePostId",updatePostId)
-        if(result !== undefined && updatePostId.status ===204){
+        console.log("updatePostId2",updatePostId,result)
+        if(result === undefined && updatePostId.status ===204){
             res.send(204)
         }
     })

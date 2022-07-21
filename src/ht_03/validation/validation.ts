@@ -69,5 +69,6 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,updatePos
         }
         return res.status(400).json({errorsMessages:errorsMessages})
     }
+    return res.send(204)
 }
 
