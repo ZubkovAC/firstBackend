@@ -77,8 +77,8 @@ ht_03_Router.put('/api/bloggers/:id',
     authorizationMiddleware03,
     validationName15,
     validationYoutubeUrl,
+    validationError,
     async (req: Request, res: Response) => {
-        validationError(req,res)
         const id = +req.params.id
         const newName = req.body.name
         const newYoutubeUrl = req.body.youtubeUrl
