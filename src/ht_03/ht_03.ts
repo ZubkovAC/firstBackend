@@ -155,7 +155,8 @@ ht_03_Router.put('/api/posts/:id',
         let bloggerId = req.body.bloggerId
         const updatePostId  = await postsService03.updatePostId(id,title,content,shortDescription,bloggerId)
         const result = validationErrorUpdatePosts(req,res,updatePostId)
-        if(result !== undefined){
+        console.log("updatePostId",updatePostId)
+        if(result !== undefined && updatePostId.status ===204){
             res.send(204)
         }
     })

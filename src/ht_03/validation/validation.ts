@@ -65,7 +65,7 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,updatePos
         }
         const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))
         if(updatePostId.status === 400){
-            errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
+            errorsMessages.push(...updatePostId.errorsMessages)
         }
         return res.status(400).json({errorsMessages:errorsMessages})
     }
