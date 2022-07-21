@@ -154,8 +154,10 @@ ht_03_Router.put('/api/posts/:id',
         let content = req.body.content.trim()
         let bloggerId = req.body.bloggerId
         const updatePostId  = await postsService03.updatePostId(id,title,content,shortDescription,bloggerId)
-        validationErrorUpdatePosts(req,res,updatePostId)
-        res.send(204)
+        const result = validationErrorUpdatePosts(req,res,updatePostId)
+        if(result !== undefined){
+            res.send(204)
+        }
     })
 
 ht_03_Router.delete('/api/posts/:id',

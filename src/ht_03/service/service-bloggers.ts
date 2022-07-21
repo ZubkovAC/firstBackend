@@ -22,7 +22,6 @@ export let bloggers : Array<BloggersType> = [
 // let expression = '/^https:\/\/([a-zA-Z0-9_-]+.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/'
 let expression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi
 
-
 export const bloggersServiceDb03 = {
     async findBloggers(pageNumber:number, pageSize:number,searchNameTerm:string) : Promise<BloggersGetType>{
         return bloggersRepositoryDb03.findBloggers(pageNumber,pageSize,searchNameTerm)
