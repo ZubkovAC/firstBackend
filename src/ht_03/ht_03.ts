@@ -36,7 +36,7 @@ ht_03_Router.get('/api/bloggers/:id',async (req: Request, res: Response) => {
     return
 })
 ht_03_Router.get('/api/bloggers/:idBloggers/posts',async (req: Request, res: Response) => {
-    const pageN = pageNumber(req.query.pageNumber as string)
+    const pageN = pageNumber(req.query.PageNumber as string)
     const pageS = pageSize(req.query.PageSize as string)
     const bloggers = await bloggersServiceDb03.findIdBloggerPosts(pageN, pageS,+req.params.idBloggers)
     if(bloggers){

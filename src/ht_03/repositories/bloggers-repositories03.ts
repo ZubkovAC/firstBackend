@@ -76,13 +76,20 @@ export const bloggersRepositoryDb03 = {
     },
     async findBloggerIdPosts(pageNumber:number, pageSize:number ,bloggerId:number): Promise< BloggerGetPostType | string >{
         let searchBloggerId : BloggersType | null = await bloggersCollection.findOne({id:bloggerId})
-        let postsBlogger = await  postsCollection.find({bloggerId:bloggerId}).toArray()
+        let skipCount = (pageNumber-1) * pageSize
+        const allPostsBlogger = await postsCollection.find({bloggerId:bloggerId}).toArray()
+        const allPostsBloggerLength = allPostsBlogger.length
+        let postsBlogger = await  postsCollection
+            .find({bloggerId:bloggerId})
+            .skip(skipCount)
+            .limit(pageSize)
+            .toArray()
         if(searchBloggerId && postsBlogger){
             return {
-                pagesCount: Math.ceil(postsBlogger.length / pageSize),
+                pagesCount: Math.ceil(allPostsBloggerLength / pageSize),
                 page: pageNumber,
                 pageSize : pageSize,
-                totalCount : postsBlogger.length,
+                totalCount : allPostsBloggerLength,
                 items: convertBloggersPosts(postsBlogger)
             }
         }
