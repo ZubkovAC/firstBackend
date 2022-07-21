@@ -65,8 +65,8 @@ ht_03_Router.post('/api/bloggers',
     authorizationMiddleware03,
     validationName15,
     validationYoutubeUrl,
+    validationError,
     async (req: Request, res: Response) => {
-        validationError(req,res)
         let name = req.body.name.trim()
         let youtubeUrl = req.body.youtubeUrl.trim()
         const createBlogger = await bloggersServiceDb03.createBlogger(name,youtubeUrl)

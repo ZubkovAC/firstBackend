@@ -44,6 +44,7 @@ export const validationError = (req: Request, res: Response) => {
     }
 }
 
+
 export const validationErrorCreatePosts = (req: Request, res: Response,newPost) => {
     const error = validationResult(req)
     if(!error.isEmpty() || newPost.status === 400){
