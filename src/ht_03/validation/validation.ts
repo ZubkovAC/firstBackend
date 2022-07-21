@@ -1,6 +1,6 @@
 
 import {body, validationResult} from "express-validator";
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 
 export const validationName15 =
     body('name')
@@ -34,7 +34,7 @@ export const validationContent =
         .isLength({min:5,max:1000})
         .withMessage('must be at least 1000 chars long')
 
-export const validationError = (req: Request, res: Response) => {
+export const validationError = (req: Request, res: Response, next:NextFunction) => {
     const error = validationResult(req)
     if(!error.isEmpty()){
         return res.status(400)
@@ -42,6 +42,7 @@ export const validationError = (req: Request, res: Response) => {
                     .array({onlyFirstError:true})
                     .map( err=>({message:err.msg, field:err.param}))})
     }
+    next()
 }
 
 
