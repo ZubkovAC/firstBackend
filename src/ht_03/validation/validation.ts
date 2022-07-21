@@ -43,10 +43,20 @@ export const validationError = (req: Request, res: Response, next:NextFunction) 
                     .map( err=>({message:err.msg, field:err.param}))})
     }
     next()
+    return
 }
 
 
-export const validationErrorCreatePosts = (req: Request, res: Response,newPost) => {
+export const validationErrorCreatePosts = (req: Request, res: Response,next:NextFunction) => {
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+        const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))
+        return res.status(400).json({errorsMessages:errorsMessages})
+    }
+    next()
+    return
+}
+export const validationErrorCreatePostsv2 = (req: Request, res: Response,newPost) => {
     const error = validationResult(req)
     if(!error.isEmpty() || newPost.status === 400){
         const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))

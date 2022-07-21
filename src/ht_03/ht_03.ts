@@ -1,7 +1,11 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {authorizationMiddleware03} from "./authorization-middleware/authorization-middleware03";
 import {
-    validationContent, validationError, validationErrorCreatePosts, validationErrorUpdatePosts,
+    validationContent,
+    validationError,
+    validationErrorCreatePosts,
+    validationErrorCreatePostsv2,
+    validationErrorUpdatePosts,
     validationName15,
     validationShortDescription,
     validationTitle,
@@ -130,14 +134,14 @@ ht_03_Router.post('/api/posts',
     validationShortDescription,
     validationTitle,
     validationContent,
+    validationErrorCreatePosts,
     async (req: Request, res: Response) => {
-
         let shortDescription = req.body.shortDescription.trim()
         let title = req.body.title.trim()
         let content = req.body.content.trim()
         let bloggerId = req.body.bloggerId
         const newPost = await postsService03.createPost(title,shortDescription,content,bloggerId)
-        validationErrorCreatePosts(req,res,newPost)
+        validationErrorCreatePostsv2(req,res,newPost)
         res.status(newPost.status).send(newPost.newPost)
     })
 
