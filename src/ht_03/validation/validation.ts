@@ -80,9 +80,9 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
         }
         // @ts-ignore
         errorArray = []
-        let status = 404
+        let status = 400
         if(errorArray.length > 0){
-            status = 400
+            status = 404
         }
         return res.status(status).json({errorsMessages:errorsMessages})
     }
