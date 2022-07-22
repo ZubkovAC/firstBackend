@@ -70,18 +70,19 @@ export const validationErrorCreatePostsv2 = (req: Request, res: Response,newPost
     }
 }
 
-export const validationErrorUpdatePosts = (req: Request, res: Response) => {
+export const validationErrorUpdatePosts = (req: Request, res: Response,next:NextFunction) => {
     const error = validationResult(req)
-    if(!error.isEmpty() ){
+    console.log(errorArray)
+    if(!error.isEmpty() || errorArray.length > 0 ){
         const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))
         if(errorArray.length > 0){
             errorsMessages.push(...errorArray)
         }
         // @ts-ignore
         errorArray = []
-        return res.status(400).json({errorsMessages:errorsMessages})
+        return res.status(404).json({errorsMessages:errorsMessages})
     }
-    return res.send(204)
+    next()
 }
 export const validationPostId = async (req: Request, res: Response,next:NextFunction) => {
     let searchPost = await postsCollection.findOne({id:+req.params.id})
