@@ -18,7 +18,8 @@ import {postsService03} from "./service/service-posts";
 
 export const ht_03_Router = Router({})
 
-export let errorArray =[]
+export let errorPostId =[]
+export let errorBloggerId =[]
 
 const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10

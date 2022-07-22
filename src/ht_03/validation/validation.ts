@@ -2,7 +2,7 @@
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {bloggersCollection, postsCollection} from "../db";
-import {errorArray} from "../ht_03";
+import {errorBloggerId, errorPostId} from "../ht_03";
 
 export const validationName15 =
     body('name')
@@ -16,7 +16,6 @@ export const validationYoutubeUrl =
         .isURL()
         .isLength({min:5,max:100})
         .withMessage('must be at least 100 chars long')
-
 
 export const validationShortDescription =
     body('shortDescription')
@@ -72,18 +71,18 @@ export const validationErrorCreatePostsv2 = (req: Request, res: Response,newPost
 
 export const validationErrorUpdatePosts = (req: Request, res: Response,next:NextFunction) => {
     const error = validationResult(req)
-    if(!error.isEmpty() || errorArray.length > 0 ){
+    if(!error.isEmpty() || errorPostId.length > 0 || errorBloggerId.length > 0 ){
         const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))
-        if(errorArray.length > 0){
-            errorsMessages.push(...errorArray)
-        }
-        if(errorArray.length > 0){
+        if(errorBloggerId.length > 0){
+            errorsMessages.push(...errorBloggerId)
             // @ts-ignore
-            errorArray = []
+            errorBloggerId = []
+        }
+        if(errorPostId.length > 0){
+            // @ts-ignore
+            errorPostId = []
             res.send(404)
         }
-        // @ts-ignore
-        errorArray = []
         return res.status(400).json({errorsMessages:errorsMessages})
     }
     next()
@@ -91,14 +90,14 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
 export const validationPostId = async (req: Request, res: Response,next:NextFunction) => {
     let searchPost = await postsCollection.findOne({id:+req.params.id})
     if (searchPost === null){
-        errorArray.push({ message: "non found post ", field: "post" })
+        errorPostId.push({ message: "non found post ", field: "post" })
     }
     next()
 }
 export const validationBloggerId = async (req: Request, res: Response,next:NextFunction) => {
     let searchBlogger =  await bloggersCollection.findOne({id:req.body.bloggerId})
     if (searchBlogger === null){
-        errorArray.push({ message: "non found bloggerId ", field: "bloggerId" })
+        errorBloggerId.push({ message: "non found bloggerId ", field: "bloggerId" })
     }
     next()
 }
