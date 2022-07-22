@@ -69,20 +69,7 @@ export const postsRepositories03 ={
     },
 
     async updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){
-        let searchPost = await postsCollection.findOne({id:postId})
         let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
-        console.log("mongo",searchPost,searchBlogger)
-        const error = {"errorsMessages": [],status:404}
-        if(searchBlogger === null ){
-            error.errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
-        }
-        if(searchPost === null){
-            error.errorsMessages.push({ message: "non found post ", field: "post" })
-        }
-        if(searchBlogger === null || searchPost === null){
-            return error
-        }
-        if(searchPost){
             await postsCollection.updateOne({id:postId},
                 { $set:
                         {   id:postId,
@@ -93,7 +80,5 @@ export const postsRepositories03 ={
                             bloggerName:searchBlogger.name
                         }})
             return {status:204}
-        }
-        return {status:404}
     }
 }

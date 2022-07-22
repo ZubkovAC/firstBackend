@@ -1,6 +1,8 @@
 
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
+import {bloggersCollection, postsCollection} from "../db";
+import {errorArray} from "../ht_03";
 
 export const validationName15 =
     body('name')
@@ -68,19 +70,31 @@ export const validationErrorCreatePostsv2 = (req: Request, res: Response,newPost
     }
 }
 
-export const validationErrorUpdatePosts = (req: Request, res: Response,updatePostId) => {
+export const validationErrorUpdatePosts = (req: Request, res: Response) => {
     const error = validationResult(req)
-    if(!error.isEmpty() || updatePostId.status === 400 || updatePostId.status === 404){
-        if(updatePostId.status === 404){
-            res.send(404)
-            return
-        }
+    if(!error.isEmpty() ){
         const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))
-        if(updatePostId.status === 400){
-            errorsMessages.push(...updatePostId.errorsMessages)
+        if(errorArray.length > 0){
+            errorsMessages.push(...errorArray)
         }
+        // @ts-ignore
+        errorArray = []
         return res.status(400).json({errorsMessages:errorsMessages})
     }
     return res.send(204)
+}
+export const validationPostId = async (req: Request, res: Response,next:NextFunction) => {
+    let searchPost = await postsCollection.findOne({id:+req.params.id})
+    if (searchPost === null){
+        errorArray.push({ message: "non found post ", field: "post" })
+    }
+    next()
+}
+export const validationBloggerId = async (req: Request, res: Response,next:NextFunction) => {
+    let searchBlogger =  await bloggersCollection.findOne({id:req.body.bloggerId})
+    if (searchBlogger === null){
+        errorArray.push({ message: "non found bloggerId ", field: "bloggerId" })
+    }
+    next()
 }
 

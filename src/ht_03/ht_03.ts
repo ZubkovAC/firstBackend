@@ -1,12 +1,13 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {authorizationMiddleware03} from "./authorization-middleware/authorization-middleware03";
 import {
+    validationBloggerId,
     validationContent,
     validationError,
     validationErrorCreatePosts,
     validationErrorCreatePostsv2,
     validationErrorUpdatePosts,
-    validationName15,
+    validationName15, validationPostId,
     validationShortDescription,
     validationTitle,
     validationYoutubeUrl
@@ -16,6 +17,8 @@ import {postsService03} from "./service/service-posts";
 
 
 export const ht_03_Router = Router({})
+
+export let errorArray =[]
 
 const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
@@ -151,18 +154,21 @@ ht_03_Router.put('/api/posts/:id',
     validationShortDescription,
     validationTitle,
     validationContent,
+    validationPostId,
+    validationBloggerId,
+    validationErrorUpdatePosts,
     async (req: Request, res: Response) => {
+            const postId = +req.params.id
+            let shortDescription = req.body.shortDescription.trim()
+            let title = req.body.title.trim()
+            let content = req.body.content.trim()
+            let bloggerId = req.body.bloggerId
 
-        const postId = +req.params.id
-        let shortDescription = req.body.shortDescription.trim()
-        let title = req.body.title.trim()
-        let content = req.body.content.trim()
-        let bloggerId = req.body.bloggerId
-        const updatePostId  = await postsService03.updatePostId(postId,title,content,shortDescription,bloggerId)
-        const result = validationErrorUpdatePosts(req,res,updatePostId)
-        console.log("updatePostId2",updatePostId,result)
-        if(result === undefined && updatePostId.status ===204){
+            const updatePostId  = await postsService03.updatePostId(postId,title,content,shortDescription,bloggerId)
+        if(updatePostId.status === 204){
             res.send(204)
+        }    else {
+            res.send(404)
         }
     })
 
