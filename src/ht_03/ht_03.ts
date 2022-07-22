@@ -55,6 +55,7 @@ ht_03_Router.post('/api/bloggers/:idBlogger/posts',
     validationTitle,
     validationShortDescription,
     validationContent,
+    validationErrorCreatePosts,
     async (req: Request, res: Response) => {
     const postsBlogger = await postsService03.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,+req.params.idBlogger)
     if(postsBlogger.status === 201){
