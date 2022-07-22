@@ -72,18 +72,18 @@ export const validationErrorCreatePostsv2 = (req: Request, res: Response,newPost
 
 export const validationErrorUpdatePosts = (req: Request, res: Response,next:NextFunction) => {
     const error = validationResult(req)
-    console.log(errorArray)
     if(!error.isEmpty() || errorArray.length > 0 ){
         const errorsMessages = error.array().map( err=>({message:err.msg, field:err.param}))
         if(errorArray.length > 0){
             errorsMessages.push(...errorArray)
         }
-        // @ts-ignore
-        errorArray = []
         let status = 400
         if(errorArray.length > 0){
             status = 404
         }
+        console.log('status',errorArray.length,status)
+        // @ts-ignore
+        errorArray = []
         return res.status(status).json({errorsMessages:errorsMessages})
     }
     next()
