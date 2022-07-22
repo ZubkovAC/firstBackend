@@ -72,7 +72,7 @@ export const postsRepositories03 ={
         let searchPost = await postsCollection.findOne({id:postId})
         let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
         console.log("mongo",searchPost,searchBlogger)
-        const error = {"errorsMessages": [],status:404}
+        const error = {"errorsMessages": [],status:400}
         if(searchBlogger === null ){
             error.errorsMessages.push({ message: "non found bloggerId ", field: "bloggerId" })
         }
