@@ -77,14 +77,14 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
         if(errorArray.length > 0){
             errorsMessages.push(...errorArray)
         }
-        let status = 400
         if(errorArray.length > 0){
-            status = 404
+            // @ts-ignore
+            errorArray = []
+            res.send(404)
         }
-        console.log('status',errorArray.length,status)
         // @ts-ignore
         errorArray = []
-        return res.status(status).json({errorsMessages:errorsMessages})
+        return res.status(400).json({errorsMessages:errorsMessages})
     }
     next()
 }
