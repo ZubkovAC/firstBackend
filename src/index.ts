@@ -6,7 +6,9 @@ import {bloggers_01_Router} from "./routes/blogers_01";
 import {hs_01_Router} from "./hs_01v2/hs_01/hs_01";
 import {ht_02_Router} from "./ht_02/ht_02";
 import {ht_03_Router} from "./ht_03/ht_03";
-import {runDb} from "./ht_03/db";
+import {ht_04_Router} from "./ht_04/ht_04";
+// import {runDb} from "./ht_03/db";
+import {runDb} from "./ht_04/db";
 
 
 const express = require('express')
@@ -37,6 +39,7 @@ app.use('/hs_01',bloggers_01_Router)
 app.use('/hs_01v2',hs_01_Router)
 app.use('/ht_02',ht_02_Router)
 app.use('/ht_03',ht_03_Router)
+app.use('/ht_04',ht_04_Router)
 
 const startApp = async () => {
     await runDb()

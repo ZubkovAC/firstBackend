@@ -11,7 +11,7 @@ import {
     validationShortDescription,
     validationTitle,
     validationYoutubeUrl
-} from "./validation/validation";
+} from "../validation/validation";
 import {bloggersServiceDb03} from "./service/service-bloggers";
 import {postsService03} from "./service/service-posts";
 

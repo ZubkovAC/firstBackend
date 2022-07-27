@@ -1,33 +1,7 @@
-import {bloggers} from "./bloggers-repositories03";
-import {bloggersCollection, postsCollection} from "../db";
+import {bloggersCollection, BloggersType, postsCollection} from "../db";
 import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
 
-let posts =[
-    {
-        "id": 1,
-        "title": "newMessage",
-        "shortDescription": "new group 28 may",
-        "content": "sale 20%",
-        "bloggerId": 1,
-        "bloggerName": "Dumich"
-    },{
-        "id": 2,
-        "title": "new Video",
-        "shortDescription": "react 18",
-        "content": "new hooks",
-        "bloggerId": 2,
-        "bloggerName": "it-kamasutra"
-    },{
-        "id": 3,
-        "title": "next js",
-        "shortDescription": "one video project next js",
-        "content": "next js start-end",
-        "bloggerId": 3,
-        "bloggerName": "UlbiTV"
-    },
-]
-
-export const postsRepositories03 ={
+export const postsRepositories04 ={
     async findPosts(pageNumber:number, pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await postsCollection.countDocuments()
@@ -40,7 +14,7 @@ export const postsRepositories03 ={
             items: convertBloggersPosts(postsMongo)
         }
     },
-    async findPostId(postId:number){
+    async findPostId(postId:number)  {
         const post = await postsCollection.findOne({id:postId})
         if(post){
             return {post:convertBloggerPost(post),status:true}

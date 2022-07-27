@@ -1,8 +1,8 @@
 
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {bloggersCollection, postsCollection} from "../db";
-import {errorBloggerId, errorPostId} from "../ht_03";
+import {bloggersCollection, postsCollection} from "../ht_03/db";
+import {errorBloggerId, errorPostId} from "../ht_03/ht_03";
 
 export const validationName15 =
     body('name')
