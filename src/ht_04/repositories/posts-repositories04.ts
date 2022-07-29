@@ -31,7 +31,6 @@ export const postsRepositories04 ={
         if(!searchBlogger && searchBlogger === null){
             return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
         }
-        const idPostComments = uuidv4()
         const newPost = {
             "id": uuidv4(),
             "title": title,
@@ -41,8 +40,6 @@ export const postsRepositories04 ={
             "bloggerName": searchBlogger.name
         }
         await postsCollection.insertOne(newPost)
-        await commentsCollection.insertOne({idPostComment:idPostComments ,postComments:[] })
-        console.log("idPostComments",idPostComments)
         return {newPost:convertBloggerPost(newPost) ,status:201}
     },
 
