@@ -1,17 +1,25 @@
+import {CommentsType} from "../db";
+
 type BloggerMongoType = {
-    id:number
+    id:string
     name:string
     youtubeUrl:string
 }
 type BloggerPostsMongoType = {
-    "id": number
+    "id": string
     "title": string
     "shortDescription": string
     "content": string
-    "bloggerId": number
+    "bloggerId": string
     "bloggerName": string
 }
-
+type PostsCommentsMongoType= {
+    "id": string
+    "content":string
+    "userId": string
+    "userLogin": string
+    "addedAt": string
+}
 export const convertBloggers = (bloggersMongo:Array<BloggerMongoType>) =>{
     return bloggersMongo.map(b =>(convertBlogger(b)))
 }
@@ -42,5 +50,14 @@ export const convertBloggerPost = (bloggerPostMongo:BloggerPostsMongoType) =>{
         "bloggerId": bloggerPostMongo.bloggerId,
         "bloggerName": bloggerPostMongo.bloggerName,
     }
+}
+export const convertPostsComments = (postsCommentsMongo:Array<CommentsType>) =>{
+    return postsCommentsMongo.map(p =>({
+        "id": p.id,
+        "content": p.content,
+        "userId": p.userId,
+        "userLogin": p.userLogin,
+        "addedAt": p.addedAt
+    }))
 }
 

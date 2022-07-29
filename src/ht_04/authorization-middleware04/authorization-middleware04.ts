@@ -5,11 +5,14 @@ import {secret, usersCollection} from "../db";
 
 export const authorizationMiddleware04 = (req: Request, res: Response , next: NextFunction) => {
     let authHeader = req.headers?.authorization
-    const parse = jwt.verify(authHeader.split(" ")[1],secret.key)
-    const userId = usersCollection.find({id:parse.id})
-    if(userId){
-        next()
-        return
+    if(authHeader && authHeader.split(' ')[0] !== "Basic"){
+        const parse = jwt.verify(authHeader.split(" ")[1],secret.key)
+        const userId = usersCollection.findOne({id:parse.id})
+        if(userId){
+            next()
+            return
+        }
     }
     res.send(401)
+    return;
 }

@@ -2,18 +2,18 @@ import {commentsRepositories04} from "../repositories/comments-repositories04";
 
 export const serviceComments04 = {
     async getComments(idComments:string){
-       await commentsRepositories04.getComments(idComments)
+       return await commentsRepositories04.getComments(idComments)
     },
     async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
-       await commentsRepositories04.getCommentsPost(idComments,pageNumber,pageSize)
+      return  await commentsRepositories04.getCommentsPost(idComments,pageNumber,pageSize)
     },
     async createCommentsPost(idComments:string,content:string,token:string){
-       await commentsRepositories04.createCommentsPost(idComments,content,token)
+        return  await commentsRepositories04.createCommentsPost(idComments,content,token)
     },
-    async updateComments(content:string,idComments:string){
-       await commentsRepositories04.updateComments(content,idComments)
+    async updateComments(idComments:string,content:string){
+       return await commentsRepositories04.updateComments(idComments,content)
     },
     async deleteComments(idComments:string){
-       await commentsRepositories04.deleteComments(idComments)
+       return await commentsRepositories04.deleteComments(idComments)
     },
 }

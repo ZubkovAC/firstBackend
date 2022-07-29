@@ -1,8 +1,10 @@
 
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {bloggersCollection, postsCollection} from "../ht_03/db";
+import {bloggersCollection, postsCollection} from "../ht_04/db";
 import {errorBloggerId, errorPostId} from "../ht_03/ht_03";
+
+
 
 export const validationName15 =
     body('name')
@@ -88,7 +90,7 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
     next()
 }
 export const validationPostId = async (req: Request, res: Response,next:NextFunction) => {
-    let searchPost = await postsCollection.findOne({id:+req.params.id})
+    let searchPost = await postsCollection.findOne({id:req.params.id})
     if (searchPost === null){
         errorPostId.push({ message: "non found post ", field: "post" })
     }

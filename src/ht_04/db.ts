@@ -1,16 +1,16 @@
 import {MongoClient} from 'mongodb'
 
 export type BloggersType = {
-    id:number
+    id:string
     name:string
     youtubeUrl:string
 }
 export type PostsType = {
-    "id": number
+    "id": string
     "title": string
     "shortDescription": string
     "content": string
-    "bloggerId": number
+    "bloggerId": string
     "bloggerName": string
 }
 export type UsersType = {
@@ -19,12 +19,14 @@ export type UsersType = {
     password:string
 }
 export type CommentsType = {
+    idPostComment :string
     "id": string
     "content": string
     "userId": string
     "userLogin": string
     "addedAt": string
 }
+
 export type TokenType = {
     token: {
         accessToken:string

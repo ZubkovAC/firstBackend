@@ -1,5 +1,6 @@
-import {bloggersCollection, BloggersType, postsCollection} from "../db";
+import {bloggersCollection, commentsCollection, postsCollection} from "../db";
 import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
+import { v4 as uuidv4 } from 'uuid'
 
 export const postsRepositories04 ={
     async findPosts(pageNumber:number, pageSize:number){
@@ -14,24 +15,25 @@ export const postsRepositories04 ={
             items: convertBloggersPosts(postsMongo)
         }
     },
-    async findPostId(postId:number)  {
+    async findPostId(postId:string)  {
         const post = await postsCollection.findOne({id:postId})
         if(post){
             return {post:convertBloggerPost(post),status:true}
         }
         return {status:false}
     },
-    async deletePostId(postId:number){
+    async deletePostId(postId:string){
         const res = await postsCollection.deleteOne({id:postId})
         return res.deletedCount === 1
     },
-    async createPost(title:string,shortDescription:string,content:string ,bloggerId:number){
+    async createPost(title:string,shortDescription:string,content:string ,bloggerId:string){
         let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
         if(!searchBlogger && searchBlogger === null){
             return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
         }
+        const idPostComments = uuidv4()
         const newPost = {
-            "id": + new Date(),
+            "id": uuidv4(),
             "title": title,
             "shortDescription": shortDescription,
             "content": content,
@@ -39,10 +41,12 @@ export const postsRepositories04 ={
             "bloggerName": searchBlogger.name
         }
         await postsCollection.insertOne(newPost)
+        await commentsCollection.insertOne({idPostComment:idPostComments ,postComments:[] })
+        console.log("idPostComments",idPostComments)
         return {newPost:convertBloggerPost(newPost) ,status:201}
     },
 
-    async updatePostId(postId:number,title:string,content:string,shortDescription:string,bloggerId:number){
+    async updatePostId(postId:string,title:string,content:string,shortDescription:string,bloggerId:string){
         let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
             await postsCollection.updateOne({id:postId},
                 { $set:

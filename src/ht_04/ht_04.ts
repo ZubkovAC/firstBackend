@@ -21,8 +21,8 @@ var jwt = require('jsonwebtoken')
 
 export const ht_04_Router = Router({})
 
-export let errorPostId =[]
-export let errorBloggerId =[]
+export let errorPostId04 =[]
+export let errorBloggerId04 =[]
 
 const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
@@ -57,7 +57,7 @@ ht_04_Router.get('/api/bloggers',
     })
 
 ht_04_Router.get('/api/bloggers/:id',async (req: Request, res: Response) => {
-    const bloggers = await bloggersServiceDb04.findBloggerId(+req.params.id)
+    const bloggers = await bloggersServiceDb04.findBloggerId(req.params.id)
     if(bloggers){
         res.status(200).send(bloggers)
         return
@@ -68,7 +68,7 @@ ht_04_Router.get('/api/bloggers/:id',async (req: Request, res: Response) => {
 ht_04_Router.get('/api/bloggers/:idBloggers/posts',async (req: Request, res: Response) => {
     const pageN = pageNumber(req.query.PageNumber as string)
     const pageS = pageSize(req.query.PageSize as string)
-    const bloggers = await bloggersServiceDb04.findIdBloggerPosts(pageN, pageS,+req.params.idBloggers)
+    const bloggers = await bloggersServiceDb04.findIdBloggerPosts(pageN, pageS,req.params.idBloggers)
     if(bloggers){
         res.status(200).send(bloggers)
         return
@@ -83,7 +83,7 @@ ht_04_Router.post('/api/bloggers/:idBlogger/posts',
     validationContent,
     validationErrorCreatePosts,
     async (req: Request, res: Response) => {
-        const postsBlogger = await postsService04.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,+req.params.idBlogger)
+        const postsBlogger = await postsService04.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
         if(postsBlogger.status === 201){
             res.status(201).send(postsBlogger.newPost)
             return
@@ -110,7 +110,7 @@ ht_04_Router.put('/api/bloggers/:id',
     validationYoutubeUrl,
     validationError,
     async (req: Request, res: Response) => {
-        const id = +req.params.id
+        const id = req.params.id
         const newName = req.body.name
         const newYoutubeUrl = req.body.youtubeUrl
         const updateBlogger = await bloggersServiceDb04.updateBlogger(id,newName,newYoutubeUrl)
@@ -127,7 +127,7 @@ ht_04_Router.put('/api/bloggers/:id',
 ht_04_Router.delete('/api/bloggers/:id',
     authorizationMiddleware04,
     async (req: Request, res: Response) => {
-        const bloggerDeleteId = +req.params.id
+        const bloggerDeleteId = req.params.id
         const removeBlogger = await bloggersServiceDb04.removeBloggerId(bloggerDeleteId)
         if(removeBlogger){
             res.send(204)
@@ -147,7 +147,7 @@ ht_04_Router.get('/api/posts',
     })
 ht_04_Router.get('/api/posts/:id',
     async(req: Request, res: Response) => {
-        const id = +req.params.id
+        const id = req.params.id
         const post = await postsService04.findPostId(id)
         if(post.status){
             res.status(200).send(post.post)
@@ -159,22 +159,25 @@ ht_04_Router.get('/api/posts/:id',
 ht_04_Router.get('/api/posts/:id/comments',
     async(req: Request, res: Response) => {
         const id = req.params.id
-        const commentsPost = await serviceComments04.getCommentsPost(id,+req.query.PageNumber,+req.query.PageSize)
+        const pageN = pageNumber(req.query.PageNumber as string)
+        const pageS = pageSize(req.query.PageSize as string)
+        const commentsPost = await serviceComments04.getCommentsPost(id,pageN,pageS)
         // need validation + fix error ( 404, 400 )
+        console.log(commentsPost)
+        res.status(200).send(commentsPost)
         return;
     })
 
 ht_04_Router.post('/api/posts/:id/comments',
     authorizationMiddleware04,
-    validationShortDescription,
-    validationTitle,
     validationContent,
-    validationErrorCreatePosts,
     async (req: Request, res: Response) => {
         let content = req.body.content.trim()
         const token = req.headers.authorization
-        const newComments = await serviceComments04.createCommentsPost(req.params.id,content,token )
+        const postId = req.params.id
+        const newComments = await serviceComments04.createCommentsPost(postId,content,token )
         // need fix error (401 , 400 , token )
+        console.log("newComments",newComments)
         res.status(201).send(newComments)
     })
 ht_04_Router.post('/api/posts',
@@ -202,12 +205,12 @@ ht_04_Router.put('/api/posts/:id',
     validationBloggerId,
     validationErrorUpdatePosts,
     async (req: Request, res: Response) => {
-        const postId = +req.params.id
+        const postId = req.params.id
         let shortDescription = req.body.shortDescription.trim()
         let title = req.body.title.trim()
         let content = req.body.content.trim()
         let bloggerId = req.body.bloggerId
-
+        console.log('put post',postId,bloggerId)
         const updatePostId  = await postsService04.updatePostId(postId,title,content,shortDescription,bloggerId)
         if(updatePostId.status === 204){
             res.send(204)
@@ -219,7 +222,7 @@ ht_04_Router.put('/api/posts/:id',
 ht_04_Router.delete('/api/posts/:id',
     authorizationMiddleware04,
     async (req: Request, res: Response) => {
-        const postDeleteId = +req.params.id
+        const postDeleteId = req.params.id
         const statusRemovePostId = await postsService04.deletePostId(postDeleteId)
         if(statusRemovePostId){
             res.send(204)
@@ -231,22 +234,28 @@ ht_04_Router.delete('/api/posts/:id',
 
 // /*COMMENTS*/
 ht_04_Router.get('/api/comments/:id',
-    authorizationMiddleware04,
     async (req: Request, res: Response) => {
         const id = req.params.id
         const statusRemovePostId = await serviceComments04.getComments(id)
         // need validation / error 404 400
+        res.status(200).send(statusRemovePostId)
         return;
     })
-ht_04_Router.put('/api/comments/:id',
+ht_04_Router.put('/api/comments/:idComment',
     authorizationMiddleware04,
     async (req: Request, res: Response) => {
-        const id = req.params.id
+        const idComment = req.params.idComment
         const token =req.headers.authorization
-        const updateComment = await serviceComments04.updateComments(id,req.body.content)
+        const updateComment = await serviceComments04.updateComments(idComment,req.body.content)
         // need validation/ token / error 404 400
-        return;
+        if(updateComment){
+            res.send(204)
+            return;
+        }
+        res.send(404)
+        return
     })
+
 ht_04_Router.delete('/api/comments/:id',
     authorizationMiddleware04,
     async (req: Request, res: Response) => {
@@ -266,7 +275,6 @@ ht_04_Router.get('/api/users',
         return;
     })
 ht_04_Router.post('/api/users',
-    // authorizationMiddleware04,
     async (req: Request, res: Response) => {
         const login = req.body.login
         const password = req.body.password
