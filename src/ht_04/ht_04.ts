@@ -276,6 +276,7 @@ ht_04_Router.get('/api/users',
         return;
     })
 ht_04_Router.post('/api/users',
+    authorizationMiddleware03,
     async (req: Request, res: Response) => {
         const login = req.body.login
         const password = req.body.password
@@ -286,7 +287,7 @@ ht_04_Router.post('/api/users',
         return;
     })
 ht_04_Router.delete('/api/users/:id',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     async (req: Request, res: Response) => {
         const id = req.params.id
         let authHeader = req.headers?.authorization
