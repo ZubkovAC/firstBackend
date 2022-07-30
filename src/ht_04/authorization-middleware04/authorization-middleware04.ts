@@ -5,7 +5,7 @@ import {secret, usersCollection} from "../db";
 
 export const authorizationMiddleware04 = (req: Request, res: Response , next: NextFunction) => {
     let authHeader = req.headers?.authorization
-    console.log("authHeader04",authHeader)
+    // console.log("authHeader04",authHeader)
     if(authHeader && authHeader.split(' ')[0] !== "Basic"){
         const parse = jwt.verify(authHeader.split(" ")[1],secret.key)
         const userId = usersCollection.findOne({id:parse.id})
