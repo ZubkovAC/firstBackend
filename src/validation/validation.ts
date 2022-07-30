@@ -108,9 +108,9 @@ export const validationLogin3_10 =
     body('login')
         .trim()
         .isLength({min:3,max:10})
-        .withMessage('must be at least 10 chars long')
+        .withMessage('must be at least 10 chars long login')
 export const validationPassword6_20 =
-    body('login')
+    body('password')
         .trim()
         .isLength({min:6,max:20})
-        .withMessage('must be at least 20 chars long')
+        .withMessage('must be at least 20 chars long password')
