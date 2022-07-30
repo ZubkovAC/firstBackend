@@ -36,7 +36,10 @@ export const usersRepositories04 ={
         }
         await usersCollection.insertOne(newUser)
         // await tokensCollection.insertOne({token:{accessToken:password, refreshToken:password}})
-        return 'test create User'
+        return {
+            id: idUser,
+            login:login
+        }
     },
     async deleteUser (idUser:string){
         await usersCollection.deleteOne({id:idUser})
