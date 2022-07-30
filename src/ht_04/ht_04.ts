@@ -282,9 +282,9 @@ ht_04_Router.post('/api/users',
     validationPassword6_20,
     validationErrorCreatePosts,
     async (req: Request, res: Response) => {
-        const login = req.body.login
-        const password = req.body.password
-        console.log('body - create user',login,password)
+        const login = req.body.login.trim()
+        const password = req.body.password.trim()
+        console.log('body - create user',login +'_!!!',password+'_!!!!')
         const users = await serviceUser04.createUsers(login,password)
         res.send(204)
         // need validation - id/ token / error 404 400
