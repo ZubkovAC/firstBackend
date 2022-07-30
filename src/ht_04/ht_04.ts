@@ -271,6 +271,7 @@ ht_04_Router.get('/api/users',
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
         const users = await serviceUser04.getUsers(pageN,pageS)
+        console.log('getUsers',users)
         res.send(users)
         // need validation - id/ token / error 404 400
         return;
