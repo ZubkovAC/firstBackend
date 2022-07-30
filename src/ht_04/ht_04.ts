@@ -282,7 +282,7 @@ ht_04_Router.post('/api/users',
         const password = req.body.password
         console.log('body',login,password)
         const users = await serviceUser04.createUsers(login,password)
-        res.send(users)
+        res.send(204)
         // need validation - id/ token / error 404 400
         return;
     })
@@ -290,9 +290,7 @@ ht_04_Router.delete('/api/users/:id',
     authorizationMiddleware03,
     async (req: Request, res: Response) => {
         const id = req.params.id
-        let authHeader = req.headers?.authorization
-        const parse = jwt.verify(authHeader.split(" ")[1],secret.key)
-        const userId = usersCollection.find({id:parse.id})
+        const userId = await serviceUser04.findUserId(id)
         if(userId){
             const users = await serviceUser04.deleteUsers(id)
             res.send(204)
@@ -302,6 +300,7 @@ ht_04_Router.delete('/api/users/:id',
         // need validation - id/ token / error 404 400
         return;
     })
+
 
 
 

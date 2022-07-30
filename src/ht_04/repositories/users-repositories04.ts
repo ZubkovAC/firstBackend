@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 export const usersRepositories04 ={
+    async findUserId(userId:string){
+        return await usersCollection.findOne({id:userId})
+    },
     async getUsers(pageNumber: number, pageSize: number) {
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await usersCollection.countDocuments()

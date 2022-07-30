@@ -1,6 +1,9 @@
 import {usersRepositories04} from "../repositories/users-repositories04";
 
 export const serviceUser04 ={
+    async findUserId(userId:string){
+        return  await usersRepositories04.findUserId(userId)
+    },
     async getUsers(pageNumber:number, pageSize:number){
        return  await usersRepositories04.getUsers(pageNumber,pageSize)
     },
