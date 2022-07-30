@@ -285,7 +285,7 @@ ht_04_Router.post('/api/users',
         const login = req.body.login.trim()
         const password = req.body.password.trim()
         const users = await serviceUser04.createUsers(login,password)
-        res.status(204).send(users)
+        res.status(201).send(users)
         // need validation - id/ token / error 404 400
         return;
     })
@@ -295,7 +295,7 @@ ht_04_Router.delete('/api/users/:id',
         const id = req.params.id
         const userId = await serviceUser04.findUserId(id)
         if(userId){
-            const users = await serviceUser04.deleteUsers(id)
+            await serviceUser04.deleteUsers(id)
             res.send(204)
             return
         }
