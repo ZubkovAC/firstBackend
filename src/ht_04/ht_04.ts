@@ -78,7 +78,7 @@ ht_04_Router.get('/api/bloggers/:idBloggers/posts',async (req: Request, res: Res
     return
 })
 ht_04_Router.post('/api/bloggers/:idBlogger/posts',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     validationTitle,
     validationShortDescription,
     validationContent,
