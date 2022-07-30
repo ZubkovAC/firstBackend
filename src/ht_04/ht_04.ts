@@ -17,6 +17,7 @@ import {postsService04} from "./service/service-posts";
 import {serviceUser04} from "./service/service-user";
 import {serviceComments04} from "./service/service-comments";
 import {secret, usersCollection} from "./db";
+import {authorizationMiddleware03} from "../ht_03/authorization-middleware/authorization-middleware03";
 var jwt = require('jsonwebtoken')
 
 export const ht_04_Router = Router({})
@@ -93,7 +94,7 @@ ht_04_Router.post('/api/bloggers/:idBlogger/posts',
     })
 
 ht_04_Router.post('/api/bloggers',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     validationName15,
     validationYoutubeUrl,
     validationError,
@@ -105,7 +106,7 @@ ht_04_Router.post('/api/bloggers',
     })
 
 ht_04_Router.put('/api/bloggers/:id',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     validationName15,
     validationYoutubeUrl,
     validationError,
@@ -125,7 +126,7 @@ ht_04_Router.put('/api/bloggers/:id',
     })
 
 ht_04_Router.delete('/api/bloggers/:id',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     async (req: Request, res: Response) => {
         const bloggerDeleteId = req.params.id
         const removeBlogger = await bloggersServiceDb04.removeBloggerId(bloggerDeleteId)
@@ -181,7 +182,7 @@ ht_04_Router.post('/api/posts/:id/comments',
         res.status(201).send(newComments)
     })
 ht_04_Router.post('/api/posts',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     validationShortDescription,
     validationTitle,
     validationContent,
@@ -197,7 +198,7 @@ ht_04_Router.post('/api/posts',
     })
 
 ht_04_Router.put('/api/posts/:id',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     validationShortDescription,
     validationTitle,
     validationContent,
@@ -220,7 +221,7 @@ ht_04_Router.put('/api/posts/:id',
     })
 
 ht_04_Router.delete('/api/posts/:id',
-    authorizationMiddleware04,
+    authorizationMiddleware03,
     async (req: Request, res: Response) => {
         const postDeleteId = req.params.id
         const statusRemovePostId = await postsService04.deletePostId(postDeleteId)
