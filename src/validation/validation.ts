@@ -104,3 +104,13 @@ export const validationBloggerId = async (req: Request, res: Response,next:NextF
     next()
 }
 
+export const validationLogin3_10 =
+    body('login')
+        .trim()
+        .isLength({min:3,max:10})
+        .withMessage('must be at least 10 chars long')
+export const validationPassword6_20 =
+    body('login')
+        .trim()
+        .isLength({min:6,max:20})
+        .withMessage('must be at least 20 chars long')

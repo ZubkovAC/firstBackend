@@ -6,8 +6,8 @@ import {
     validationError,
     validationErrorCreatePosts,
     validationErrorCreatePostsv2,
-    validationErrorUpdatePosts,
-    validationName15, validationPostId,
+    validationErrorUpdatePosts, validationLogin3_10,
+    validationName15, validationPassword6_20, validationPostId,
     validationShortDescription,
     validationTitle,
     validationYoutubeUrl
@@ -277,6 +277,9 @@ ht_04_Router.get('/api/users',
     })
 ht_04_Router.post('/api/users',
     authorizationMiddleware03,
+    validationLogin3_10,
+    validationPassword6_20,
+    validationErrorCreatePosts,
     async (req: Request, res: Response) => {
         const login = req.body.login
         const password = req.body.password
