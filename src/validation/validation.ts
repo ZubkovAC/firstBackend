@@ -48,6 +48,17 @@ export const validationError = (req: Request, res: Response, next:NextFunction) 
     next()
     return
 }
+export const validationErrorAuth = (req: Request, res: Response, next:NextFunction) => {
+    const error = validationResult(req)
+    if(!error.isEmpty()){
+        return res.status(401)
+            .json({errorsMessages:error
+                    .array({onlyFirstError:true})
+                    .map( err=>({message:err.msg, field:err.param}))})
+    }
+    next()
+    return
+}
 
 
 export const validationErrorCreatePosts = (req: Request, res: Response,next:NextFunction) => {

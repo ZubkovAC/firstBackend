@@ -3,7 +3,7 @@ import {authorizationMiddleware04} from "./authorization-middleware04/authorizat
 import {
     validationBloggerId,
     validationContent,
-    validationError,
+    validationError, validationErrorAuth,
     validationErrorCreatePosts,
     validationErrorCreatePostsv2,
     validationErrorUpdatePosts, validationLogin3_10,
@@ -33,7 +33,8 @@ const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 ht_04_Router.post('/api/auth/login',
     validationLogin3_10,
     validationPassword6_20,
-    validationError,
+    // validationError,
+    validationErrorAuth,
     async (req: Request, res: Response) => {
         // const parse = jwt.verify(test,secret.key)
         const login = req.body.login.trim()
