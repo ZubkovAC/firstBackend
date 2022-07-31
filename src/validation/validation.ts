@@ -1,8 +1,10 @@
 
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {bloggersCollection, postsCollection} from "../ht_04/db";
+import {bloggersCollection, commentsCollection, postsCollection, secret, usersCollection} from "../ht_04/db";
 import {errorBloggerId, errorPostId} from "../ht_03/ht_03";
+import {serviceComments04} from "../ht_04/service/service-comments";
+var jwt = require('jsonwebtoken')
 
 
 
@@ -36,6 +38,12 @@ export const validationContent =
         .trim()
         .isLength({min:5,max:1000})
         .withMessage('must be at least 1000 chars long')
+
+export const validationContent20_300 =
+    body('content')
+        .trim()
+        .isLength({min:5,max:300})
+        .withMessage('validationContent must be at least 300 chars long')
 
 export const validationError = (req: Request, res: Response, next:NextFunction) => {
     const error = validationResult(req)
@@ -125,3 +133,33 @@ export const validationPassword6_20 =
         .trim()
         .isLength({min:6,max:20})
         .withMessage('must be at least 20 chars long password')
+
+export const validatorFindCommentId = async (req: Request, res: Response,next:NextFunction) => {
+    const commentsId = await commentsCollection.findOne({id:req.params.id})
+    if(commentsId){
+        next()
+        return
+    }
+    res.send(404)
+    return
+}
+export const validatorAccessUserCommentId = async (req: Request, res: Response,next:NextFunction) => {
+    let authHeader = req.headers?.authorization
+    if(authHeader && authHeader.split(' ')[0] !== "Basic"){
+        const parse = jwt.verify(authHeader.split(" ")[1],secret.key)
+        const userId = await usersCollection.findOne({id:parse.id})
+        const commentsId = await commentsCollection.findOne({id:req.params.id})
+        if(userId.id === commentsId.userId){
+            next()
+            return
+        }
+        res.send(403)
+        return
+        // if(userId === commentsId.userId){
+        //     next()
+        //     return
+        // }
+    }
+}
+
+

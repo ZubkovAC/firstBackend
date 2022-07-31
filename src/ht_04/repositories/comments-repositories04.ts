@@ -8,7 +8,6 @@ export const commentsRepositories04 ={
     // async getComments(idComments:string): Promise<{id:string,content:string,userId:string,userLogin:string,addedAt:string}> {
     async getComments(idComments:string){
         const commentsId = await commentsCollection.findOne({id:idComments})
-        console.log("idComments",idComments)
         return {
             "id":commentsId.id,
             "content": commentsId.content,
@@ -36,7 +35,6 @@ export const commentsRepositories04 ={
     async createCommentsPost(idPosts:string,content:string,token:string){
         const parse = jwt.verify(token.split(" ")[1],secret.key)
         const userId = await usersCollection.findOne({id:parse.id})
-        console.log("idPosts",idPosts)
         // const searchCommentsPost = await usersCollection.findOne({idPost:parse.id})
         const newCommentPost ={
             idPostComment: idPosts ,
@@ -46,7 +44,6 @@ export const commentsRepositories04 ={
             "userLogin": userId.login,
             "addedAt": new Date().toISOString()
         }
-        console.log("newCommentPost",newCommentPost)
         await commentsCollection.insertOne(newCommentPost)
         return {
             "id":newCommentPost.id,
@@ -57,7 +54,6 @@ export const commentsRepositories04 ={
         }
     },
     async updateComments(idComments:string,content:string){
-        console.log('update', idComments,content)
         const res = await commentsCollection.updateOne({id:idComments},{ $set:{content:content}})
         return res.matchedCount===1
     },

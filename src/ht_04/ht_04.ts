@@ -2,7 +2,7 @@ import { Request, Response, Router} from "express";
 import {authorizationMiddleware04} from "./authorization-middleware04/authorization-middleware04";
 import {
     validationBloggerId,
-    validationContent,
+    validationContent, validationContent20_300,
     validationError, validationErrorAuth,
     validationErrorCreatePosts,
     validationErrorCreatePostsv2,
@@ -10,7 +10,7 @@ import {
     validationName15, validationPassword6_20, validationPostId,
     validationShortDescription,
     validationTitle,
-    validationYoutubeUrl
+    validationYoutubeUrl, validatorAccessUserCommentId, validatorFindCommentId
 } from "../validation/validation";
 import {bloggersServiceDb04} from "./service/service-bloggers";
 import {postsService04} from "./service/service-posts";
@@ -238,18 +238,22 @@ ht_04_Router.delete('/api/posts/:id',
 
 // /*COMMENTS*/
 ht_04_Router.get('/api/comments/:id',
+    validatorFindCommentId,
     async (req: Request, res: Response) => {
         const id = req.params.id
         const statusRemovePostId = await serviceComments04.getComments(id)
         // need validation / error 404 400
+        console.log("statusRemovePostId",statusRemovePostId)
         res.status(200).send(statusRemovePostId)
         return;
     })
-ht_04_Router.put('/api/comments/:idComment',
+ht_04_Router.put('/api/comments/:id',
     authorizationMiddleware04,
+    validationContent20_300,
+    validatorFindCommentId,
+    validatorAccessUserCommentId,
     async (req: Request, res: Response) => {
-        const idComment = req.params.idComment
-        const token =req.headers.authorization
+        const idComment = req.params.id
         const updateComment = await serviceComments04.updateComments(idComment,req.body.content)
         // need validation/ token / error 404 400
         if(updateComment){
@@ -262,10 +266,13 @@ ht_04_Router.put('/api/comments/:idComment',
 
 ht_04_Router.delete('/api/comments/:id',
     authorizationMiddleware04,
+    validatorFindCommentId,
+    validatorAccessUserCommentId,
     async (req: Request, res: Response) => {
         const id = req.params.id
         const statusRemovePostId = await serviceComments04.deleteComments(id)
         // need validation - id/ token / error 404 400
+        res.send(204)
         return;
     })
 // USERS
