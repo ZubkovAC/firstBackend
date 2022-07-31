@@ -114,6 +114,7 @@ export const validationPostId = async (req: Request, res: Response,next:NextFunc
         errorPostId.push({ message: "non found post ", field: "post" })
     }
     next()
+    return
 }
 export const validationBloggerId = async (req: Request, res: Response,next:NextFunction) => {
     let searchBlogger =  await bloggersCollection.findOne({id:req.body.bloggerId})

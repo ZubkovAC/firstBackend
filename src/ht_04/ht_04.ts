@@ -175,7 +175,10 @@ ht_04_Router.get('/api/posts/:id/comments',
 
 ht_04_Router.post('/api/posts/:id/comments',
     authorizationMiddleware04,
-    validationContent,
+    validationContent20_300,
+    validationErrorCreatePosts,
+    validationPostId,
+    validationErrorUpdatePosts,
     async (req: Request, res: Response) => {
         let content = req.body.content.trim()
         const token = req.headers.authorization
@@ -253,6 +256,7 @@ ht_04_Router.put('/api/comments/:id',
     validationContent20_300,
     validatorFindCommentId,
     validatorAccessUserCommentId,
+    validationErrorCreatePosts, // ????
     async (req: Request, res: Response) => {
         const idComment = req.params.id
         const updateComment = await serviceComments04.updateComments(idComment,req.body.content)
