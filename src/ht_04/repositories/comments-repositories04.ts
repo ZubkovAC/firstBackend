@@ -5,6 +5,7 @@ import {convertPostsComments} from "../convert/convert";
 var jwt = require('jsonwebtoken')
 
 export const commentsRepositories04 ={
+    // async getComments(idComments:string): Promise<{id:string,content:string,userId:string,userLogin:string,addedAt:string}> {
     async getComments(idComments:string){
         const commentsId = await commentsCollection.findOne({id:idComments})
         console.log("idComments",idComments)

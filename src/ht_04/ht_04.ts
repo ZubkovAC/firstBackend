@@ -29,21 +29,22 @@ const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
 const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 
-
-
 // LOGIN
 ht_04_Router.post('/api/auth/login',
+    validationLogin3_10,
+    validationPassword6_20,
+    validationError,
     async (req: Request, res: Response) => {
         // const parse = jwt.verify(test,secret.key)
         const login = req.body.login
         const password = req.body.password
         const searchLogin = await usersCollection.findOne({login:login})
-        if(searchLogin.password === password){
+        if(searchLogin && searchLogin.password === password){
             const token = jwt.sign({id:searchLogin.id},secret.key,{expiresIn:'1h'})
             res.status(200).send({token:token})
             return
         }
-        res.send(400)
+        res.status(401).send('If the password or login is wrong')
         return
     })
 
@@ -303,6 +304,8 @@ ht_04_Router.delete('/api/users/:id',
         // need validation - id/ token / error 404 400
         return;
     })
+
+
 
 
 
