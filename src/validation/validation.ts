@@ -42,7 +42,7 @@ export const validationContent =
 export const validationContent20_300 =
     body('content')
         .trim()
-        .isLength({min:5,max:300})
+        .isLength({min:20,max:300})
         .withMessage('validationContent must be at least 300 chars long')
 
 export const validationError = (req: Request, res: Response, next:NextFunction) => {
@@ -136,6 +136,7 @@ export const validationPassword6_20 =
 
 export const validatorFindCommentId = async (req: Request, res: Response,next:NextFunction) => {
     const commentsId = await commentsCollection.findOne({id:req.params.id})
+    console.log("commentsId",commentsId)
     if(commentsId){
         next()
         return
@@ -160,6 +161,16 @@ export const validatorAccessUserCommentId = async (req: Request, res: Response,n
         //     return
         // }
     }
+}
+export const validatorPostIdComments = async (req: Request, res: Response,next:NextFunction) => {
+    const allCommentsPost = await commentsCollection.find({idPostComment:req.params.id}).toArray()
+    console.log("allCommentsPost",allCommentsPost)
+    if(allCommentsPost.length>0){
+        next()
+        return
+    }
+    res.send(404)
+    return
 }
 
 

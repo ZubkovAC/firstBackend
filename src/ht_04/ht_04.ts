@@ -10,7 +10,7 @@ import {
     validationName15, validationPassword6_20, validationPostId,
     validationShortDescription,
     validationTitle,
-    validationYoutubeUrl, validatorAccessUserCommentId, validatorFindCommentId
+    validationYoutubeUrl, validatorAccessUserCommentId, validatorFindCommentId, validatorPostIdComments
 } from "../validation/validation";
 import {bloggersServiceDb04} from "./service/service-bloggers";
 import {postsService04} from "./service/service-posts";
@@ -161,6 +161,7 @@ ht_04_Router.get('/api/posts/:id',
         return;
     })
 ht_04_Router.get('/api/posts/:id/comments',
+    validatorPostIdComments,
     async(req: Request, res: Response) => {
         const id = req.params.id
         const pageN = pageNumber(req.query.PageNumber as string)
