@@ -36,8 +36,9 @@ ht_04_Router.post('/api/auth/login',
     validationError,
     async (req: Request, res: Response) => {
         // const parse = jwt.verify(test,secret.key)
-        const login = req.body.login
-        const password = req.body.password
+        const login = req.body.login.trim()
+        const password = req.body.password.trim()
+        console.log("~~~AUTH~~~~~",login,password)
         const searchLogin = await usersCollection.findOne({login:login})
         if(searchLogin && searchLogin.password === password){
             const token = jwt.sign({id:searchLogin.id},secret.key,{expiresIn:'1h'})
