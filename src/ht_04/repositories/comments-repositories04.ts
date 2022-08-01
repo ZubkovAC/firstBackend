@@ -34,7 +34,7 @@ export const commentsRepositories04 ={
     },
     async createCommentsPost(idPosts:string,content:string,token:string){
         const parse = jwt.verify(token.split(" ")[1],secret.key)
-        const userId = await usersCollection.findOne({idComments:parse.id})
+        const userId = await usersCollection.findOne({id:parse.id})
         // const searchCommentsPost = await usersCollection.findOne({idPost:parse.id})
         const newCommentPost ={
             idPostComment: idPosts ,
@@ -64,4 +64,5 @@ export const commentsRepositories04 ={
         return  await commentsCollection.deleteOne({id:idComments})
     }
 }
+
 
