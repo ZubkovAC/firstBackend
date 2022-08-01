@@ -58,7 +58,7 @@ export const commentsRepositories04 ={
         return res.matchedCount===1
     },
     async deleteComments(idComments:string){
-        await commentsCollection.deleteOne({id:idComments})
+        return  await commentsCollection.deleteOne({id:idComments})
     }
 }
 
