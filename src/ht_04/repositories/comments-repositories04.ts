@@ -1,4 +1,4 @@
-import {commentsCollection, secret, usersCollection} from "../db";
+import {commentsCollection, createCommentsCollection, deleteCommentsCollection, secret, usersCollection} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {convertPostsComments} from "../convert/convert";
 // import jwt from "jsonwebtoken";
@@ -34,7 +34,7 @@ export const commentsRepositories04 ={
     },
     async createCommentsPost(idPosts:string,content:string,token:string){
         const parse = jwt.verify(token.split(" ")[1],secret.key)
-        const userId = await usersCollection.findOne({id:parse.id})
+        const userId = await usersCollection.findOne({idComments:parse.id})
         // const searchCommentsPost = await usersCollection.findOne({idPost:parse.id})
         const newCommentPost ={
             idPostComment: idPosts ,
@@ -45,6 +45,7 @@ export const commentsRepositories04 ={
             "addedAt": new Date().toISOString()
         }
         await commentsCollection.insertOne(newCommentPost)
+        await createCommentsCollection.insertOne(newCommentPost)
         return {
             "id":newCommentPost.id,
             "content": newCommentPost.content,
@@ -58,6 +59,8 @@ export const commentsRepositories04 ={
         return res.matchedCount===1
     },
     async deleteComments(idComments:string){
+        await  deleteCommentsCollection.insertOne({id:idComments})
+        console.log("!!!!PSOS!!!!!",idComments)
         return  await commentsCollection.deleteOne({id:idComments})
     }
 }

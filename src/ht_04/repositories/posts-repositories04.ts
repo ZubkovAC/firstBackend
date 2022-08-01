@@ -1,4 +1,4 @@
-import {bloggersCollection, commentsCollection, postsCollection} from "../db";
+import {bloggersCollection, commentsCollection, deleteCommentsCollection, postsCollection} from "../db";
 import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
 

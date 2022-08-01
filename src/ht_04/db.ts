@@ -49,7 +49,8 @@ export const bloggersCollection = db.collection<BloggersType>('bloggers')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<UsersType>('users')
 export const commentsCollection = db.collection<CommentsType>('comments')
-export const tokensCollection = db.collection<TokenType>('tokens')
+export const createCommentsCollection = db.collection<any>('createComments')
+export const deleteCommentsCollection = db.collection<any>('deleteComments')
 
 export async function runDb(){
     try{
