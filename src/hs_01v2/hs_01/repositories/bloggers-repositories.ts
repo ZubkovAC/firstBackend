@@ -37,7 +37,6 @@ export const bloggersRepositories = {
             return true
         }
         return false
-
     },
     createBlogger(name:string, youtubeUrl:string){
         const newVideo = {

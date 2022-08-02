@@ -164,9 +164,9 @@ export const validatorAccessUserCommentId = async (req: Request, res: Response,n
     }
 }
 export const validatorPostIdComments = async (req: Request, res: Response,next:NextFunction) => {
-    const allCommentsPost = await commentsCollection.find({idPostComment:req.params.id}).toArray()
+    const allCommentsPost = await postsCollection.find({idPostComment:req.params.id}).toArray()
     console.log("allCommentsPost",allCommentsPost)
-    if(allCommentsPost.length>0){
+    if(allCommentsPost){
         next()
         return
     }
