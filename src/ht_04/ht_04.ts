@@ -166,11 +166,16 @@ ht_04_Router.get('/api/posts/:id/comments',
         const id = req.params.id
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
-        const commentsPost = await serviceComments04.getCommentsPost(id,pageN,pageS)
-        // need validation + fix error ( 404, 400 )
-        console.log(commentsPost)
-        res.status(200).send(commentsPost)
-        return;
+        const post = await postsService04.findPostId(id)
+        console.log("post",post)
+        if(post.status){
+            const commentsPost = await serviceComments04.getCommentsPost(id,pageN,pageS)
+            // need validation + fix error ( 404, 400 )
+            console.log(commentsPost)
+            res.status(200).send(commentsPost)
+            return;
+        }
+        res.send(404)
     })
 
 ht_04_Router.post('/api/posts/:id/comments',
