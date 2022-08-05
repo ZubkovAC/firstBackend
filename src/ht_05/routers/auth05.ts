@@ -1,9 +1,9 @@
 import {Request, Response, Router} from "express";
 import {validationErrorAuth, validationLogin3_10, validationPassword6_20} from "../../validation/validation";
 import {secret, usersCollection} from "../db";
-const nodemailer = require("nodemailer")
-
+var nodemailer = require("nodemailer")
 var jwt = require('jsonwebtoken')
+
 
 export const RouterAuth05 = Router({})
 
