@@ -1,18 +1,37 @@
 import {Request, Response, Router} from "express";
 import {validationErrorAuth, validationLogin3_10, validationPassword6_20} from "../../validation/validation";
 import {secret, usersCollection} from "../db";
+import nodemailer from 'nodemailer'
 var jwt = require('jsonwebtoken')
 
 export const RouterAuth05 = Router({})
 
 RouterAuth05.post("/registration-confirmation",
     async (req, res) => {
-        res.send('registration-confirmation')
+        res.send(`registration-confirmation + ${process.env.EMAIL} + ${process.env.PASSWORD}`)
         return
 
 })
 RouterAuth05.post("/registration",
     async (req, res) => {
+    const login = req.body.login
+    const password = req.body.password
+    const email = req.body.email
+        let transporter = nodemailer.createTransport({
+            service:"gmail",
+            // secure: false, // true for 465, false for other ports
+            auth: {
+                user: process.env.EMAIL, // generated ethereal user
+                pass:  process.env.PASSWORD, // generated ethereal password
+            },
+        });
+        let info = await transporter.sendMail({
+            from: '"Fred Foo 👻" <foo@example.com>', // sender address
+            to: `${process.env.EMAIL}`, // list of receivers
+            subject: "Registration ✔", // Subject line
+            text: "Access Email", // plain text body
+            html: "<b>Hello world?</b>", // html body
+        });
             res.send('registration')
             return
 })
