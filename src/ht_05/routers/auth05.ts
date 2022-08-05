@@ -27,7 +27,7 @@ RouterAuth05.post("/registration",
             },
         });
         let info = await transporter.sendMail({
-            from: '1233312', // sender address
+            from: 'Me-me', // sender address
             to: '3y6kob90@gmail.com', // list of receivers
             subject: "Registration ✔", // Subject line
             text: "Access Email", // plain text body
