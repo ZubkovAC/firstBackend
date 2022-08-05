@@ -1,3 +1,4 @@
+require('dotenv').config()
 import {productsRouter} from "./routes/products-router";
 import {addressesRouter} from "./routes/addresses-router";
 import {videosRouter} from "./routes/videos-router";
@@ -17,7 +18,6 @@ import {RouterComments05} from "./ht_05/routers/routerComments05";
 import { RouterTesting05 } from "./ht_05/routers/routerTesting05";
 import { RouterUsers05 } from "./ht_05/routers/routerUsers05";
 
-
 const express = require('express')
 const cors = require('cors')
 // const bodyParser = require('body-parser')
@@ -25,19 +25,19 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 5000
 
+
 app.use(cors())
 
 app.use(express.json())
 
 app.get('/', (req, res) => {
-    let helloWorldWORLD11 = 'Hello World! WORLD!';
+    let helloWorldWORLD11 = 'Hello World! WORLD!'
     res.send(helloWorldWORLD11)
 })
 
 app.use('/videos',videosRouter)
 app.use('/products',productsRouter)
 app.use('/addresses',addressesRouter)
-
 
 app.use('/lesson_01',lesson_01_Router)
 app.use('/hs_01',bloggers_01_Router)
@@ -52,8 +52,6 @@ app.use('/ht_05/api/comments',RouterComments05)
 app.use('/ht_05/api/posts',RouterPosts05)
 app.use('/ht_05/api/testing',RouterTesting05)
 app.use('/ht_05/api/users',RouterUsers05)
-
-
 
 const startApp = async () => {
     await runDb()

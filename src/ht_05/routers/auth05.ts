@@ -11,6 +11,7 @@ RouterAuth05.post("/registration-confirmation",
         res.send(`registration-confirmation + ${process.env.EMAIL} + ${process.env.PASSWORD}`)
         return
 })
+
 RouterAuth05.post("/registration",
     async (req, res) => {
     const login = req.body.login

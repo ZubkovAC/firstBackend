@@ -33,12 +33,10 @@ export type TokenType = {
         refreshToken:string
     }
 }
-// const mongoUri = process.env.mongoURI || 'mongodb://0.0.0.0:27017'
-// const mongoUri = "mongodb+srv://ZybkovAC:KalxotXic2bEZh4R@cluster0.ywntv.mongodb.net/expample?retryWrites=true&w=majority" || 'mongodb://0.0.0.0:27017'
-const mongoUri = "mongodb+srv://ZybkovAC:u2fvwZGQ60wsUru2@cluster0.ywntv.mongodb.net/expample" || 'mongodb://0.0.0.0:27017'
+const mongoUri = process.env.MONGO_DB || 'mongodb://0.0.0.0:27017'
 
 export const secret = {
-    key :'123'
+    key : process.env.SECRET_KEY || '123'
 }
 
 export const client = new MongoClient(mongoUri)
