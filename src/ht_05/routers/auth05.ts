@@ -3,18 +3,20 @@ import {validationErrorAuth, validationLogin3_10, validationPassword6_20} from "
 import {secret, usersCollection} from "../db";
 var nodemailer = require("nodemailer")
 var jwt = require('jsonwebtoken')
-
+const requestIp = require('request-ip')
 
 export const RouterAuth05 = Router({})
 
 RouterAuth05.post("/registration-confirmation",
     async (req, res) => {
-        res.send(`registration-confirmation + ${process.env.EMAIL} + ${process.env.PASSWORD}`)
+        const clientIp = requestIp.getClientIp(req)
+        res.send(`IP-IP +  ${clientIp} `)
         return
     })
 
 RouterAuth05.post("/registration",
     async (req, res) => {
+
         const login = req.body.login
         const password = req.body.password
         const email = req.body.email
@@ -28,10 +30,10 @@ RouterAuth05.post("/registration",
         });
         let info = await transporter.sendMail({
             from: 'Me-me', // sender address
-            to: '3y6kob90@gmail.com', // list of receivers
+            to: email, // list of receivers
             subject: "Registration ✔", // Subject line
             text: "Access Email", // plain text body
-            html: "<b>Hello world?</b>", // html body
+            html: "https://ferst-back.herokuapp.com/ht_05/api/auth/confirm-registration?code=youtcodehere", // html body
         });
         console.log('info-registration',info)
         res.send({
