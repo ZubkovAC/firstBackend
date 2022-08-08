@@ -54,7 +54,7 @@ export const secret = {
 export const client = new MongoClient(mongoUri)
 
 // let db = client.db('video');
-let db = client.db('expample');
+export let db = client.db('expample');
 export const bloggersCollection = db.collection<BloggersType>('bloggers')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<UsersType>('users')
