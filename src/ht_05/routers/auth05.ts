@@ -45,8 +45,8 @@ RouterAuth05.post("/registration",
     validationPassword6_20,
     validationEmail,
     validationError,
-    // validationFindEmail,
-    // validationFindLogin,
+    validationFindEmail,
+    validationFindLogin,
     validationEmailPattern,
     async (req, res) => {
 
