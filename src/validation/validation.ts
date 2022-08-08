@@ -1,4 +1,6 @@
+import {CountRepositories05} from "../ht_05/repositories/count-repositories05";
 
+const requestIp = require('request-ip')
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {bloggersCollection, commentsCollection, postsCollection, secret, usersCollection} from "../ht_04/db";
@@ -134,6 +136,11 @@ export const validationPassword6_20 =
         .trim()
         .isLength({min:6,max:20})
         .withMessage('must be at least 20 chars long password')
+export const validationEmail =
+    body('email')
+        .trim()
+        .isEmail()
+        .withMessage('not correct email')
 
 export const validatorFindCommentId = async (req: Request, res: Response,next:NextFunction) => {
     const commentsId = await commentsCollection.findOne({id:req.params.id})
@@ -173,5 +180,20 @@ export const validatorPostIdComments = async (req: Request, res: Response,next:N
     res.send(404)
     return
 }
-
+export const validatorCounterRequest5 = async (req: Request, res: Response,next:NextFunction) => {
+    const clientIp = requestIp.getClientIp(req)
+    const countIp = await CountRepositories05.count(clientIp)
+    next()
+    return
+}
+export const validatorRequest5 = async (req: Request, res: Response,next:NextFunction) => {
+    const clientIp = requestIp.getClientIp(req)
+    const countIp = await CountRepositories05.count5Error(clientIp)
+    if(!countIp){
+        next()
+        return
+    }
+    res.send(429)
+    return
+}
 

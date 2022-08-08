@@ -27,10 +27,22 @@ export type CommentsType = {
     "addedAt": string
 }
 
-export type TokenType = {
-    token: {
-        accessToken:string
-        refreshToken:string
+export type CountRequestType = {
+    ip:string
+    date:Date
+}
+export type RegistrationTokenType = {
+    accountData:{
+        id:string
+        login:string
+        email:string
+        createAt:Date
+        passwordHash:string
+    }
+    emailConformation:{
+        conformationCode:string
+        expirationDate:Date
+        isConfirmed:boolean
     }
 }
 const mongoUri = process.env.MONGO_DB || 'mongodb://0.0.0.0:27017'
@@ -47,6 +59,9 @@ export const bloggersCollection = db.collection<BloggersType>('bloggers')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<UsersType>('users')
 export const commentsCollection = db.collection<CommentsType>('comments')
+export const countRequest = db.collection<CountRequestType>('countRequest')
+export const registrationToken = db.collection<RegistrationTokenType>('registrationToken')
+
 export const createCommentsCollection = db.collection<any>('createComments')
 export const deleteCommentsCollection = db.collection<any>('deleteComments')
 
