@@ -9,7 +9,7 @@ import {  addSeconds } from 'date-fns'
 export const searchRepo = (path:string) => {
     if(path==='/registration-confirmation')return  countRequestRegistrationConformation
     if(path==='/login')return  countRequestLogin
-    if(path==='/registration-email-resenging')return  countRequestEmailResending
+    if(path==='/registration-email-resending')return  countRequestEmailResending
     if(path==='/registration')return  countRequestRegistration
 }
 

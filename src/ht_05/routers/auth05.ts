@@ -92,10 +92,12 @@ RouterAuth05.post("/registration-email-resending",
         const searchEmail = await registrationToken.findOne({"accountData.email":email})
         if(searchEmail){
             const conformationCode = uuidv4()
+            console.log('conformation',conformationCode)
             const newEmail = await registrationToken.updateOne(
-                {"emailConformation.conformationCode":conformationCode},
+                {"accountData.email":searchEmail.accountData.email},
                 { $set:
                         {
+                            "emailConformation.conformationCode":conformationCode,
                             "emailConformation.isConfirmed":false,
                             "emailConformation.expirationDate":add(new Date(),{minutes:5})
                         }
@@ -130,3 +132,5 @@ RouterAuth05.post('/login',
         res.status(401).send('If the password or login is wrong')
         return
     })
+// d49074cb-4821-4b3b-ab9d-ee2a18d5b6ab
+// d49074cb-4821-4b3b-ab9d-ee2a18d5b6ab
