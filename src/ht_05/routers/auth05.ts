@@ -74,11 +74,11 @@ RouterAuth05.post("/registration",
         }
         await registrationToken.insertOne(user)
         // const  obj = jwt.verify(token,secret.key)
-        // const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
-        // const transporter = await nodemailer.createTransport(transporterInfo)
-        // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
-        // const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
-        // const info = await transporter.sendMail(sendMailObject)
+        const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
+        const transporter = await nodemailer.createTransport(transporterInfo)
+        const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
+        const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
+        const info = await transporter.sendMail(sendMailObject)
         res.send(204)
         return
     })
