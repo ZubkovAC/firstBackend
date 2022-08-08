@@ -1,11 +1,10 @@
 import {CountRepositories05} from "../ht_05/repositories/count-repositories05";
-
 const requestIp = require('request-ip')
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
 import {bloggersCollection, commentsCollection, postsCollection, secret, usersCollection} from "../ht_04/db";
 import {errorBloggerId, errorPostId} from "../ht_03/ht_03";
-import {serviceComments04} from "../ht_04/service/service-comments";
+import {registrationToken} from "../ht_05/db";
 var jwt = require('jsonwebtoken')
 
 
@@ -58,6 +57,7 @@ export const validationError = (req: Request, res: Response, next:NextFunction) 
     next()
     return
 }
+
 export const validationErrorAuth = (req: Request, res: Response, next:NextFunction) => {
     const error = validationResult(req)
     if(!error.isEmpty()){
@@ -144,7 +144,6 @@ export const validationEmail =
 
 export const validatorFindCommentId = async (req: Request, res: Response,next:NextFunction) => {
     const commentsId = await commentsCollection.findOne({id:req.params.id})
-    console.log("commentsId",commentsId)
     if(commentsId){
         next()
         return
@@ -172,7 +171,6 @@ export const validatorAccessUserCommentId = async (req: Request, res: Response,n
 }
 export const validatorPostIdComments = async (req: Request, res: Response,next:NextFunction) => {
     const allCommentsPost = await postsCollection.find({idPostComment:req.params.id}).toArray()
-    console.log("allCommentsPost",allCommentsPost)
     if(allCommentsPost){
         next()
         return
@@ -182,13 +180,13 @@ export const validatorPostIdComments = async (req: Request, res: Response,next:N
 }
 export const validatorCounterRequest5 = async (req: Request, res: Response,next:NextFunction) => {
     const clientIp = requestIp.getClientIp(req)
-    const countIp = await CountRepositories05.count(clientIp)
+    const countIp = await CountRepositories05.count(clientIp,req.path)
     next()
     return
 }
 export const validatorRequest5 = async (req: Request, res: Response,next:NextFunction) => {
     const clientIp = requestIp.getClientIp(req)
-    const countIp = await CountRepositories05.count5Error(clientIp)
+    const countIp = await CountRepositories05.count5Error(clientIp,req.path)
     if(!countIp){
         next()
         return
@@ -196,4 +194,12 @@ export const validatorRequest5 = async (req: Request, res: Response,next:NextFun
     res.send(429)
     return
 }
-
+export const validationFindEmail = async (req: Request, res: Response, next:NextFunction) => {
+    const searchEmail = await registrationToken.findOne({"accountData.login":req.body.email})
+    if(searchEmail){
+        next()
+        return
+    }
+    res.send(400)
+    return
+}

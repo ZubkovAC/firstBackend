@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 import {
     validationEmail,
     validationError,
-    validationErrorAuth,
+    validationErrorAuth, validationFindEmail,
     validationLogin3_10,
     validationPassword6_20, validatorCounterRequest5,
     validatorRequest5
@@ -22,7 +22,7 @@ RouterAuth05.post("/registration-confirmation",
     async (req, res) => {
         const code = req.body.code
         const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
-        if(infoCode.emailConformation.isConfirmed) {
+        if(infoCode === null || infoCode.emailConformation.isConfirmed) {
             res.send(400)
             return
         }
@@ -45,6 +45,7 @@ RouterAuth05.post("/registration",
     validationPassword6_20,
     validationEmail,
     validationError,
+    validationFindEmail,
     async (req, res) => {
 
         const login = req.body.login.trim()
