@@ -1,8 +1,8 @@
 import {Request, Response, Router} from "express";
 import {
-    validationEmail,
+    validationEmail, validationEmailPattern,
     validationError,
-    validationErrorAuth, validationFindEmail,
+    validationErrorAuth, validationFindEmail, validationFindLogin,
     validationLogin3_10,
     validationPassword6_20, validatorCounterRequest5,
     validatorRequest5
@@ -46,6 +46,8 @@ RouterAuth05.post("/registration",
     validationEmail,
     validationError,
     validationFindEmail,
+    validationFindLogin,
+    validationEmailPattern,
     async (req, res) => {
 
         const login = req.body.login.trim()

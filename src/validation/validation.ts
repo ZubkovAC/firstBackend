@@ -141,6 +141,15 @@ export const validationEmail =
         .trim()
         .isEmail()
         .withMessage('not correct email')
+export const validationEmailPattern =(req: Request, res: Response,next:NextFunction) => {
+        const v=   /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        const testEmail =v.test(req.body.email)
+        if(testEmail){
+            next()
+            return;
+        }
+
+}
 
 export const validatorFindCommentId = async (req: Request, res: Response,next:NextFunction) => {
     const commentsId = await commentsCollection.findOne({id:req.params.id})
@@ -202,6 +211,17 @@ export const validationFindEmail = async (req: Request, res: Response, next:Next
     }
     res.status(400).send({
      errorsMessages: [{ message: 'this email is busy', field: "email" }]
+    })
+    return
+}
+export const validationFindLogin = async (req: Request, res: Response, next:NextFunction) => {
+    const searchEmail = await registrationToken.findOne({"accountData.login":req.body.login})
+    if(searchEmail === null){
+        next()
+        return
+    }
+    res.status(400).send({
+     errorsMessages: [{ message: 'this login is busy', field: "login" }]
     })
     return
 }
