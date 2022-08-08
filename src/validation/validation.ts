@@ -148,6 +148,9 @@ export const validationEmailPattern =(req: Request, res: Response,next:NextFunct
             next()
             return;
         }
+        res.status(400).send({
+            errorsMessages: [{ message: 'not correct email', field: "email" }]
+        })
 
 }
 
