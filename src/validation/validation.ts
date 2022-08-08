@@ -195,11 +195,13 @@ export const validatorRequest5 = async (req: Request, res: Response,next:NextFun
     return
 }
 export const validationFindEmail = async (req: Request, res: Response, next:NextFunction) => {
-    const searchEmail = await registrationToken.findOne({"accountData.login":req.body.email})
-    if(searchEmail){
+    const searchEmail = await registrationToken.findOne({"accountData.email":req.body.email})
+    if(searchEmail === null){
         next()
         return
     }
-    res.send(400)
+    res.status(400).send({
+     errorsMessages: [{ message: 'this email is busy', field: "email" }]
+    })
     return
 }
