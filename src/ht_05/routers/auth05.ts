@@ -109,10 +109,14 @@ RouterAuth05.post("/registration-email-resending",
                         }
                 })
             const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
+            console.log("transporterInfo",transporterInfo)
             const transporter = await nodemailer.createTransport(transporterInfo)
             const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
+            console.log("messageRegistration",messageRegistration)
             const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
+            console.log("sendMailObject",sendMailObject)
             const info = await transporter.sendMail(sendMailObject)
+            console.log()
             res.send(204)
             return
         }
