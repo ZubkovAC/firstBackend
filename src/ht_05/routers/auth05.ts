@@ -21,9 +21,7 @@ RouterAuth05.post("/registration-confirmation",
     validatorCounterRequest5,
     async (req, res) => {
         const code = req.body.code
-        console.log('code',code)
         const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
-        console.log('infoCode',infoCode)
         if(infoCode === null) {
             res.status(400).send({
                 errorsMessages: [{ message: 'not find code', field: "code" }]
@@ -47,8 +45,8 @@ RouterAuth05.post("/registration-confirmation",
 
 
 RouterAuth05.post("/registration",
-    validatorRequest5,
     validatorCounterRequest5,
+    validatorRequest5,
     validationLogin3_10,
     validationPassword6_20,
     validationEmail,
@@ -81,7 +79,7 @@ RouterAuth05.post("/registration",
             }
         }
         await registrationToken.insertOne(user)
-        // const  obj = jwt.verify(token,secret.key)
+        const  obj = jwt.verify(token,secret.key)
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
         const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
@@ -139,5 +137,3 @@ RouterAuth05.post('/login',
         res.status(401).send('If the password or login is wrong')
         return
     })
-// d49074cb-4821-4b3b-ab9d-ee2a18d5b6ab
-// d49074cb-4821-4b3b-ab9d-ee2a18d5b6ab
