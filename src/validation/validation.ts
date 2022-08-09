@@ -142,7 +142,7 @@ export const validationEmail =
         .isEmail()
         .withMessage('not correct email')
 export const validationEmailPattern =(req: Request, res: Response,next:NextFunction) => {
-        const v=   /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        const v =   /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
         const testEmail =v.test(req.body.email)
         if(testEmail){
             next()

@@ -21,7 +21,9 @@ RouterAuth05.post("/registration-confirmation",
     validatorCounterRequest5,
     async (req, res) => {
         const code = req.body.code
+        console.log('code',code)
         const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
+        console.log('infoCode',infoCode)
         if(infoCode === null) {
             res.status(400).send({
                 errorsMessages: [{ message: 'not find code', field: "code" }]
@@ -32,7 +34,7 @@ RouterAuth05.post("/registration-confirmation",
             res.send(400)
             return
         }
-        if(infoCode && infoCode.emailConformation.expirationDate < new Date()){
+        if(infoCode && infoCode.emailConformation.expirationDate > new Date()){
            await registrationToken.updateOne({"emailConformation.conformationCode":code},{ $set:{"emailConformation.isConfirmed":true}})
             const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
             console.log(infoCode)
@@ -51,9 +53,9 @@ RouterAuth05.post("/registration",
     validationPassword6_20,
     validationEmail,
     validationError,
+    validationEmailPattern,
     validationFindEmail,
     validationFindLogin,
-    validationEmailPattern,
     async (req, res) => {
 
         const login = req.body.login.trim()
@@ -85,7 +87,7 @@ RouterAuth05.post("/registration",
         const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
         const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
         const info = await transporter.sendMail(sendMailObject)
-        res.send(204)
+        res.status(204).send("Input data is accepted. Email with confirmation code will be send to passed email address")
         return
     })
 RouterAuth05.post("/registration-email-resending",
@@ -96,9 +98,8 @@ RouterAuth05.post("/registration-email-resending",
     async (req, res) => {
         const email = req.body.email
         const searchEmail = await registrationToken.findOne({"accountData.email":email})
-        if(searchEmail){
+        if(searchEmail && !searchEmail.emailConformation.isConfirmed){
             const conformationCode = uuidv4()
-            console.log('conformation',conformationCode)
             const newEmail = await registrationToken.updateOne(
                 {"accountData.email":searchEmail.accountData.email},
                 { $set:
@@ -109,14 +110,10 @@ RouterAuth05.post("/registration-email-resending",
                         }
                 })
             const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
-            console.log("transporterInfo",transporterInfo)
             const transporter = await nodemailer.createTransport(transporterInfo)
             const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
-            console.log("messageRegistration",messageRegistration)
             const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
-            console.log("sendMailObject",sendMailObject)
             const info = await transporter.sendMail(sendMailObject)
-            console.log()
             res.send(204)
             return
         }
