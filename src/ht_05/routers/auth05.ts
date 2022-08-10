@@ -85,7 +85,7 @@ RouterAuth05.post("/registration",
         const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
         const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
         const info = await transporter.sendMail(sendMailObject)
-        res.status(204).send("Input data is accepted. Email with confirmation code will be send to passed email address")
+        res.status(201).send('hello')
         return
     })
 RouterAuth05.post("/registration-email-resending",
