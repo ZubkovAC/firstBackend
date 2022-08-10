@@ -202,6 +202,16 @@ export const validatorRequest5 = async (req: Request, res: Response,next:NextFun
     res.send(429)
     return
 }
+export const validatorRequestRegistration5 = async (req: Request, res: Response,next:NextFunction) => {
+    const clientIp = requestIp.getClientIp(req)
+    const countIp = await CountRepositories05.count5ErrorRegistration(clientIp,req.path)
+    if(!countIp){
+        next()
+        return
+    }
+    res.send(429)
+    return
+}
 export const validationFindEmail = async (req: Request, res: Response, next:NextFunction) => {
     const searchEmail = await registrationToken.findOne({"accountData.email":req.body.email})
     if(searchEmail === null){
