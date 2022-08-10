@@ -166,19 +166,15 @@ export const validatorFindCommentId = async (req: Request, res: Response,next:Ne
 export const validatorAccessUserCommentId = async (req: Request, res: Response,next:NextFunction) => {
     let authHeader = req.headers?.authorization
     if(authHeader && authHeader.split(' ')[0] !== "Basic"){
-        const parse = jwt.verify(authHeader.split(" ")[1],secret.key)
-        const userId = await usersCollection.findOne({id:parse.id})
+        const parse = jwt.verify(authHeader.split(" ")[1],process.env.SECRET_KEY)
+        const userId = await registrationToken.findOne({"accountData.login":parse.login})
         const commentsId = await commentsCollection.findOne({id:req.params.id})
-        if(userId.id === commentsId.userId){
+        if(userId.accountData.id === commentsId.userId){
             next()
             return
         }
         res.send(403)
         return
-        // if(userId === commentsId.userId){
-        //     next()
-        //     return
-        // }
     }
 }
 export const validatorPostIdComments = async (req: Request, res: Response,next:NextFunction) => {
@@ -214,6 +210,17 @@ export const validationFindEmail = async (req: Request, res: Response, next:Next
     }
     res.status(400).send({
      errorsMessages: [{ message: 'this email is busy', field: "email" }]
+    })
+    return
+}
+export const validationNoFindEmail = async (req: Request, res: Response, next:NextFunction) => {
+    const searchEmail = await registrationToken.findOne({"accountData.email":req.body.email})
+    if(searchEmail){
+        next()
+        return
+    }
+    res.status(400).send({
+        errorsMessages: [{ message: 'this email is busy', field: "email" }]
     })
     return
 }

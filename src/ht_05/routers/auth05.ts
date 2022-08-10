@@ -3,17 +3,19 @@ import {
     validationEmail, validationEmailPattern,
     validationError,
     validationErrorAuth, validationFindEmail, validationFindLogin,
-    validationLogin3_10,
+    validationLogin3_10, validationNoFindEmail,
     validationPassword6_20, validatorCounterRequest5,
     validatorRequest5
 } from "../../validation/validation";
 import {registrationToken, secret, usersCollection} from "../db";
 import {EmailAdapter05} from "../adapter/emailAdapter";
-import {ManagerAuth05} from "../managerAuth/managerAuth";
-var nodemailer = require("nodemailer")
+import {manager, ManagerAuth05} from "../managerAuth/managerAuth";
+// var nodemailer = require("nodemailer")
+import * as nodemailer from "nodemailer"
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
-import { add } from "date-fns";
+
+
 export const RouterAuth05 = Router({})
 
 RouterAuth05.post("/registration-confirmation",
@@ -63,29 +65,15 @@ RouterAuth05.post("/registration",
         // 1 repo - key 2 business -  3 adapter - logic  4 manager ( message ) {id: searchLogin.id}, secret.key, {expiresIn: '1h'}
         const id = uuidv4()
         const conformationCode = uuidv4()
-        const token =  jwt.sign({id, login,email,password},secret.key, {expiresIn: '1h'})
-        const user = {
-            accountData:{
-                id:id,
-                login:login,
-                email:email,
-                createAt:new Date(),
-                passwordHash:token
-            },
-            emailConformation:{
-                conformationCode: conformationCode ,
-                expirationDate: add(new Date(),{minutes:5}),
-                isConfirmed:false
-            }
-        }
+        const token =  jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
+        const user = manager.createUser(id,login,email,token,conformationCode)
         await registrationToken.insertOne(user)
-        const  obj = jwt.verify(token,secret.key)
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
-        const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
-        const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
+        // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
+        const sendMailObject = await EmailAdapter05.sendMailer(process.env.EMAIL,email,conformationCode)
         const info = await transporter.sendMail(sendMailObject)
-        res.status(201).send('hello')
+        res.send(204)
         return
     })
 RouterAuth05.post("/registration-email-resending",
@@ -93,24 +81,17 @@ RouterAuth05.post("/registration-email-resending",
     validatorCounterRequest5,
     validationEmailPattern,
     validationError,
+    validationNoFindEmail,
     async (req, res) => {
         const email = req.body.email
         const searchEmail = await registrationToken.findOne({"accountData.email":email})
-        if(searchEmail && !searchEmail.emailConformation.isConfirmed){
+        if(!searchEmail.emailConformation.isConfirmed){
             const conformationCode = uuidv4()
-            const newEmail = await registrationToken.updateOne(
-                {"accountData.email":searchEmail.accountData.email},
-                { $set:
-                        {
-                            "emailConformation.conformationCode":conformationCode,
-                            "emailConformation.isConfirmed":false,
-                            "emailConformation.expirationDate":add(new Date(),{minutes:5})
-                        }
-                })
+            const newEmail = await  manager.updateUser(email,conformationCode)
             const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
             const transporter = await nodemailer.createTransport(transporterInfo)
-            const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
-            const sendMailObject = EmailAdapter05.sendMailer(process.env.EMAIL,email,messageRegistration)
+            // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
+            const sendMailObject = await EmailAdapter05.sendMailer(process.env.EMAIL,email,conformationCode)
             const info = await transporter.sendMail(sendMailObject)
             res.send(204)
             return
@@ -128,12 +109,20 @@ RouterAuth05.post('/login',
         // const parse = jwt.verify(test,secret.key)
         const login = req.body.login.trim()
         const password = req.body.password.trim()
-        const searchLogin = await usersCollection.findOne({login: login})
-        if (searchLogin && searchLogin.password === password) {
-            const token = jwt.sign({id: searchLogin.id}, secret.key, {expiresIn: '1h'})
-            res.status(200).send({token: token})
-            return
+        const searchLogin = await registrationToken.findOne({"accountData.login": login})
+
+        if (searchLogin && searchLogin.emailConformation.isConfirmed) {
+            const verify = jwt.verify(searchLogin.accountData.passwordHash,process.env.SECRET_KEY)
+            if(verify.password === password ){
+                const token = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
+                await registrationToken.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
+                res.status(200).send({token: token})
+                return
+            }
         }
         res.status(401).send('If the password or login is wrong')
         return
     })
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InVsb2dpbjQ1IiwicGFzc3dvcmQiOiJxd2VydHkiLCJpYXQiOjE2NjAxMjIxNjIsImV4cCI6MTY2MDEyNTc2Mn0.m-Uy0LDXroA1-yKUMIKxiRb1kiwiqf0x8P5aiCUjLT8
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InVsb2dpbjQ1IiwicGFzc3dvcmQiOiJxd2VydHkiLCJpYXQiOjE2NjAxMjIxNjIsImV4cCI6MTY2MDEyNTc2Mn0.m-Uy0LDXroA1-yKUMIKxiRb1kiwiqf0x8P5aiCUjLT8
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhlMTdlNmEwLTBkMTgtNDA3MC1iNjA5LTMyZWU2MDA5NzU3OSIsImxvZ2luIjoidWxvZ2luNDUiLCJlbWFpbCI6IjN5NmtvYjkwQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoicXdlcnR5IiwiaWF0IjoxNjYwMTE5NjY3LCJleHAiOjE2NjAxMjMyNjd9.lD1gBajTzf2-7bABSEil4R2JDG1XdDXjuzgh8Ciu5q4

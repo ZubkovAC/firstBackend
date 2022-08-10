@@ -1,4 +1,4 @@
-import {commentsCollection, secret, usersCollection} from "../db";
+import {commentsCollection, registrationToken, secret, usersCollection} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {convertPostsComments} from "../convert/convert";
 // import jwt from "jsonwebtoken";
@@ -33,15 +33,17 @@ export const commentsRepositories04 ={
         }
     },
     async createCommentsPost(idPosts:string,content:string,token:string){
-        const parse = jwt.verify(token.split(" ")[1],secret.key)
-        const userId = await usersCollection.findOne({id:parse.id})
+        console.log('create')
+        const parse = await jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
+        const userId = await registrationToken.findOne({"accountData.login":parse.login})
         // const searchCommentsPost = await usersCollection.findOne({idPost:parse.id})
+        console.log("userId",userId)
         const newCommentPost ={
             idPostComment: idPosts ,
             "id": uuidv4(),
             "content": content,
-            "userId": parse.id,
-            "userLogin": userId.login,
+            "userId": userId.accountData.id,
+            "userLogin": userId.accountData.login,
             "addedAt": new Date().toISOString()
         }
         await commentsCollection.insertOne(newCommentPost)
