@@ -5,7 +5,6 @@ import {convertPostsComments} from "../convert/convert";
 var jwt = require('jsonwebtoken')
 
 export const commentsRepositories04 ={
-    // async getComments(idComments:string): Promise<{id:string,content:string,userId:string,userLogin:string,addedAt:string}> {
     async getComments(idComments:string){
         const commentsId = await commentsCollection.findOne({id:idComments})
         return {
@@ -33,11 +32,9 @@ export const commentsRepositories04 ={
         }
     },
     async createCommentsPost(idPosts:string,content:string,token:string){
-        console.log('create')
         const parse = await jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
         const userId = await registrationToken.findOne({"accountData.login":parse.login})
         // const searchCommentsPost = await usersCollection.findOne({idPost:parse.id})
-        console.log("userId",userId)
         const newCommentPost ={
             idPostComment: idPosts ,
             "id": uuidv4(),

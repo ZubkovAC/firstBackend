@@ -7,9 +7,9 @@ import {
     validationPassword6_20, validatorCounterRequest5,
     validatorRequest5, validatorRequestRegistration5
 } from "../../validation/validation";
-import {registrationToken, secret, usersCollection} from "../db";
+import {registrationToken} from "../db";
 import {EmailAdapter05} from "../adapter/emailAdapter";
-import {manager, ManagerAuth05} from "../managerAuth/managerAuth";
+import {manager} from "../managerAuth/managerAuth";
 // var nodemailer = require("nodemailer")
 import * as nodemailer from "nodemailer"
 var jwt = require('jsonwebtoken')
@@ -50,8 +50,8 @@ RouterAuth05.post("/registration-confirmation",
 
 RouterAuth05.post("/registration",
     validatorCounterRequest5,
-    // validatorRequest5,
-    validatorRequestRegistration5,
+    validatorRequest5,
+    // validatorRequestRegistration5,
     validationLogin3_10,
     validationPassword6_20,
     validationEmail,
@@ -128,6 +128,3 @@ RouterAuth05.post('/login',
         res.status(401).send('If the password or login is wrong')
         return
     })
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InVsb2dpbjQ1IiwicGFzc3dvcmQiOiJxd2VydHkiLCJpYXQiOjE2NjAxMjIxNjIsImV4cCI6MTY2MDEyNTc2Mn0.m-Uy0LDXroA1-yKUMIKxiRb1kiwiqf0x8P5aiCUjLT8
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InVsb2dpbjQ1IiwicGFzc3dvcmQiOiJxd2VydHkiLCJpYXQiOjE2NjAxMjIxNjIsImV4cCI6MTY2MDEyNTc2Mn0.m-Uy0LDXroA1-yKUMIKxiRb1kiwiqf0x8P5aiCUjLT8
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhlMTdlNmEwLTBkMTgtNDA3MC1iNjA5LTMyZWU2MDA5NzU3OSIsImxvZ2luIjoidWxvZ2luNDUiLCJlbWFpbCI6IjN5NmtvYjkwQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoicXdlcnR5IiwiaWF0IjoxNjYwMTE5NjY3LCJleHAiOjE2NjAxMjMyNjd9.lD1gBajTzf2-7bABSEil4R2JDG1XdDXjuzgh8Ciu5q4

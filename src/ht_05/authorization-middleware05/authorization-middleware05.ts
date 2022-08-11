@@ -1,7 +1,7 @@
 import {NextFunction,Response,Request} from "express";
 // import jwt from "jsonwebtoken";
 var jwt = require('jsonwebtoken')
-import {registrationToken, usersCollection} from "../db";
+import {registrationToken} from "../db";
 
 export const authorizationMiddleware05 = async (req: Request, res: Response , next: NextFunction) => {
     let authHeader = req.headers?.authorization
