@@ -49,8 +49,8 @@ RouterAuth05.post("/registration-confirmation",
 
 RouterAuth05.post("/registration",
     validatorCounterRequest5,
-    validatorRequest5,
-    // validatorRequestRegistration5,
+    // validatorRequest5,
+    validatorRequestRegistration5,
     validationLogin3_10,
     validationPassword6_20,
     validationEmail,
@@ -123,6 +123,6 @@ RouterAuth05.post('/login',
                 return
             }
         }
-        res.status(401).send('If the password or login is wrong')
+        res.send(401)
         return
     })
