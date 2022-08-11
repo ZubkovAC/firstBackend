@@ -27,7 +27,6 @@ export const CountRepositories05 ={
         const repo = searchRepo(path)
         const req = await repo.find({ip:ip}).toArray()
         const f = req.filter(d=> addSeconds(d.date,10) > date  )
-        console.log('test f',f.length)
         return f?.length >= 5
     },
     async count5ErrorRegistration (ip:string ,path:string){
@@ -35,7 +34,6 @@ export const CountRepositories05 ={
         const repo = searchRepo(path)
         const req = await repo.find({ip:ip}).toArray()
         const f = req.filter(d=> addSeconds(d.date,11) > date  )
-        console.log('test f',f.length)
         return f?.length >= 5
     },
 }
