@@ -225,7 +225,10 @@ export const validationFindEmail = async (req: Request, res: Response, next:Next
 }
 export const validationNoFindEmail = async (req: Request, res: Response, next:NextFunction) => {
     const searchEmail = await registrationToken.findOne({"accountData.email":req.body.email})
+    const emails = await registrationToken.find({})
+    // if(searchEmail && !searchEmail.emailConformation.isConfirmed){
     if(searchEmail){
+        console.log('~~~EMAIL~~~',searchEmail, emails)
         next()
         return
     }

@@ -86,21 +86,16 @@ RouterAuth05.post("/registration-email-resending",
     validationNoFindEmail,
     async (req, res) => {
         const email = req.body.email
-        const searchEmail = await registrationToken.findOne({"accountData.email":email})
-        if(!searchEmail.emailConformation.isConfirmed){
-            const conformationCode = uuidv4()
-            const newEmail = await  manager.updateUser(email,conformationCode)
-            const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
-            const transporter = await nodemailer.createTransport(transporterInfo)
-            // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
-            const sendMailObject = await EmailAdapter05.sendMailer(process.env.EMAIL,email,conformationCode)
-            const info = await transporter.sendMail(sendMailObject)
-            res.send(204)
-            return
-        }
-        res.send(400).send({
-            errorsMessages: [{ message: 'this email is busy', field: "email" }]
-        })
+        // const searchEmail = await registrationToken.findOne({"accountData.email":email})
+
+        const conformationCode = uuidv4()
+        const newEmail = await  manager.updateUser(email,conformationCode)
+        const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
+        const transporter = await nodemailer.createTransport(transporterInfo)
+        // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
+        const sendMailObject = await EmailAdapter05.sendMailer(process.env.EMAIL,email,conformationCode)
+        const info = await transporter.sendMail(sendMailObject)
+        res.send(204)
         return
     })
 RouterAuth05.post('/login',
