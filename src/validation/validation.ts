@@ -229,6 +229,7 @@ export const validationNoFindEmail = async (req: Request, res: Response, next:Ne
     // if(searchEmail && !searchEmail.emailConformation.isConfirmed){
     if(searchEmail){
         console.log('~~~EMAIL~~~',searchEmail, emails)
+
         next()
         return
     }
