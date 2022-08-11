@@ -47,7 +47,6 @@ RouterAuth05.post("/registration-confirmation",
         return
     })
 
-
 RouterAuth05.post("/registration",
     validatorCounterRequest5,
     validatorRequest5,
