@@ -32,7 +32,7 @@ RouterAuth05.post("/registration-confirmation",
         }
         if(infoCode.emailConformation.isConfirmed){
             res.status(400).send({
-                errorsMessages: [{ message: 'email is Conformed', field: "email" }]
+                errorsMessages: [{ message: 'email is Conformed', field: "code" }]
             })
             return
         }
@@ -83,7 +83,6 @@ RouterAuth05.post("/registration-email-resending",
     validatorRequest5,
     validatorCounterRequest5,
     validationEmailPattern,
-    validationError,
     validationNoFindEmail,
     async (req, res) => {
         const email = req.body.email
