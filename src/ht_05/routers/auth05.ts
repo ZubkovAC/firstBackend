@@ -24,13 +24,16 @@ RouterAuth05.post("/registration-confirmation",
     async (req, res) => {
         const code = req.body.code
         const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
+        console.log('~~~~~~~INFO 1~~~~~~~~')
         if(infoCode === null) {
+            console.log('~~~~~~~INFO 2~~~~~~~~')
             res.status(400).send({
                 errorsMessages: [{ message: 'not find code', field: "code" }]
             })
             return
         }
         if(infoCode.emailConformation.isConfirmed){
+            console.log('~~~~~~~INFO 3~~~~~~~~')
             res.send(400)
             return
         }
@@ -41,6 +44,7 @@ RouterAuth05.post("/registration-confirmation",
             res.send(204) // work
             return
         }
+        console.log('~~~~~~~INFO 4~~~~~~~~')
         res.send(400) // work
         return
     })
@@ -97,7 +101,10 @@ RouterAuth05.post("/registration-email-resending",
             res.send(204)
             return
         }
-        res.send(400)
+        console.log('~~~~~~~registration-email 2~~~~~~~~')
+        res.send(400).send({
+            errorsMessages: [{ message: 'this email is busy', field: "email" }]
+        })
         return
     })
 RouterAuth05.post('/login',

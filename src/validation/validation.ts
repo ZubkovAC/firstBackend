@@ -219,7 +219,7 @@ export const validationFindEmail = async (req: Request, res: Response, next:Next
         return
     }
     res.status(400).send({
-     errorsMessages: [{ message: 'this email is busy', field: "email" }]
+        errorsMessages: [{ message: 'this email is busy', field: "email" }]
     })
     return
 }
