@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import {db, RegistrationTokenType} from "../ht_05/db";
 
 const BloggersSchema = new mongoose.Schema({
     id:String,
@@ -33,7 +32,7 @@ const CountRequestSchema = new mongoose.Schema({
 });
 const RegistrationSchema = new mongoose.Schema({
     accountData:{
-        id:String,
+        userId:String,
         login:String,
         email:String,
         createAt:Date,

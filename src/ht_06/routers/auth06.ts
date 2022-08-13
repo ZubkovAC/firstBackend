@@ -15,9 +15,18 @@ import * as nodemailer from "nodemailer"
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
 import {RegistrationTokenType} from "../types";
+import {authorizationMiddleware06} from "../authorization-middleware06/authorization-middleware06";
+import {addSeconds} from "date-fns";
 
 
 export const RouterAuth06 = Router({})
+
+const dateExpired={
+    '10sec':'10sec',
+    '20sec':'20sec',
+    '1h':'1h',
+    '2h':'2h'
+}
 
 RouterAuth06.post("/registration-confirmation",
     validatorRequest5,
@@ -63,17 +72,16 @@ RouterAuth06.post("/registration",
         const password = req.body.password.trim()
         const email = req.body.email.trim()
 
-        // 1 repo - key 2 business -  3 adapter - logic  4 manager ( message ) {id: searchLogin.id}, secret.key, {expiresIn: '1h'}
-        const id = uuidv4()
-        const conformationCode = uuidv4()
-        const token =  jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
-        const user :RegistrationTokenType = await manager.createUser(id,login,email,token,conformationCode)
+        const userId = uuidv4()
+        const token =  jwt.sign({userId, login,email,password},process.env.SECRET_KEY, {expiresIn: dateExpired["1h"]})
+        const conformationCode = jwt.sign({ userId,login,email,password},process.env.SECRET_KEY, {expiresIn: dateExpired["2h"]})
+        const user :RegistrationTokenType = await manager.createUser(userId,login,email,token,conformationCode)
         await registrationToken06.insertMany([user])
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
-        // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
+
         const sendMailObject = await EmailAdapter05.sendMailer(process.env.EMAIL,email,conformationCode)
-        // const info = await transporter.sendMail(sendMailObject)
+        const info = await transporter.sendMail(sendMailObject)
         res.send(204)
         return
     })
@@ -84,9 +92,10 @@ RouterAuth06.post("/registration-email-resending",
     validationNoFindEmail,
     async (req, res) => {
         const email = req.body.email
-        // const searchEmail = await registrationToken.findOne({"accountData.email":email})
-
-        const conformationCode = uuidv4()
+        const searchEmail = await registrationToken06.findOne({"accountData.email":email})
+        const {userId,login , passwordHash } = searchEmail.accountData
+        const password = jwt.verify(passwordHash,process.env.SECRET_KEY).password
+        const conformationCode = jwt.sign({ userId,login,email,password},process.env.SECRET_KEY, {expiresIn: dateExpired["2h"]})
         const newEmail = await  manager.updateUser(email,conformationCode)
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
@@ -99,24 +108,90 @@ RouterAuth06.post("/registration-email-resending",
 RouterAuth06.post('/login',
     validatorRequest5,
     validatorCounterRequest5,
-    validationLogin3_10,
-    validationPassword6_20,
-    validationErrorAuth,
     async (req: Request, res: Response) => {
-        // const parse = jwt.verify(test,secret.key)
         const login = req.body.login.trim()
         const password = req.body.password.trim()
         const searchLogin = await registrationToken06.findOne({"accountData.login": login})
+        if (searchLogin ) {
+            console.log(searchLogin)
+                const verify = jwt.verify(searchLogin.accountData.passwordHash,process.env.SECRET_KEY)
+                if(verify.password === password ){
+                    const userId = searchLogin.accountData.userId
+                    const email = searchLogin.accountData.email
+                    const token = await jwt.sign({ userId,login,email,password:verify.password},process.env.SECRET_KEY, {expiresIn: dateExpired["1h"]})
+                    await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
+                    res.cookie("refreshToken",searchLogin.accountData.passwordHash)
+                    res.status(200).send({token: token}) // ??
+                    return
+                }
+        }
+        res.send(401)
+        return
+    })
 
-        if (searchLogin && searchLogin.emailConformation.isConfirmed) {
-            const verify = jwt.verify(searchLogin.accountData.passwordHash,process.env.SECRET_KEY)
-            if(verify.password === password ){
-                const token = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
-                await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
+RouterAuth06.post('/refresh-token',
+    async (req: Request, res: Response) => {
+        const token = req.headers?.authorization?.split(" ")[1]
+        if(token){
+            try{
+                const parse = jwt.verify(token,process.env.SECRET_KEY)
+                const login = parse.login
+                const password = parse.password
+                const token1 = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: dateExpired["10sec"]})
+                await registrationToken06.updateOne({"accountData.login": parse.login},{$set: {"accountData.passwordHash":token1}})
                 res.status(200).send({token: token})
                 return
+            }catch (e) {
+                if(req.cookies.refreshToken){
+                   const user = await registrationToken06.findOne({"emailConformation.conformationCode":req.cookies.refreshToken})
+                    if(user){
+                        const dateUser  = await jwt.verify(user,process.env.SECRET_KEY)
+                        const login = dateUser.login
+                        const password = dateUser.password
+                        const token = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn:  dateExpired["10sec"]})
+                        await registrationToken06.updateOne({"accountData.login": user.accountData.login},{$set: {"accountData.passwordHash":token}})
+                        res.status(200).send({token: token})
+                        return
+                    }
+                }
             }
         }
         res.send(401)
         return
     })
+
+RouterAuth06.post('/logout',
+    async (req: Request, res: Response) => {
+        // const token = req.headers.authorization.split(" ")[1]
+       const tokenRefresh = req.cookies.refreshToken
+       if(!tokenRefresh){
+           res.send(401)
+           return
+       }
+       try{
+          const userCookieToken = jwt.verify(tokenRefresh, process.env.SECRET_KEY)
+           const {userId, password, email, login} = userCookieToken
+          const userCookie = jwt.sign({userId, password, email, login}, process.env.SECRET_KEY,{expiresIn: '1sec'})
+           await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordHash":userCookie}})
+           res.clearCookie("refreshToken")
+           res.send(204)
+       }catch (e) {
+           res.send(401)
+           return
+       }
+    })
+RouterAuth06.get('/me',
+    authorizationMiddleware06,
+    async (req: Request, res: Response) => {
+        const token = req.headers.authorization
+        const verify = jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
+        res.status(200).send({
+            email: verify.email,
+            login: verify.login,
+            userId: verify.userId
+        })
+        return
+    })
+
+
+

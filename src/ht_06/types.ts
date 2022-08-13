@@ -30,7 +30,7 @@ export type CountRequestType = {
 }
 export type RegistrationTokenType = {
     accountData:{
-        id:string
+        userId:string
         login:string
         email:string
         createAt:Date

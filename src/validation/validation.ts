@@ -168,7 +168,7 @@ export const validatorAccessUserCommentId = async (req: Request, res: Response,n
         const parse = jwt.verify(authHeader.split(" ")[1],process.env.SECRET_KEY)
         const userId = await registrationToken06.findOne({"accountData.login":parse.login})
         const commentsId = await commentsCollection06.findOne({id:req.params.id})
-        if(userId.accountData.id === commentsId.userId){
+        if(userId.accountData.userId === commentsId.userId){
             next()
             return
         }

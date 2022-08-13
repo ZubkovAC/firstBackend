@@ -40,7 +40,7 @@ export const commentsRepositories06 ={
             idPostComment: idPosts ,
             "id": uuidv4(),
             "content": content,
-            "userId": userId.accountData.id,
+            "userId": userId.accountData.userId,
             "userLogin": userId.accountData.login,
             "addedAt": new Date().toISOString()
         }

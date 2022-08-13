@@ -1,4 +1,5 @@
 require('dotenv').config()
+var cookieParser = require('cookie-parser')
 import {runDb} from "./ht_06/db";
 import {RouterAuth06} from "./ht_06/routers/auth06";
 import {RouterBloggers06} from "./ht_06/routers/routerBloggers06";
@@ -11,12 +12,14 @@ const express = require('express')
 const cors = require('cors')
 
 const app = express()
+app.use(cookieParser())
 const port = process.env.PORT || 5000
 
 
 app.use(cors())
 
 app.use(express.json())
+
 
 app.get('/', (req, res) => {
     let helloWorldWORLD11 = 'Hello World! WORLD!'

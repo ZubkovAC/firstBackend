@@ -14,10 +14,10 @@ export const ManagerAuth05={
 }
 
 export const manager = {
-    async createUser(id:string,login:string,email:string,token:string,conformationCode:string) : Promise<RegistrationTokenType>{
+    async createUser(userId:string,login:string,email:string,token:string,conformationCode:string) : Promise<RegistrationTokenType>{
         return {
             accountData:{
-                id:id,
+                userId:userId,
                 login:login,
                 email:email,
                 createAt:new Date(),
