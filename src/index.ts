@@ -8,20 +8,16 @@ import {hs_01_Router} from "./hs_01v2/hs_01/hs_01";
 import {ht_02_Router} from "./ht_02/ht_02";
 import {ht_03_Router} from "./ht_03/ht_03";
 import {ht_04_Router} from "./ht_04/ht_04";
-import {ht_05_Router} from "./ht_05/ht_05";
-// import {runDb} from "./ht_03/db";
-// import {runDb} from "./ht_04/db";
-import {runDb} from "./ht_05/db";
-import {RouterAuth05} from "./ht_05/routers/auth05";
-import {RouterBloggers05} from "./ht_05/routers/routerBloggers05";
-import {RouterPosts05} from "./ht_05/routers/routerPosts05";
-import {RouterComments05} from "./ht_05/routers/routerComments05";
-import { RouterTesting05 } from "./ht_05/routers/routerTesting05";
-import { RouterUsers05 } from "./ht_05/routers/routerUsers05";
+import {runDb} from "./ht_06/db";
+import {RouterAuth06} from "./ht_06/routers/auth06";
+import {RouterBloggers06} from "./ht_06/routers/routerBloggers06";
+import {RouterPosts06} from "./ht_06/routers/routerPosts06";
+import {RouterComments06} from "./ht_06/routers/routerComments06";
+import { RouterUsers06 } from "./ht_06/routers/routerUsers06";
+import { RouterTesting06 } from "./ht_06/routers/routerTesting06";
 
 const express = require('express')
 const cors = require('cors')
-// const bodyParser = require('body-parser')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -46,13 +42,13 @@ app.use('/hs_01v2',hs_01_Router)
 app.use('/ht_02',ht_02_Router)
 app.use('/ht_03',ht_03_Router)
 app.use('/ht_04',ht_04_Router)
-// app.use('/ht_05',ht_05_Router)
-app.use('/ht_05/api/auth',RouterAuth05)
-app.use('/ht_05/api/bloggers',RouterBloggers05)
-app.use('/ht_05/api/comments',RouterComments05)
-app.use('/ht_05/api/posts',RouterPosts05)
-app.use('/ht_05/api/testing',RouterTesting05)
-app.use('/ht_05/api/users',RouterUsers05)
+// ht_06
+app.use('/ht_06/api/auth',RouterAuth06)
+app.use('/ht_06/api/bloggers',RouterBloggers06)
+app.use('/ht_06/api/comments',RouterComments06)
+app.use('/ht_06/api/posts',RouterPosts06)
+app.use('/ht_06/api/testing',RouterTesting06)
+app.use('/ht_06/api/users',RouterUsers06)
 
 const startApp = async () => {
     await runDb()
