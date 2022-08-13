@@ -1,6 +1,7 @@
 import {commentsCollection06, registrationToken06} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {convertPostsComments} from "../convert/convert";
+import {CommentsType} from "../types";
 // import jwt from "jsonwebtoken";
 var jwt = require('jsonwebtoken')
 
@@ -17,12 +18,12 @@ export const commentsRepositories06 ={
     },
     async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
-        const allCommentsPost = await commentsCollection06.find({idPostComment:idComments}).toArray()
-        const commentsPost = await commentsCollection06
+        const allCommentsPost = await commentsCollection06.find({idPostComment:idComments}).lean()
+        const commentsPost :Array<CommentsType> = await commentsCollection06
             .find({idPostComment:idComments})
             .skip(skipCount)
             .limit(pageSize)
-            .toArray()
+            .lean()
         return {
             "pagesCount": Math.ceil( allCommentsPost.length / pageSize),
             "page": pageNumber,
@@ -43,7 +44,7 @@ export const commentsRepositories06 ={
             "userLogin": userId.accountData.login,
             "addedAt": new Date().toISOString()
         }
-        await commentsCollection06.insertOne(newCommentPost)
+        await commentsCollection06.insertMany([newCommentPost])
         return {
             "id":newCommentPost.id,
             "content": newCommentPost.content,

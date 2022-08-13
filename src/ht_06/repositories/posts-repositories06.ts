@@ -1,12 +1,13 @@
 import {bloggersCollection06, postsCollection06} from "../db";
 import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
+import {PostsType} from "../types";
 
 export const postsRepositories06 ={
     async findPosts(pageNumber:number, pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await postsCollection06.countDocuments()
-        const postsMongo = await postsCollection06.find({}).skip(skipCount).limit(pageSize).toArray()
+        const postsMongo:PostsType[] = await postsCollection06.find({}).skip(skipCount).limit(pageSize).lean()
         return {
             totalCount : totalCount,
             pageSize : pageSize,
@@ -16,7 +17,7 @@ export const postsRepositories06 ={
         }
     },
     async findPostId(postId:string)  {
-        const post = await postsCollection06.findOne({id:postId})
+        const post:PostsType = await postsCollection06.findOne({id:postId}).lean()
         if(post){
             return {post:convertBloggerPost(post),status:true}
         }
@@ -39,7 +40,7 @@ export const postsRepositories06 ={
             "bloggerId": bloggerId,
             "bloggerName": searchBlogger.name
         }
-        await postsCollection06.insertOne(newPost)
+        await postsCollection06.insertMany([newPost])
         return {newPost:convertBloggerPost(newPost) ,status:201}
     },
 

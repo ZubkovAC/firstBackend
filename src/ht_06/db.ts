@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {db, RegistrationTokenType} from "../ht_05/db";
 
 const BloggersSchema = new mongoose.Schema({
     id:String,

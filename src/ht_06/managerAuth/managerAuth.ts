@@ -1,5 +1,6 @@
 import {add} from "date-fns";
 import {registrationToken06} from "../db";
+import {RegistrationTokenType} from "../types";
 
 export const ManagerAuth05={
     mesRegistration(code:string){
@@ -13,7 +14,7 @@ export const ManagerAuth05={
 }
 
 export const manager = {
-    createUser(id:string,login:string,email:string,token:string,conformationCode:string){
+    async createUser(id:string,login:string,email:string,token:string,conformationCode:string) : Promise<RegistrationTokenType>{
         return {
             accountData:{
                 id:id,

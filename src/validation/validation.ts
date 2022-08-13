@@ -2,12 +2,11 @@ import {CountRepositories06} from "../ht_06/repositories/count-repositories06";
 const requestIp = require('request-ip')
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {bloggersCollection, commentsCollection, postsCollection, secret, usersCollection} from "../ht_04/db";
-import {registrationToken} from "../ht_05/db";
+import {bloggersCollection06, commentsCollection06, postsCollection06, registrationToken06} from "../ht_06/db";
 var jwt = require('jsonwebtoken')
 
-export const errorBloggerId =[]
-export const errorPostId =[]
+export let errorBloggerId =[]
+export let errorPostId =[]
 
 export const validationName15 =
     body('name')
@@ -111,7 +110,7 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
     next()
 }
 export const validationPostId = async (req: Request, res: Response,next:NextFunction) => {
-    let searchPost = await postsCollection.findOne({id:req.params.id})
+    let searchPost = await postsCollection06.findOne({id:req.params.id})
     if (searchPost === null){
         errorPostId.push({ message: "non found post ", field: "post" })
     }
@@ -119,7 +118,7 @@ export const validationPostId = async (req: Request, res: Response,next:NextFunc
     return
 }
 export const validationBloggerId = async (req: Request, res: Response,next:NextFunction) => {
-    let searchBlogger =  await bloggersCollection.findOne({id:req.body.bloggerId})
+    let searchBlogger =  await bloggersCollection06.findOne({id:req.body.bloggerId})
     if (searchBlogger === null){
         errorBloggerId.push({ message: "non found bloggerId ", field: "bloggerId" })
     }
@@ -155,7 +154,7 @@ export const validationEmailPattern =(req: Request, res: Response,next:NextFunct
 }
 
 export const validatorFindCommentId = async (req: Request, res: Response,next:NextFunction) => {
-    const commentsId = await commentsCollection.findOne({id:req.params.id})
+    const commentsId = await commentsCollection06.findOne({id:req.params.id})
     if(commentsId){
         next()
         return
@@ -167,8 +166,8 @@ export const validatorAccessUserCommentId = async (req: Request, res: Response,n
     let authHeader = req.headers?.authorization
     if(authHeader && authHeader.split(' ')[0] !== "Basic"){
         const parse = jwt.verify(authHeader.split(" ")[1],process.env.SECRET_KEY)
-        const userId = await registrationToken.findOne({"accountData.login":parse.login})
-        const commentsId = await commentsCollection.findOne({id:req.params.id})
+        const userId = await registrationToken06.findOne({"accountData.login":parse.login})
+        const commentsId = await commentsCollection06.findOne({id:req.params.id})
         if(userId.accountData.id === commentsId.userId){
             next()
             return
@@ -178,7 +177,7 @@ export const validatorAccessUserCommentId = async (req: Request, res: Response,n
     }
 }
 export const validatorPostIdComments = async (req: Request, res: Response,next:NextFunction) => {
-    const allCommentsPost = await postsCollection.find({idPostComment:req.params.id}).toArray()
+    const allCommentsPost = await postsCollection06.find({idPostComment:req.params.id}).lean()
     if(allCommentsPost){
         next()
         return
@@ -204,7 +203,7 @@ export const validatorRequest5 = async (req: Request, res: Response,next:NextFun
 }
 
 export const validationFindEmail = async (req: Request, res: Response, next:NextFunction) => {
-    const searchEmail = await registrationToken.findOne({"accountData.email":req.body.email})
+    const searchEmail = await registrationToken06.findOne({"accountData.email":req.body.email})
     if(searchEmail === null){
         next()
         return
@@ -215,7 +214,7 @@ export const validationFindEmail = async (req: Request, res: Response, next:Next
     return
 }
 export const validationNoFindEmail = async (req: Request, res: Response, next:NextFunction) => {
-    const searchEmail = await registrationToken.findOne({"accountData.email":req.body.email})
+    const searchEmail = await registrationToken06.findOne({"accountData.email":req.body.email})
     if(searchEmail && !searchEmail.emailConformation.isConfirmed ){
         next()
         return
@@ -226,7 +225,7 @@ export const validationNoFindEmail = async (req: Request, res: Response, next:Ne
     return
 }
 export const validationFindLogin = async (req: Request, res: Response, next:NextFunction) => {
-    const searchEmail = await registrationToken.findOne({"accountData.login":req.body.login})
+    const searchEmail = await registrationToken06.findOne({"accountData.login":req.body.login})
     if(searchEmail === null){
         next()
         return

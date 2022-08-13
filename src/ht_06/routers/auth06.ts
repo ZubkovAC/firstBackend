@@ -14,6 +14,7 @@ import {manager} from "../managerAuth/managerAuth";
 import * as nodemailer from "nodemailer"
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
+import {RegistrationTokenType} from "../types";
 
 
 export const RouterAuth06 = Router({})
@@ -39,7 +40,6 @@ RouterAuth06.post("/registration-confirmation",
         if(infoCode && infoCode.emailConformation.expirationDate > new Date()){
            await registrationToken06.updateOne({"emailConformation.conformationCode":code},{ $set:{"emailConformation.isConfirmed":true}})
             const infoCode = await registrationToken06.findOne({"emailConformation.conformationCode":code})
-            console.log(infoCode)
             res.send(204) // work
             return
         }
@@ -48,9 +48,7 @@ RouterAuth06.post("/registration-confirmation",
     })
 
 RouterAuth06.post("/registration",
-
     validatorRequest5,
-    // validatorRequestRegistration5,
     validatorCounterRequest5,
     validationLogin3_10,
     validationPassword6_20,
@@ -69,13 +67,13 @@ RouterAuth06.post("/registration",
         const id = uuidv4()
         const conformationCode = uuidv4()
         const token =  jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
-        const user = manager.createUser(id,login,email,token,conformationCode)
-        await registrationToken06.insertOne(user)
+        const user :RegistrationTokenType = await manager.createUser(id,login,email,token,conformationCode)
+        await registrationToken06.insertMany([user])
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
         // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
         const sendMailObject = await EmailAdapter05.sendMailer(process.env.EMAIL,email,conformationCode)
-        const info = await transporter.sendMail(sendMailObject)
+        // const info = await transporter.sendMail(sendMailObject)
         res.send(204)
         return
     })

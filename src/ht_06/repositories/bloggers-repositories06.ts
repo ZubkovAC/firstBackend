@@ -19,19 +19,27 @@ export type BloggersGetType = {
     pageSize:number
     page:number
     totalCount:number
-    items:Array<{id:string, name:string,youtubeUrl:string}>
+    items:Array<BloggerType>
+}
+export type BloggerType={
+    id:string
+    name:string
+    youtubeUrl:string
 }
 export type BloggerGetPostType = {
     pagesCount:number
     pageSize:number
     page:number
     totalCount:number
-    items:Array<{ id: string
-        "title": string
-        "shortDescription": string
-        "content": string
-        "bloggerId": string
-        "bloggerName": string}>
+    items:Array<BloggerPostType>
+}
+export type BloggerPostType={
+    id: string
+    title: string
+    shortDescription: string
+    content: string
+    bloggerId: string
+    bloggerName: string
 }
 
 export const bloggersRepositoryDb04 = {
@@ -40,13 +48,12 @@ export const bloggersRepositoryDb04 = {
         const query = {name: {$regex:searchNameTerm}}
         const totalCount = await bloggersCollection06.countDocuments(query)
 
-        const bloggersRestrict =
+        const bloggersRestrict:Array<BloggerType> =
             await bloggersCollection06
                 .find(query)
                 .skip(skipCount)
                 .limit(pageSize)
-                .toArray()
-
+                .lean()
         return {
             pagesCount: Math.ceil(totalCount/ pageSize),
             page:pageNumber,
@@ -65,13 +72,13 @@ export const bloggersRepositoryDb04 = {
     async findBloggerIdPosts(pageNumber:number, pageSize:number ,bloggerId:string): Promise< BloggerGetPostType | string >{
         let searchBloggerId : BloggersType | null = await bloggersCollection06.findOne({id:bloggerId})
         let skipCount = (pageNumber-1) * pageSize
-        const allPostsBlogger = await postsCollection06.find({bloggerId:bloggerId}).toArray()
+        const allPostsBlogger = await postsCollection06.find({bloggerId:bloggerId}).lean()
         const allPostsBloggerLength = allPostsBlogger.length
-        let postsBlogger = await  postsCollection06
+        let postsBlogger :Array<BloggerPostType> = await  postsCollection06
             .find({bloggerId:bloggerId})
             .skip(skipCount)
             .limit(pageSize)
-            .toArray()
+            .lean()
         if(searchBloggerId && postsBlogger){
             return {
                 pagesCount: Math.ceil(allPostsBloggerLength / pageSize),
@@ -93,7 +100,6 @@ export const bloggersRepositoryDb04 = {
             "name":name,
             "youtubeUrl": youtubeUrl
         }
-        // await bloggersCollection.insertOne(newBlogger)
         await bloggersCollection06.insertMany([newBlogger])
         return convertBlogger(newBlogger)
     },

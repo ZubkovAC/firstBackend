@@ -16,7 +16,7 @@ export const usersRepositories06 ={
             .find({})
             .skip(skipCount)
             .limit(pageSize)
-            .toArray()
+            .lean()
         return{
             "pagesCount": Math.ceil(totalCount/ pageSize),
             "page": pageNumber,
@@ -34,7 +34,7 @@ export const usersRepositories06 ={
             login:login,
             password:password
         }
-        await usersCollection06.insertOne(newUser)
+        await usersCollection06.insertMany([newUser])
         // await tokensCollection.insertOne({token:{accessToken:password, refreshToken:password}})
         return {
             id: idUser,
