@@ -1,5 +1,5 @@
 import {add} from "date-fns";
-import {registrationToken} from "../db";
+import {registrationToken06} from "../db";
 
 export const ManagerAuth05={
     mesRegistration(code:string){
@@ -30,7 +30,7 @@ export const manager = {
         }
     },
     async updateUser(email:string,conformationCode:string){
-        return registrationToken.updateOne(
+        return registrationToken06.updateOne(
             {"accountData.email": email},
             { $set:
                     {

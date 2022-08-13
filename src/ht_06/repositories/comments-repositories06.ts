@@ -1,4 +1,4 @@
-import {commentsCollection, registrationToken, secret, usersCollection} from "../db";
+import {commentsCollection06, registrationToken06} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {convertPostsComments} from "../convert/convert";
 // import jwt from "jsonwebtoken";
@@ -6,7 +6,7 @@ var jwt = require('jsonwebtoken')
 
 export const commentsRepositories06 ={
     async getComments(idComments:string){
-        const commentsId = await commentsCollection.findOne({id:idComments})
+        const commentsId = await commentsCollection06.findOne({id:idComments})
         return {
             "id":commentsId.id,
             "content": commentsId.content,
@@ -17,8 +17,8 @@ export const commentsRepositories06 ={
     },
     async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
-        const allCommentsPost = await commentsCollection.find({idPostComment:idComments}).toArray()
-        const commentsPost = await commentsCollection
+        const allCommentsPost = await commentsCollection06.find({idPostComment:idComments}).toArray()
+        const commentsPost = await commentsCollection06
             .find({idPostComment:idComments})
             .skip(skipCount)
             .limit(pageSize)
@@ -33,7 +33,7 @@ export const commentsRepositories06 ={
     },
     async createCommentsPost(idPosts:string,content:string,token:string){
         const parse = await jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
-        const userId = await registrationToken.findOne({"accountData.login":parse.login})
+        const userId = await registrationToken06.findOne({"accountData.login":parse.login})
         // const searchCommentsPost = await usersCollection.findOne({idPost:parse.id})
         const newCommentPost ={
             idPostComment: idPosts ,
@@ -43,7 +43,7 @@ export const commentsRepositories06 ={
             "userLogin": userId.accountData.login,
             "addedAt": new Date().toISOString()
         }
-        await commentsCollection.insertOne(newCommentPost)
+        await commentsCollection06.insertOne(newCommentPost)
         return {
             "id":newCommentPost.id,
             "content": newCommentPost.content,
@@ -53,11 +53,11 @@ export const commentsRepositories06 ={
         }
     },
     async updateComments(idComments:string,content:string){
-        const res = await commentsCollection.updateOne({id:idComments},{ $set:{content:content}})
+        const res = await commentsCollection06.updateOne({id:idComments},{ $set:{content:content}})
         return res.matchedCount===1
     },
     async deleteComments(idComments:string){
-        return  await commentsCollection.deleteOne({id:idComments})
+        return  await commentsCollection06.deleteOne({id:idComments})
     }
 }
 

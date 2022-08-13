@@ -1,4 +1,4 @@
-import {secret, usersCollection} from "../db";
+import {secret, usersCollection06} from "../db";
 // import jwt from 'jsonwebtoken'
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
@@ -7,12 +7,12 @@ import { v4 as uuidv4 } from 'uuid'
 
 export const usersRepositories06 ={
     async findUserId(userId:string){
-        return await usersCollection.findOne({id:userId})
+        return await usersCollection06.findOne({id:userId})
     },
     async getUsers(pageNumber: number, pageSize: number) {
         let skipCount = (pageNumber-1) * pageSize
-        const totalCount = await usersCollection.countDocuments()
-        const allUsers =  await usersCollection
+        const totalCount = await usersCollection06.countDocuments()
+        const allUsers =  await usersCollection06
             .find({})
             .skip(skipCount)
             .limit(pageSize)
@@ -34,7 +34,7 @@ export const usersRepositories06 ={
             login:login,
             password:password
         }
-        await usersCollection.insertOne(newUser)
+        await usersCollection06.insertOne(newUser)
         // await tokensCollection.insertOne({token:{accessToken:password, refreshToken:password}})
         return {
             id: idUser,
@@ -42,7 +42,7 @@ export const usersRepositories06 ={
         }
     },
     async deleteUser (idUser:string){
-        await usersCollection.deleteOne({id:idUser})
+        await usersCollection06.deleteOne({id:idUser})
         return
     }
 }

@@ -1,12 +1,12 @@
-import {bloggersCollection, postsCollection} from "../db";
+import {bloggersCollection06, postsCollection06} from "../db";
 import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
 
 export const postsRepositories06 ={
     async findPosts(pageNumber:number, pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
-        const totalCount = await postsCollection.countDocuments()
-        const postsMongo = await postsCollection.find({}).skip(skipCount).limit(pageSize).toArray()
+        const totalCount = await postsCollection06.countDocuments()
+        const postsMongo = await postsCollection06.find({}).skip(skipCount).limit(pageSize).toArray()
         return {
             totalCount : totalCount,
             pageSize : pageSize,
@@ -16,18 +16,18 @@ export const postsRepositories06 ={
         }
     },
     async findPostId(postId:string)  {
-        const post = await postsCollection.findOne({id:postId})
+        const post = await postsCollection06.findOne({id:postId})
         if(post){
             return {post:convertBloggerPost(post),status:true}
         }
         return {status:false}
     },
     async deletePostId(postId:string){
-        const res = await postsCollection.deleteOne({id:postId})
+        const res = await postsCollection06.deleteOne({id:postId})
         return res.deletedCount === 1
     },
     async createPost(title:string,shortDescription:string,content:string ,bloggerId:string){
-        let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
+        let searchBlogger = await bloggersCollection06.findOne({id:bloggerId})
         if(!searchBlogger && searchBlogger === null){
             return {errorsMessages:{ message: "non found bloggerId ", field: "bloggerId" } ,status:400}
         }
@@ -39,13 +39,13 @@ export const postsRepositories06 ={
             "bloggerId": bloggerId,
             "bloggerName": searchBlogger.name
         }
-        await postsCollection.insertOne(newPost)
+        await postsCollection06.insertOne(newPost)
         return {newPost:convertBloggerPost(newPost) ,status:201}
     },
 
     async updatePostId(postId:string,title:string,content:string,shortDescription:string,bloggerId:string){
-        let searchBlogger = await bloggersCollection.findOne({id:bloggerId})
-            await postsCollection.updateOne({id:postId},
+        let searchBlogger = await bloggersCollection06.findOne({id:bloggerId})
+            await postsCollection06.updateOne({id:postId},
                 { $set:
                         {   id:postId,
                             title:title,

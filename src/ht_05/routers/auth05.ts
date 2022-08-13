@@ -5,7 +5,7 @@ import {
     validationErrorAuth, validationFindEmail, validationFindLogin,
     validationLogin3_10, validationNoFindEmail,
     validationPassword6_20, validatorCounterRequest5,
-    validatorRequest5, validatorRequestRegistration5
+    validatorRequest5
 } from "../../validation/validation";
 import {registrationToken} from "../db";
 import {EmailAdapter05} from "../adapter/emailAdapter";
@@ -48,9 +48,7 @@ RouterAuth05.post("/registration-confirmation",
     })
 
 RouterAuth05.post("/registration",
-
     validatorRequest5,
-    // validatorRequestRegistration5,
     validatorCounterRequest5,
     validationLogin3_10,
     validationPassword6_20,

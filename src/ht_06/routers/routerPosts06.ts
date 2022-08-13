@@ -14,7 +14,7 @@ import {
 } from "../../validation/validation";
 import {serviceComments04} from "../service/service-comments";
 import {authorizationMiddleware06} from "../authorization-middleware06/authorization-middleware06";
-import {authorizationMiddleware03} from "../../ht_03/authorization-middleware/authorization-middleware03";
+import {authorizationMiddleware03} from "../authorization-middleware06/authorization-middleware03";
 
 export const RouterPosts06 = Router({})
 

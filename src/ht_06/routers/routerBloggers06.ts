@@ -1,6 +1,5 @@
 import {Request, Response, Router} from "express";
 import {bloggersServiceDb04} from "../service/service-bloggers";
-import {authorizationMiddleware03} from "../../ht_03/authorization-middleware/authorization-middleware03";
 import {
     validationContent, validationError,
     validationErrorCreatePosts, validationName15,
@@ -8,6 +7,7 @@ import {
     validationTitle, validationYoutubeUrl
 } from "../../validation/validation";
 import {postsService04} from "../service/service-posts";
+import { authorizationMiddleware03 } from "../authorization-middleware06/authorization-middleware03";
 
 export const RouterBloggers06 =  Router({})
 
@@ -67,7 +67,7 @@ RouterBloggers06.post('/',
         let name = req.body.name.trim()
         let youtubeUrl = req.body.youtubeUrl.trim()
         const createBlogger = await bloggersServiceDb04.createBlogger(name,youtubeUrl)
-        res.status(201).send(createBlogger.newBlogger)
+        res.status(201).send(createBlogger)
     })
 RouterBloggers06.put('/:id',
     authorizationMiddleware03,

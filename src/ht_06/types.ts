@@ -24,7 +24,6 @@ export type CommentsType = {
     "userLogin": string
     "addedAt": string
 }
-
 export type CountRequestType = {
     ip:string
     date:Date

@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {serviceUser04} from "../service/service-user";
 import {pageNumber, pageSize} from "../function";
-import {authorizationMiddleware03} from "../../ht_03/authorization-middleware/authorization-middleware03";
+import {authorizationMiddleware03} from "../authorization-middleware06/authorization-middleware03";
 import {validationErrorCreatePosts, validationLogin3_10, validationPassword6_20} from "../../validation/validation";
 
 export const RouterUsers06 = Router({})

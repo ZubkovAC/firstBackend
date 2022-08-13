@@ -1,6 +1,7 @@
-import {CommentsType} from "../db";
+import { CommentsType } from "../types"
 
-type BloggerMongoType = {
+
+export type BloggerMongoType = {
     id:string
     name:string
     youtubeUrl:string

@@ -5,9 +5,9 @@ import {
     validationErrorAuth, validationFindEmail, validationFindLogin,
     validationLogin3_10, validationNoFindEmail,
     validationPassword6_20, validatorCounterRequest5,
-    validatorRequest5, validatorRequestRegistration5
+    validatorRequest5
 } from "../../validation/validation";
-import {registrationToken} from "../db";
+import {registrationToken06} from "../db";
 import {EmailAdapter05} from "../adapter/emailAdapter";
 import {manager} from "../managerAuth/managerAuth";
 // var nodemailer = require("nodemailer")
@@ -23,7 +23,7 @@ RouterAuth06.post("/registration-confirmation",
     validatorCounterRequest5,
     async (req, res) => {
         const code = req.body.code
-        const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
+        const infoCode = await registrationToken06.findOne({"emailConformation.conformationCode":code})
         if(infoCode === null) {
             res.status(400).send({
                 errorsMessages: [{ message: 'not find code', field: "code" }]
@@ -37,8 +37,8 @@ RouterAuth06.post("/registration-confirmation",
             return
         }
         if(infoCode && infoCode.emailConformation.expirationDate > new Date()){
-           await registrationToken.updateOne({"emailConformation.conformationCode":code},{ $set:{"emailConformation.isConfirmed":true}})
-            const infoCode = await registrationToken.findOne({"emailConformation.conformationCode":code})
+           await registrationToken06.updateOne({"emailConformation.conformationCode":code},{ $set:{"emailConformation.isConfirmed":true}})
+            const infoCode = await registrationToken06.findOne({"emailConformation.conformationCode":code})
             console.log(infoCode)
             res.send(204) // work
             return
@@ -70,7 +70,7 @@ RouterAuth06.post("/registration",
         const conformationCode = uuidv4()
         const token =  jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
         const user = manager.createUser(id,login,email,token,conformationCode)
-        await registrationToken.insertOne(user)
+        await registrationToken06.insertOne(user)
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
         // const messageRegistration = ManagerAuth05.mesRegistration(conformationCode)
@@ -108,13 +108,13 @@ RouterAuth06.post('/login',
         // const parse = jwt.verify(test,secret.key)
         const login = req.body.login.trim()
         const password = req.body.password.trim()
-        const searchLogin = await registrationToken.findOne({"accountData.login": login})
+        const searchLogin = await registrationToken06.findOne({"accountData.login": login})
 
         if (searchLogin && searchLogin.emailConformation.isConfirmed) {
             const verify = jwt.verify(searchLogin.accountData.passwordHash,process.env.SECRET_KEY)
             if(verify.password === password ){
                 const token = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: '1h'})
-                await registrationToken.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
+                await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
                 res.status(200).send({token: token})
                 return
             }
