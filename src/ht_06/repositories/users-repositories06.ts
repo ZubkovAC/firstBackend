@@ -57,8 +57,7 @@ export const usersRepositories06 ={
         await registrationToken06.insertMany([user])
         return {
             id: idUser,
-            login:login,
-            email:email
+            login:login
         }
     },
     async deleteUser (idUser:string){
