@@ -132,7 +132,7 @@ RouterAuth06.post('/login',
                     const email = searchLogin.accountData.email
                     const token = await jwt.sign({ userId,login,email,password:verify.password},process.env.SECRET_KEY, {expiresIn: dateExpired["1h"]})
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
-                    res.cookie("refresh",searchLogin.accountData.passwordHash,{
+                    res.cookie("refreshToken",searchLogin.accountData.passwordHash,{
                         secure:true,
                         httpOnly:true
                     })
@@ -148,7 +148,7 @@ RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
 
         const token = req?.cookies.refresh
-        console.log('refresh',token)
+        console.log('refreshToken',token)
         if(token){
             try{
                 const parse = jwt.verify(token,process.env.SECRET_KEY)
@@ -194,7 +194,7 @@ RouterAuth06.post('/logout',
            const {userId, password, email, login} = userCookieToken
           const userCookie = jwt.sign({userId, password, email, login}, process.env.SECRET_KEY,{expiresIn: '1sec'})
            await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordHash":userCookie}})
-           res.clearCookie("refresh")
+           res.clearCookie("refreshToken")
            res.send(204)
        }catch (e) {
            res.send(401)
