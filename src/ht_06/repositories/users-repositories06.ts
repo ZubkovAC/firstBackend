@@ -1,4 +1,4 @@
-import {secret, usersCollection06, usersCollectionTest} from "../db";
+import {registrationToken06, secret, usersCollection06, usersCollectionTest} from "../db";
 // import jwt from 'jsonwebtoken'
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
@@ -53,9 +53,12 @@ export const usersRepositories06 ={
         )
         const conformationCode = uuidv4()
         const user :RegistrationTokenType = await manager.createUser(userId,refreshPassword,login,email,token,conformationCode)
+        console.log('hello')
+        await registrationToken06.insertMany([user])
         return {
             id: idUser,
-            login:login
+            login:login,
+            email:email
         }
     },
     async deleteUser (idUser:string){
