@@ -36,7 +36,8 @@ const RegistrationSchema = new mongoose.Schema({
         login:String,
         email:String,
         createAt:Date,
-        passwordHash:String
+        passwordHash:String,
+        refreshPassword:String
     },
     emailConformation:{
         conformationCode:String,
