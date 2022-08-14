@@ -124,7 +124,6 @@ RouterAuth06.post('/login',
         const password = req.body.password.trim()
         const searchLogin = await registrationToken06.findOne({"accountData.login": login})
         if (searchLogin ) {
-            console.log(searchLogin)
                 const verify = jwt.verify(searchLogin.accountData.passwordHash,process.env.SECRET_KEY)
                 if(verify.password === password ){
                     const userId = searchLogin.accountData.userId
@@ -146,7 +145,7 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
 
-        const token = req?.cookies.refreshToken
+        const token = req?.cookies.refresh
         console.log('refresh',token)
         if(token){
             try{
@@ -158,7 +157,7 @@ RouterAuth06.post('/refresh-token',
                 res.status(200).send({accessToken: passwordHash})
                 return
             }catch (e) {
-                if(req.cookies.refreshToken){
+                if(req.cookies.refresh){
                    const user = await registrationToken06.findOne({"emailConformation.conformationCode":req.cookies.refreshToken})
                     if(user){
                         const dateUser  = await jwt.verify(user,process.env.SECRET_KEY)
@@ -179,7 +178,7 @@ RouterAuth06.post('/refresh-token',
 RouterAuth06.post('/logout',
     async (req: Request, res: Response) => {
         // const token = req.headers.authorization.split(" ")[1]
-       const tokenRefresh = req.cookies.refreshToken
+       const tokenRefresh = req.cookies.refresh
        if(!tokenRefresh){
            res.send(401)
            return
