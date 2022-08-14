@@ -12,7 +12,7 @@ export const authorizationMiddleware06 = async (req: Request, res: Response , ne
             if(parse){
                 const userId = await registrationToken06.findOne({"accountData.login":parse.login})
 
-                if(userId && userId.emailConformation.isConfirmed && userId.accountData.passwordHash === authHeader.split(" ")[1] ){
+                if(userId && userId.emailConformation.isConfirmed && userId.accountData.passwordAccess === authHeader.split(" ")[1] ){
                     next()
                     return
                 }
