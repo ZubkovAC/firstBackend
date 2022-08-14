@@ -28,10 +28,10 @@ export const usersRepositories06 ={
             "items": allUsers.map(u=>({id:u.accountData.userId,login:u.accountData.login}) )
         }
     },
-    async createUser (login:string, password:string ,email:string,passwordHash:string,salt:string,jwtPas:string) {
+    async createUser (login:string,email:string,passwordHash:string,salt:string,jwtPas:string) {
         const userId = uuidv4()
         const conformationCode = uuidv4()
-        const user :RegistrationTokenType = await manager.createUser(userId,login,email,conformationCode,passwordHash,salt,jwtPas)
+        const user :RegistrationTokenType = await manager.createUser(login,email,passwordHash,salt,jwtPas,userId,conformationCode)
         console.log("user",user)
         await registrationToken06.insertMany([user])
         await usersCollection06.insertMany([user])

@@ -14,8 +14,8 @@ export const ManagerAuth05={
 }
 
 export const manager = {
-    async createUser(userId:string,login:string,email:string,conformationCode:string,
-                     passwordHash:string,salt:string,jwt:string) : Promise<RegistrationTokenType>{
+    async createUser(login:string,email:string,passwordHash:string,
+                     salt:string,jwt:string, userId:string,conformationCode:string) : Promise<RegistrationTokenType>{
 
         return {
             accountData:{

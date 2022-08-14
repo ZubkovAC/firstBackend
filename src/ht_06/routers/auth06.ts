@@ -166,16 +166,17 @@ RouterAuth06.post('/refresh-token',
                 return
             }catch (e) {
                 if(req.cookies.refreshToken){
-                   const user = await registrationToken06.findOne({"emailConformation.conformationCode":req.cookies.refreshToken})
+                   const user = await registrationToken06.findOne({"accountData.passwordRefresh":req.cookies.refreshToken})
                     if(user){
-                        const dateUser  = await jwt.verify(user,process.env.SECRET_KEY)
+                        const tokenUser = user.accountData.passwordAccess.split('.')[1]
+                        const dateUser  = await jwt.verify(tokenUser,process.env.SECRET_KEY)
                         const login = dateUser.login
                         const password = dateUser.password
                         const userId = dateUser.userId
                         const email = dateUser.email
-                        const passwordHash = await jwt.sign({ userId,login,email,password},process.env.SECRET_KEY, {expiresIn:  dateExpired["10sec"]})
-                        await registrationToken06.updateOne({"accountData.login": user.accountData.login},{$set: {"accountData.passwordHash":passwordHash}})
-                        res.status(200).send({accessToken: passwordHash})
+                        const passwordAccess = await jwt.sign({ userId,email,login},process.env.SECRET_KEY, {expiresIn:  dateExpired["10sec"]})
+                        await registrationToken06.updateOne({"accountData.login": user.accountData.login},{$set: {"accountData.passwordAccess":passwordAccess}})
+                        res.status(200).send({accessToken: passwordAccess})
                         return
                     }
                 }

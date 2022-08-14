@@ -28,9 +28,11 @@ RouterUsers06.post('/',
         const email = req.body.email.trim()
         const salt = await bcrypt.genSalt(10)
         const jwtPas = await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'1h'})
-        const passwordHash = await bcrypt.hashSync( password,salt)
-        console.log("passwordHash",passwordHash)
-        const users = await serviceUser04.createUsers(login,password,email,passwordHash,salt,jwtPas)
+
+        const refToken =    await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'2h'})
+        const passwordH = await bcrypt.hashSync( password,salt)
+        const passwordHash = passwordH+"."+refToken
+        const users = await serviceUser04.createUsers(login,email,passwordHash,salt,jwtPas)
         res.status(201).send(users)
         return;
     })
