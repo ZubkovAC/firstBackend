@@ -130,13 +130,14 @@ RouterAuth06.post('/login',
                 if(verify.password === password ){
                     const userId = searchLogin.accountData.userId
                     const email = searchLogin.accountData.email
-                    const token = await jwt.sign({ userId,login,email,password:verify.password},process.env.SECRET_KEY, {expiresIn: dateExpired["1h"]})
-                    await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordHash":token}})
-                    res.cookie("refreshToken",searchLogin.accountData.passwordHash,{
+                    // refreshToken
+                    const refreshToken = await jwt.sign({ userId,login,email,password:verify.password},process.env.SECRET_KEY, {expiresIn: dateExpired["20sec"]})
+                    await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.refreshPassword":refreshToken}})
+                    res.cookie("refreshToken",refreshToken,{
                         secure:true,
                         httpOnly:true
                     })
-                    res.status(200).send({accessToken: token}) // ??
+                    res.status(200).send({accessToken: req.headers.authorization}) // ??
                     return
                 }
         }
