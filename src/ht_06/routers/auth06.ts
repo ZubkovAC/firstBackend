@@ -73,8 +73,15 @@ RouterAuth06.post("/registration",
         const email = req.body.email.trim()
 
         const userId = uuidv4()
-        const token =  jwt.sign({userId, login,email,password},process.env.SECRET_KEY, {expiresIn: dateExpired["10sec"]})
-        const refreshPassword = jwt.sign({ userId,login,email,password},process.env.SECRET_KEY, {expiresIn: dateExpired["20sec"]})
+        const token =  jwt.sign({userId, login,email,password},
+            process.env.SECRET_KEY,
+            // {expiresIn: dateExpired["10sec"]}),
+            {expiresIn: dateExpired["1h"]})
+        const refreshPassword = jwt.sign({ userId,login,email,password},
+            process.env.SECRET_KEY,
+            // {expiresIn: dateExpired["20sec"]},
+            {expiresIn: dateExpired["2h"]}
+        )
         const conformationCode = uuidv4()
         const user :RegistrationTokenType = await manager.createUser(userId,refreshPassword,login,email,token,conformationCode)
         await registrationToken06.insertMany([user])
@@ -93,9 +100,12 @@ RouterAuth06.post("/registration-email-resending",
     validationNoFindEmail,
     async (req, res) => {
         const email = req.body.email
+
         const searchEmail = await registrationToken06.findOne({"accountData.email":email})
+
         const {userId,login , passwordHash } = searchEmail.accountData
         const password = jwt.verify(passwordHash,process.env.SECRET_KEY).password
+
         const conformationCode = uuidv4()
         const newEmail = await  manager.updateUser(email,conformationCode)
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
