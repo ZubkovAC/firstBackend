@@ -130,9 +130,12 @@ RouterAuth06.post('/login',
                     const email = searchLogin.accountData.email
                     // refreshToken
                     const salt = await bcrypt.genSalt(10)
-                    const passwordRefresh = await bcrypt.hashSync( password,salt)
+                    const refToken =    await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'2h'})
+                    const passwordH = await bcrypt.hashSync( password,salt)
+                    const passwordRefresh = passwordH+"."+refToken
 
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.refreshPassword":passwordRefresh,"accountData.salt":salt}})
+                    console.log("passwordRefresh",passwordRefresh)
                     res.cookie("refreshToken",passwordRefresh,{
                         secure:true,
                         httpOnly:true
