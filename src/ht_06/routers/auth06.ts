@@ -74,7 +74,7 @@ RouterAuth06.post("/registration",
 
         const userId = uuidv4()
 
-        const accessToken =  jwt.sign({userId, login,email,password},
+        const accessToken = await jwt.sign({userId, login,email,password},
             process.env.SECRET_KEY,
             // {expiresIn: dateExpired["10sec"]}),
             {expiresIn: dateExpired["1h"]})
@@ -104,7 +104,7 @@ RouterAuth06.post("/registration-email-resending",
         const searchEmail = await registrationToken06.findOne({"accountData.email":email})
 
         const {userId,login , passwordAccess } = searchEmail.accountData
-        const password = jwt.verify(passwordAccess,process.env.SECRET_KEY).password
+        // const password = jwt.verify(passwordAccess,process.env.SECRET_KEY).password
 
         const conformationCode = uuidv4()
         const newEmail = await  manager.updateUser(email,conformationCode)
