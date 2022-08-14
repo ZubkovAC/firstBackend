@@ -57,6 +57,9 @@ export const countRequestRegistration06 = mongoose.model('countRequestRegistrati
 export const countRequestEmailResending06 = mongoose.model('countRequestEmailResending', CountRequestSchema);
 export const countRequestRegistrationConformation06 = mongoose.model('countRequestRegistrationConformation', CountRequestSchema);
 
+export const usersCollectionTest = mongoose.model('usersTest', UsersSchema);
+export const registrationTokenTest = mongoose.model('registrationTokenTest', RegistrationSchema);
+
 export const secret = {
     key : process.env.SECRET_KEY
 }

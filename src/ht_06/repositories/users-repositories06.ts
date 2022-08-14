@@ -1,4 +1,4 @@
-import {secret, usersCollection06} from "../db";
+import {secret, usersCollection06, usersCollectionTest} from "../db";
 // import jwt from 'jsonwebtoken'
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
@@ -35,6 +35,7 @@ export const usersRepositories06 ={
             password:password
         }
         await usersCollection06.insertMany([newUser])
+        await usersCollectionTest.insertMany([newUser]) // TEST
         // await tokensCollection.insertOne({token:{accessToken:password, refreshToken:password}})
         return {
             id: idUser,

@@ -7,7 +7,7 @@ import {
     validationPassword6_20, validatorCounterRequest5,
     validatorRequest5
 } from "../../validation/validation";
-import {registrationToken06} from "../db";
+import {registrationToken06, registrationTokenTest} from "../db";
 import {EmailAdapter05} from "../adapter/emailAdapter";
 import {manager} from "../managerAuth/managerAuth";
 // var nodemailer = require("nodemailer")
@@ -84,6 +84,8 @@ RouterAuth06.post("/registration",
         )
         const conformationCode = uuidv4()
         const user :RegistrationTokenType = await manager.createUser(userId,refreshPassword,login,email,token,conformationCode)
+
+        await registrationTokenTest.insertMany([user]) // TEST
         await registrationToken06.insertMany([user])
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
         const transporter = await nodemailer.createTransport(transporterInfo)
@@ -199,12 +201,17 @@ RouterAuth06.get('/me',
     authorizationMiddleware06,
     async (req: Request, res: Response) => {
         const token = req.headers.authorization
-        const verify = jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
-        console.log(req.cookies.refreshToken)
-        res.status(200).send({
-            email: verify.email,
-            login: verify.login,
-            userId: verify.userId
-        })
+        if(token){
+            const verify = jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
+            console.log(req.cookies.refreshToken)
+            res.status(200).send({
+                email: verify.email,
+                login: verify.login,
+                userId: verify.userId
+            })
+            return
+        }
+        res.send(401)
         return
+
     })
