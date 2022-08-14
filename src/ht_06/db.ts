@@ -49,7 +49,8 @@ const RegistrationSchema = new mongoose.Schema({
 
 export const bloggersCollection06 = mongoose.model('bloggers', BloggersSchema);
 export const postsCollection06 = mongoose.model('posts', PostsSchema);
-export const usersCollection06 = mongoose.model('users', UsersSchema);
+// export const usersCollection06 = mongoose.model('users', UsersSchema);
+export const usersCollection06 = mongoose.model('users', RegistrationSchema);
 export const commentsCollection06 = mongoose.model('comments', CommentsSchema);
 export const registrationToken06 = mongoose.model('registrationToken', RegistrationSchema);
 // 429 auth

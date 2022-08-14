@@ -25,14 +25,16 @@ export const usersRepositories06 ={
             "page": pageNumber,
             "pageSize": pageSize,
             "totalCount": totalCount,
-            "items": allUsers.map(u=>({id:u.id,login:u.login}) )
+            "items": allUsers.map(u=>({id:u.accountData.userId,login:u.accountData.login}) )
         }
     },
     async createUser (login:string, password:string ,email:string,passwordHash:string,salt:string,jwtPas:string) {
         const userId = uuidv4()
         const conformationCode = uuidv4()
         const user :RegistrationTokenType = await manager.createUser(userId,login,email,conformationCode,passwordHash,salt,jwtPas)
+        console.log("user",user)
         await registrationToken06.insertMany([user])
+        await usersCollection06.insertMany([user])
         return {
             id: userId,
             login:login
