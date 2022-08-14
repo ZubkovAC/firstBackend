@@ -137,7 +137,7 @@ RouterAuth06.post('/login',
                         secure:true,
                         httpOnly:true
                     })
-                    res.status(200).send({accessToken: req.headers.authorization}) // ??
+                    res.status(200).send({accessToken: searchLogin.accountData.passwordHash}) // ??
                     return
                 }
         }
