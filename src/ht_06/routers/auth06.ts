@@ -148,11 +148,11 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
 
-        const token = req?.cookies.refresh
-        console.log('refreshToken',token)
-        if(token){
+        const refreshToken = req.cookies.refreshToken
+        console.log('refreshToken',refreshToken)
+        if(refreshToken){
             try{
-                const parse = jwt.verify(token,process.env.SECRET_KEY)
+                const parse = jwt.verify(refreshToken,process.env.SECRET_KEY)
                 const login = parse.login
                 const password = parse.password
                 const userId = parse.userId
@@ -162,7 +162,7 @@ RouterAuth06.post('/refresh-token',
                 res.status(200).send({accessToken: passwordHash})
                 return
             }catch (e) {
-                if(req.cookies.refresh){
+                if(req.cookies.refreshToken){
                    const user = await registrationToken06.findOne({"emailConformation.conformationCode":req.cookies.refreshToken})
                     if(user){
                         const dateUser  = await jwt.verify(user,process.env.SECRET_KEY)
@@ -185,7 +185,7 @@ RouterAuth06.post('/refresh-token',
 RouterAuth06.post('/logout',
     async (req: Request, res: Response) => {
         // const token = req.headers.authorization.split(" ")[1]
-       const tokenRefresh = req.cookies.refresh
+       const tokenRefresh = req.cookies.refreshToken
        if(!tokenRefresh){
            res.send(401)
            return
