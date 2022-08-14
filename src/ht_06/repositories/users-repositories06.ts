@@ -28,35 +28,13 @@ export const usersRepositories06 ={
             "items": allUsers.map(u=>({id:u.id,login:u.login}) )
         }
     },
-    async createUser (login:string, password:string ,email:string) {
-        const idUser = uuidv4()
-        const test = jwt.sign({ id: idUser }, secret.key,{expiresIn:'1h'});
-        const parse = jwt.verify(test,secret.key)
-        const newUser = {
-            id: idUser,
-            login:login,
-            password:password,
-            email:email
-        }
-        await usersCollection06.insertMany([newUser])
-
-        // for TEST
+    async createUser (login:string, password:string ,email:string,passwordHash:string,salt:string,jwtPas:string) {
         const userId = uuidv4()
-        const token =  jwt.sign({userId, login,email,password},
-            process.env.SECRET_KEY,
-            // {expiresIn: dateExpired["10sec"]}),
-            {expiresIn: dateExpired["1h"]})
-        const refreshPassword = jwt.sign({ userId,login,email,password},
-            process.env.SECRET_KEY,
-            // {expiresIn: dateExpired["20sec"]},
-            {expiresIn: dateExpired["2h"]}
-        )
         const conformationCode = uuidv4()
-        const user :RegistrationTokenType = await manager.createUser(userId,refreshPassword,login,email,token,conformationCode)
-        console.log('hello')
+        const user :RegistrationTokenType = await manager.createUser(userId,login,email,conformationCode,passwordHash,salt,jwtPas)
         await registrationToken06.insertMany([user])
         return {
-            id: idUser,
+            id: userId,
             login:login
         }
     },

@@ -3,7 +3,9 @@ import {serviceUser04} from "../service/service-user";
 import {pageNumber, pageSize} from "../function";
 import {authorizationMiddleware03} from "../authorization-middleware06/authorization-middleware03";
 import {validationErrorCreatePosts, validationLogin3_10, validationPassword6_20} from "../../validation/validation";
-import {usersCollectionTest} from "../db";
+var jwt = require('jsonwebtoken')
+import {dateExpired} from "./auth06";
+const bcrypt = require('bcrypt')
 
 export const RouterUsers06 = Router({})
 
@@ -24,10 +26,16 @@ RouterUsers06.post('/',
         const login = req.body.login.trim()
         const password = req.body.password.trim()
         const email = req.body.email.trim()
-        const users = await serviceUser04.createUsers(login,password,email)
+        const salt = await bcrypt.genSalt(10)
+        const jwtPas = await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'1h'})
+        const passwordHash = await bcrypt.hashSync( password,salt)
+        console.log("passwordHash",passwordHash)
+        const users = await serviceUser04.createUsers(login,password,email,passwordHash,salt,jwtPas)
         res.status(201).send(users)
         return;
     })
+
+
 RouterUsers06.delete('/:id',
     authorizationMiddleware03,
     async (req: Request, res: Response) => {

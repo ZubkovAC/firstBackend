@@ -34,8 +34,9 @@ export type RegistrationTokenType = {
         login:string
         email:string
         createAt:Date
-        passwordHash:string
-        refreshPassword:string
+        passwordAccess:string
+        passwordRefresh:string,
+        salt:string
     }
     emailConformation:{
         conformationCode:string
