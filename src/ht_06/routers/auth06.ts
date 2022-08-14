@@ -21,7 +21,7 @@ import {addSeconds} from "date-fns";
 
 export const RouterAuth06 = Router({})
 
-const dateExpired={
+export const dateExpired={
     '10sec':'10sec',
     '20sec':'20sec',
     '1h':'1h',
@@ -154,7 +154,9 @@ RouterAuth06.post('/refresh-token',
                 const parse = jwt.verify(token,process.env.SECRET_KEY)
                 const login = parse.login
                 const password = parse.password
-                const passwordHash = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn: dateExpired["10sec"]})
+                const userId = parse.userId
+                const email = parse.email
+                const passwordHash = await jwt.sign({ userId, login,email,password},process.env.SECRET_KEY, {expiresIn: dateExpired["10sec"]})
                 await registrationToken06.updateOne({"accountData.login": parse.login},{$set: {"accountData.passwordHash":passwordHash}})
                 res.status(200).send({accessToken: passwordHash})
                 return
@@ -165,7 +167,9 @@ RouterAuth06.post('/refresh-token',
                         const dateUser  = await jwt.verify(user,process.env.SECRET_KEY)
                         const login = dateUser.login
                         const password = dateUser.password
-                        const passwordHash = await jwt.sign({ login,password},process.env.SECRET_KEY, {expiresIn:  dateExpired["10sec"]})
+                        const userId = dateUser.userId
+                        const email = dateUser.email
+                        const passwordHash = await jwt.sign({ userId,login,email,password},process.env.SECRET_KEY, {expiresIn:  dateExpired["10sec"]})
                         await registrationToken06.updateOne({"accountData.login": user.accountData.login},{$set: {"accountData.passwordHash":passwordHash}})
                         res.status(200).send({accessToken: passwordHash})
                         return

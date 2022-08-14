@@ -7,7 +7,7 @@ export const serviceUser04 ={
     async getUsers(pageNumber:number, pageSize:number){
        return  await usersRepositories06.getUsers(pageNumber,pageSize)
     },
-    async createUsers(login:string, password:string){
+    async createUsers(login:string, password:string,email:string){
        return  await usersRepositories06.createUser(login,password)
     },
     async deleteUsers(userId:string){

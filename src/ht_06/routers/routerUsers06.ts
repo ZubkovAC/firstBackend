@@ -23,7 +23,8 @@ RouterUsers06.post('/',
     async (req: Request, res: Response) => {
         const login = req.body.login.trim()
         const password = req.body.password.trim()
-        const users = await serviceUser04.createUsers(login,password)
+        const email = req.body.email.trim()
+        const users = await serviceUser04.createUsers(login,password,email)
         res.status(201).send(users)
         return;
     })
