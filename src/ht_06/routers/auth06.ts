@@ -132,13 +132,13 @@ RouterAuth06.post('/login',
                     const salt = await bcrypt.genSalt(10)
                     const refToken =    await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'2h'})
                     const passwordH = await bcrypt.hashSync( password,salt)
-                    const passwordRefresh = passwordH+"."+refToken
+                    const passwordRefresh = passwordH + "." + refToken
 
-                    await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.refreshPassword":passwordRefresh,"accountData.salt":salt}})
-                    console.log("passwordRefresh",passwordRefresh)
+                    await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.refreshPassword":passwordRefresh,"accountData.salt":passwordH}})
+                    console.log("222",passwordRefresh)
                     res.cookie("refreshToken",passwordRefresh,{
-                        secure:true,
-                        httpOnly:true
+                        // secure:true,
+                        // httpOnly:true
                     })
                     res.status(200).send({accessToken: searchLogin.accountData.passwordAccess}) // ??
                     return
@@ -152,15 +152,22 @@ RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
 
         const refreshToken = req.cookies.refreshToken
-        console.log('refreshToken',refreshToken)
-        if(refreshToken){
+        const Token = req.headers.authorization.split(" ")[1]
+        console.log("333",refreshToken)
+        const user1 = await registrationToken06.findOne({"accountData.passwordAccess":Token})
+        console.log('user',user1)
+        const user = await registrationToken06.findOne({"accountData.passwordRefresh":refreshToken})
+        console.log('user',user)
+        if(user){
             try{
                 const user = await registrationToken06.findOne({"accountData.passwordRefresh":refreshToken})
-                const userToken = jwt.verify(user.accountData.passwordAccess,process.env.SECRET_KEY)
+                const deToken = user.accountData.passwordAccess.split('.')[1]
+                const userToken = await jwt.verify(deToken,process.env.SECRET_KEY)
                 const login = user.accountData.login
                 const userId = user.accountData.userId
                 const email = user.accountData.email
                 const salt = await bcrypt.genSalt(10)
+                console.log('userPass',userToken.password)
                 const passwordRefresh = await bcrypt.hashSync( userToken.password,salt)
                 await registrationToken06.updateOne({"accountData.login": login},
                     {$set: {"accountData.passwordRefresh":passwordRefresh ,
