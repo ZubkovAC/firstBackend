@@ -25,6 +25,7 @@ export const dateExpired={
     "0":"0sec",
     '1':'1sec',
     '10sec':'10sec',
+    '15sec':'15sec',
     '20sec':'20sec',
     '1h':'1h',
     '2h':'2h'
@@ -118,7 +119,7 @@ RouterAuth06.post('/login',
                     const userId = searchLogin.accountData.userId
                     const email = searchLogin.accountData.email
                     const login = searchLogin.accountData.login
-                    const passwordAccess =    await createJWT({userId,login,email},dateExpired["10sec"])
+                    const passwordAccess =    await createJWT({userId,login,email},dateExpired["15sec"])
                     const passwordRefresh =    await createJWT({userId,login,email},dateExpired["20sec"])
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
                     res.cookie("refreshToken",passwordRefresh,{
@@ -136,10 +137,11 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const authorizationToken = req.headers?.authorization
-        if(req.cookies?.refreshToken){
-            const t = await backListToken.findOne({token:req.cookies?.refreshToken})
-            console.log("~~~~~~~~~~~~~~~~~~" ,t)
+        const cookies = req.cookies?.refreshToken
+        if(cookies){
+            const t = await backListToken.findOne({token:cookies})
             if(t){
+                console.log("~~~~~~~~~~~~~~~~~~" ,t)
                 res.send(401)
                 return
             }
