@@ -136,8 +136,15 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
-        const user = await registrationToken06.findOne({"accountData.passwordRefresh":refreshToken})
-        if(user){
+        if(refreshToken){
+            try{
+                jwt.verify(refreshToken,process.env.SECRET_KEY)
+            }catch (e) {
+                res.send(401)
+                return
+            }
+            const user = await registrationToken06.findOne({"accountData.passwordRefresh":refreshToken})
+            if(user){
                 const login = user.accountData.login
                 const userId = user.accountData.userId
                 const email = user.accountData.email
@@ -146,6 +153,7 @@ RouterAuth06.post('/refresh-token',
                     {$set: {"accountData.passwordRefresh":passwordRefresh }})
                 res.status(200).send({accessToken: user.accountData.passwordAccess})
                 return
+            }
         }
         res.send(401)
         return
