@@ -180,7 +180,7 @@ RouterAuth06.post('/refresh-token',
                     const passwordAccess = await createJWT({userId,login,email},dateExpired["10sec"])
                     await registrationToken06.updateOne({"accountData.login": login},
                         {$set: {"accountData.passwordRefresh":passwordRefresh }})
-                    await backListToken.insertMany([{userId,cookies}])
+                    await backListToken.insertMany([{userId,token:cookies}])
                     res.cookie("refreshToken",passwordRefresh,{
                         secure:true,
                         httpOnly:true
