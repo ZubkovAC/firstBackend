@@ -33,7 +33,7 @@ RouterUsers06.post('/',
         const passwordRefresh = await createJWT({userId,login,email},dateExpired["2h"] )
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hashSync(password,salt)
-        const users = await serviceUser04.createUsers(userId,login,email,passwordAccess,passwordRefresh,hash,salt)
+        const users = await serviceUser04.createUsers(userId,login,email,passwordAccess,passwordRefresh,hash,salt ,true)
         res.status(201).send(users)
         return;
     })

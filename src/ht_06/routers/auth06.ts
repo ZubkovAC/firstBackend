@@ -94,8 +94,6 @@ RouterAuth06.post("/registration-email-resending",
     validationNoFindEmail,
     async (req, res) => {
         const email = req.body.email
-
-        // const searchEmail = await registrationToken06.findOne({"accountData.email":email})
         const conformationCode = uuidv4()
         const newEmail = await  manager.updateUser(email,conformationCode)
         const transporterInfo = EmailAdapter05.createTransporter(process.env.EMAIL,process.env.PASSWORD)
@@ -118,15 +116,16 @@ RouterAuth06.post('/login',
                 if(verify){
                     const userId = searchLogin.accountData.userId
                     const email = searchLogin.accountData.email
-                    const login = searchLogin.accountData.email
+                    const login = searchLogin.accountData.login
                     const passwordAccess =    await createJWT({userId,login,email},dateExpired["10sec"])
                     const passwordRefresh =    await createJWT({userId,login,email},dateExpired["20sec"])
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
+                    console.log("passwordRefresh",passwordRefresh)
                     res.cookie("refreshToken",passwordRefresh,{
-                        secure:true,
-                        httpOnly:true
+                        // secure:true,
+                        // httpOnly:true
                     })
-                    res.status(200).send({accessToken: searchLogin.accountData.passwordAccess}) // ??
+                    res.status(200).send({accessToken: passwordAccess}) // ??
                     return
                 }
         }
@@ -136,10 +135,7 @@ RouterAuth06.post('/login',
 
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
-
         const refreshToken = req.cookies.refreshToken
-        // const Token = req.headers.authorization.split(" ")[1]
-        // const user1 = await registrationToken06.findOne({"accountData.passwordAccess":Token})
         const user = await registrationToken06.findOne({"accountData.passwordRefresh":refreshToken})
         if(user){
                 const login = user.accountData.login
@@ -157,7 +153,6 @@ RouterAuth06.post('/refresh-token',
 
 RouterAuth06.post('/logout',
     async (req: Request, res: Response) => {
-        // const token = req.headers.authorization.split(" ")[1]
        const tokenRefresh = req.cookies.refreshToken
        if(!tokenRefresh){
            res.send(401)

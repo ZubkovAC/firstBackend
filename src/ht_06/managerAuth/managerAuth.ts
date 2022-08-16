@@ -15,7 +15,7 @@ export const ManagerAuth05={
 
 export const manager = {
     async createUser(login:string, email:string,passwordAccess:string,passwordRefresh:string,
-                     hash:string,salt:string, userId:string,conformationCode:string) : Promise<RegistrationTokenType>{
+                     hash:string,salt:string, userId:string,conformationCode:string ,isConfirmed?:boolean) : Promise<RegistrationTokenType>{
 
         return {
             accountData:{
@@ -31,7 +31,7 @@ export const manager = {
             emailConformation:{
                 conformationCode: conformationCode ,
                 expirationDate: add(new Date(),{minutes:5}),
-                isConfirmed:false
+                isConfirmed:isConfirmed? isConfirmed:false
             }
         }
     },
