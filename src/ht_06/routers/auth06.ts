@@ -120,7 +120,6 @@ RouterAuth06.post('/login',
                     const passwordAccess =    await createJWT({userId,login,email},dateExpired["10sec"])
                     const passwordRefresh =    await createJWT({userId,login,email},dateExpired["20sec"])
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
-                    console.log("passwordRefresh",passwordRefresh)
                     res.cookie("refreshToken",passwordRefresh,{
                         secure:true,
                         httpOnly:true
@@ -138,20 +137,21 @@ RouterAuth06.post('/refresh-token',
         const refreshToken = req.cookies.refreshToken
         if(refreshToken){
             try{
-                jwt.verify(refreshToken,process.env.SECRET_KEY)
+                const token =await jwt.verify(refreshToken,process.env.SECRET_KEY)
+                const userId = token.userId
+                const user = await registrationToken06.findOne({"accountData.userId":userId})
+                if(user){
+                    const login = user.accountData.login
+                    const userId = user.accountData.userId
+                    const email = user.accountData.email
+                    const passwordRefresh = await createJWT({userId,login,email},dateExpired["20sec"])
+                    await registrationToken06.updateOne({"accountData.login": login},
+                        {$set: {"accountData.passwordRefresh":passwordRefresh }})
+                    res.status(200).send({accessToken: user.accountData.passwordAccess})
+                    return
+                }
             }catch (e) {
                 res.send(401)
-                return
-            }
-            const user = await registrationToken06.findOne({"accountData.passwordRefresh":refreshToken})
-            if(user){
-                const login = user.accountData.login
-                const userId = user.accountData.userId
-                const email = user.accountData.email
-                const passwordRefresh = await createJWT({userId,login,email},dateExpired["20sec"])
-                await registrationToken06.updateOne({"accountData.login": login},
-                    {$set: {"accountData.passwordRefresh":passwordRefresh }})
-                res.status(200).send({accessToken: user.accountData.passwordAccess})
                 return
             }
         }
