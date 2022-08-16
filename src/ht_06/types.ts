@@ -36,6 +36,7 @@ export type RegistrationTokenType = {
         createAt:Date
         passwordAccess:string
         passwordRefresh:string,
+        hash:string
         salt:string
     }
     emailConformation:{
@@ -43,4 +44,10 @@ export type RegistrationTokenType = {
         expirationDate:Date
         isConfirmed:boolean
     }
+}
+
+export type dateUserJwtType ={
+    userId:string
+    login:string
+    email:string
 }

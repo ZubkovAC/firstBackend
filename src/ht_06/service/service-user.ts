@@ -7,8 +7,8 @@ export const serviceUser04 ={
     async getUsers(pageNumber:number, pageSize:number){
        return  await usersRepositories06.getUsers(pageNumber,pageSize)
     },
-    async createUsers(login:string, email:string,passwordHash:string,salt:string,jwtPas:string){
-       return  await usersRepositories06.createUser(login,email,passwordHash,salt,jwtPas)
+    async createUsers(userId:string,login:string, email:string,passwordAccess:string,passwordRefresh:string,hash:string,salt:string){
+       return  await usersRepositories06.createUser(userId,login,email,passwordAccess,passwordRefresh,hash,salt)
     },
     async deleteUsers(userId:string){
        return  await usersRepositories06.deleteUser(userId)

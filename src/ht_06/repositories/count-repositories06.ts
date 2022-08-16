@@ -26,7 +26,7 @@ export const CountRepositories06 ={
         const date = new Date()
         const repo = searchRepo(path)
         const req = await repo.find({ip:ip}).lean()
-        const f = req.filter(d=> addSeconds(d.date,10) > date  )
+        const f = req.filter(d=> addSeconds(d.date,10) > date )
         return f?.length >= 5
     },
 }

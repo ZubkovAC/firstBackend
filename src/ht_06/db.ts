@@ -38,7 +38,8 @@ const RegistrationSchema = new mongoose.Schema({
         createAt:Date,
         passwordAccess:String,
         passwordRefresh:String,
-        salt:String
+        hash:String,
+        salt:String // for test BCRUPT
     },
     emailConformation:{
         conformationCode:String,

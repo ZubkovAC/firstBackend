@@ -4,6 +4,8 @@ import {pageNumber, pageSize} from "../function";
 import {authorizationMiddleware03} from "../authorization-middleware06/authorization-middleware03";
 import {validationErrorCreatePosts, validationLogin3_10, validationPassword6_20} from "../../validation/validation";
 var jwt = require('jsonwebtoken')
+import { v4 as uuidv4 } from 'uuid'
+import {createJWT} from "../helpers/helpers";
 import {dateExpired} from "./auth06";
 const bcrypt = require('bcrypt')
 
@@ -26,17 +28,15 @@ RouterUsers06.post('/',
         const login = req.body.login.trim()
         const password = req.body.password.trim()
         const email = req.body.email.trim()
+        const userId = uuidv4()
+        const passwordAccess = await createJWT({userId,login,email},dateExpired["1h"] )
+        const passwordRefresh = await createJWT({userId,login,email},dateExpired["2h"] )
         const salt = await bcrypt.genSalt(10)
-        const jwtPas = await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'1h'})
-
-        const refToken =    await jwt.sign({login,email,password},process.env.SECRET_KEY,{expiresIn:'2h'})
-        const passwordH = await bcrypt.hashSync( password,salt)
-        const passwordHash = passwordH+"."+refToken
-        const users = await serviceUser04.createUsers(login,email,passwordHash,salt,jwtPas)
+        const hash = await bcrypt.hashSync(password,salt)
+        const users = await serviceUser04.createUsers(userId,login,email,passwordAccess,passwordRefresh,hash,salt)
         res.status(201).send(users)
         return;
     })
-
 
 RouterUsers06.delete('/:id',
     authorizationMiddleware03,
