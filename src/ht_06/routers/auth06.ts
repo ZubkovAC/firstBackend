@@ -122,8 +122,8 @@ RouterAuth06.post('/login',
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
                     console.log("passwordRefresh",passwordRefresh)
                     res.cookie("refreshToken",passwordRefresh,{
-                        // secure:true,
-                        // httpOnly:true
+                        secure:true,
+                        httpOnly:true
                     })
                     res.status(200).send({accessToken: passwordAccess}) // ??
                     return
