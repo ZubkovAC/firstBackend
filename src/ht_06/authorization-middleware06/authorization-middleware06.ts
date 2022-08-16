@@ -18,10 +18,12 @@ export const authorizationMiddleware06 = async (req: Request, res: Response , ne
                 }
             }
         }catch {
+            console.log('Error-code')
             res.send(401)
             return;
         }
     }
+    console.log('Error-authorization')
     res.send(401)
     return;
 }
