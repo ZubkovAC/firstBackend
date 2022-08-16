@@ -168,7 +168,7 @@ RouterAuth06.post('/refresh-token',
             return
         }
             try{
-                const userToken =await jwt.verify(cookies,process.env.SECRET_KEY)
+                const userToken = await jwt.verify(cookies,process.env.SECRET_KEY)
                 const userId = userToken.userId
                 const user = await registrationToken06.findOne({"accountData.userId":userId})
                 if(user){
@@ -176,13 +176,16 @@ RouterAuth06.post('/refresh-token',
                     const userId = user.accountData.userId
                     const email = user.accountData.email
                     const passwordRefresh = await createJWT({userId,login,email},dateExpired["20sec"])
+                    // test >
+                    const passwordAccess = await createJWT({userId,login,email},dateExpired["10sec"])
                     await registrationToken06.updateOne({"accountData.login": login},
                         {$set: {"accountData.passwordRefresh":passwordRefresh }})
                     res.cookie("refreshToken",passwordRefresh,{
                         secure:true,
                         httpOnly:true
                     })
-                    res.status(200).send({accessToken: user.accountData.passwordAccess})
+                    // res.status(200).send({accessToken: user.accountData.passwordAccess})
+                    res.status(200).send({accessToken: passwordAccess})
                     return
                 }
             }catch (e) {
