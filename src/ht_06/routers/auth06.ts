@@ -111,9 +111,10 @@ RouterAuth06.post('/login',
     async (req: Request, res: Response) => {
         const login = req.body.login.trim()
         const password = req.body.password.trim()
+
         const searchLogin = await registrationToken06.findOne({"accountData.login": login})
         if (searchLogin ) {
-                const verify = await bcrypt.compare(password,searchLogin.accountData.salt)
+                const verify = await bcrypt.compare(password,searchLogin.accountData.hash)
                 if(verify){
                     const userId = searchLogin.accountData.userId
                     const email = searchLogin.accountData.email
@@ -121,10 +122,9 @@ RouterAuth06.post('/login',
                     const passwordAccess =    await createJWT({userId,login,email},dateExpired["10sec"])
                     const passwordRefresh =    await createJWT({userId,login,email},dateExpired["20sec"])
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
-                    // console.log("222",passwordRefresh)
                     res.cookie("refreshToken",passwordRefresh,{
-                        // secure:true,
-                        // httpOnly:true
+                        secure:true,
+                        httpOnly:true
                     })
                     res.status(200).send({accessToken: searchLogin.accountData.passwordAccess}) // ??
                     return
