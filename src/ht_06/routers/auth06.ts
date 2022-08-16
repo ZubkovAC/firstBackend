@@ -136,6 +136,14 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const authorizationToken = req.headers?.authorization
+        if(req.cookies?.refreshToken){
+            const t = await backListToken.findOne({token:req.cookies?.refreshToken})
+            console.log("~~~~~~~~~~~~~~~~~~" ,t)
+            if(t){
+                res.send(401)
+                return
+            }
+        }
         // if(!req.cookies?.refreshToken){
         //     const user = await jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
         //     const listUser :Array<{userId:string,token:string}> = await backListToken.find({userId:user.userId}).lean()
@@ -200,6 +208,7 @@ RouterAuth06.post('/logout',
 RouterAuth06.get('/me',
     authorizationMiddleware06,
     async (req: Request, res: Response) => {
+
         const token = req.headers.authorization
         if(token){
             const verify = jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
