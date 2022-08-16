@@ -134,6 +134,23 @@ RouterAuth06.post('/login',
         return
     })
 
+
+// if(!req.cookies?.refreshToken){
+//     const user = await jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
+//     const listUser :Array<{userId:string,token:string}> = await backListToken.find({userId:user.userId}).lean()
+//     if(listUser?.length > 0) {
+//         const test =listUser.some( user=> user.token === req.cookies?.refreshToken)
+//         res.send(401)
+//         return
+//     }
+//     try{
+//         const refreshToken =  jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
+//     }catch (e){
+//         res.send(401)
+//         return
+//     }
+// }
+
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const authorizationToken = req.headers?.authorization
@@ -146,21 +163,6 @@ RouterAuth06.post('/refresh-token',
                 return
             }
         }
-        // if(!req.cookies?.refreshToken){
-        //     const user = await jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
-        //     const listUser :Array<{userId:string,token:string}> = await backListToken.find({userId:user.userId}).lean()
-        //     if(listUser?.length > 0) {
-        //         const test =listUser.some( user=> user.token === req.cookies?.refreshToken)
-        //         res.send(401)
-        //         return
-        //     }
-        //     try{
-        //         const refreshToken =  jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
-        //     }catch (e){
-        //         res.send(401)
-        //         return
-        //     }
-        // }
             try{
                 const token = req.headers?.authorization.split(' ')[1]
                 const userToken =await jwt.verify(token,process.env.SECRET_KEY)
@@ -173,6 +175,10 @@ RouterAuth06.post('/refresh-token',
                     const passwordRefresh = await createJWT({userId,login,email},dateExpired["20sec"])
                     await registrationToken06.updateOne({"accountData.login": login},
                         {$set: {"accountData.passwordRefresh":passwordRefresh }})
+                    res.cookie("refreshToken",passwordRefresh,{
+                        secure:true,
+                        httpOnly:true
+                    })
                     res.status(200).send({accessToken: user.accountData.passwordAccess})
                     return
                 }
@@ -180,7 +186,6 @@ RouterAuth06.post('/refresh-token',
                 res.send(401)
                 return
             }
-
         res.send(401)
         return
     })
