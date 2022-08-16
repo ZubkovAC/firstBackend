@@ -136,13 +136,11 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const authorizationToken = req.headers?.authorization
-        if(!authorizationToken){
-            res.send(401)
-            return
-        }
         if(!req.cookies?.refreshToken){
-            const list = backListToken.findOne({token:req.cookies?.refreshToken})
-            if(list) {
+            const user = await jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
+            const listUser :Array<{userId:string,token:string}> = await backListToken.find({userId:user.userId}).lean()
+            if(listUser?.length > 0) {
+                const test =listUser.some( user=> user.token === req.cookies?.refreshToken)
                 res.send(401)
                 return
             }
@@ -180,16 +178,18 @@ RouterAuth06.post('/refresh-token',
 RouterAuth06.post('/logout',
     async (req: Request, res: Response) => {
        const tokenRefresh = req.cookies.refreshToken
+
        if(!tokenRefresh){
            res.send(401)
            return
        }
+
        try{
            const userCookieToken = await jwt.verify(tokenRefresh, process.env.SECRET_KEY)
            const {userId, email, login} = userCookieToken
-           // const userCookie = await createJWT({userId,login,email}, dateExpired["1sec"])
            await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordAccess":"","accountData.passwordRefresh":""}})
-           await backListToken.insertMany([tokenRefresh])
+           console.log(123)
+           await backListToken.insertMany([{userId:userId,token:tokenRefresh}])
            res.clearCookie("refreshToken")
            res.send(204)
        }catch (e) {

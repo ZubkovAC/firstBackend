@@ -48,6 +48,7 @@ const RegistrationSchema = new mongoose.Schema({
     }
 });
 const BlackListTokenSchema = new mongoose.Schema({
+    userId:String,
     token:String
 });
 export const bloggersCollection06 = mongoose.model('bloggers', BloggersSchema);
