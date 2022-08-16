@@ -119,7 +119,7 @@ RouterAuth06.post('/login',
                     const userId = searchLogin.accountData.userId
                     const email = searchLogin.accountData.email
                     const login = searchLogin.accountData.login
-                    const passwordAccess =    await createJWT({userId,login,email},dateExpired["15sec"])
+                    const passwordAccess =    await createJWT({userId,login,email},dateExpired["10sec"])
                     const passwordRefresh =    await createJWT({userId,login,email},dateExpired["20sec"])
                     await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
                     res.cookie("refreshToken",passwordRefresh,{
