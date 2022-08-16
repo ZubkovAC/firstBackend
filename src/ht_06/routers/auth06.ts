@@ -153,12 +153,10 @@ RouterAuth06.post('/login',
 
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
-        const authorizationToken = req.headers?.authorization
         const cookies = req.cookies?.refreshToken
         if(cookies){
             const t = await backListToken.findOne({token:cookies})
             if(t){
-                console.log("~~~~~~~~~~~~~~~~~~" ,t)
                 res.send(401)
                 return
             }
