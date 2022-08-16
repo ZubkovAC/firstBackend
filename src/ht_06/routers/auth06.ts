@@ -201,6 +201,13 @@ RouterAuth06.post('/logout',
     async (req: Request, res: Response) => {
        const tokenRefresh = req.cookies.refreshToken
 
+        if(tokenRefresh){
+            const t = await backListToken.findOne({token:tokenRefresh})
+            if(t){
+                res.send(401)
+                return
+            }
+        }
        if(!tokenRefresh){
            res.send(401)
            return
