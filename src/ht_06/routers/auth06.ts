@@ -208,19 +208,22 @@ RouterAuth06.post('/logout',
        }
     })
 RouterAuth06.get('/me',
-    // authorizationMiddleware06,
+    authorizationMiddleware06,
     async (req: Request, res: Response) => {
-
         const token = req.headers?.authorization
         if(token){
-            const verify = jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
-            console.log(req.cookies.refreshToken)
-            res.status(200).send({
-                email: verify.email,
-                login: verify.login,
-                userId: verify.userId
-            })
-            return
+            try{
+                const verify = jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
+                res.status(200).send({
+                    email: verify.email,
+                    login: verify.login,
+                    userId: verify.userId
+                })
+                return
+            }catch (e) {
+                res.send(401)
+                return
+            }
         }
         res.send(401)
         return
