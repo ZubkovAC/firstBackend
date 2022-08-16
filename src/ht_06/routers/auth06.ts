@@ -163,9 +163,12 @@ RouterAuth06.post('/refresh-token',
                 return
             }
         }
+        if(!cookies){
+            res.send(401)
+            return
+        }
             try{
-                const token = req.headers?.authorization.split(' ')[1]
-                const userToken =await jwt.verify(token,process.env.SECRET_KEY)
+                const userToken =await jwt.verify(cookies,process.env.SECRET_KEY)
                 const userId = userToken.userId
                 const user = await registrationToken06.findOne({"accountData.userId":userId})
                 if(user){
