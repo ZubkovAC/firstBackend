@@ -23,6 +23,7 @@ export const RouterAuth06 = Router({})
 
 export const dateExpired={
     "0":"0sec",
+    '1':'1sec',
     '10sec':'10sec',
     '20sec':'20sec',
     '1h':'1h',
@@ -179,10 +180,10 @@ RouterAuth06.post('/logout',
            return
        }
        try{
-          const userCookieToken = jwt.verify(tokenRefresh, process.env.SECRET_KEY)
+           const userCookieToken = await jwt.verify(tokenRefresh, process.env.SECRET_KEY)
            const {userId, email, login} = userCookieToken
-          const userCookie = createJWT({userId,login,email}, dateExpired["0"])
-           await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordAccess":userCookie,"accountData.passwordRefresh":userCookie}})
+           // const userCookie = await createJWT({userId,login,email}, dateExpired["1sec"])
+           await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordAccess":"","accountData.passwordRefresh":""}})
            res.clearCookie("refreshToken")
            res.send(204)
        }catch (e) {
