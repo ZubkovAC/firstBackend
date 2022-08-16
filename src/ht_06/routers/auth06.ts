@@ -135,6 +135,15 @@ RouterAuth06.post('/login',
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const token = req.headers.authorization.split(' ')[1]
+        console.log('token')
+        if(!req.cookies?.refreshToken){
+            try{
+                const refreshtoken =  jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
+            }catch (e){
+                res.send(401)
+                return
+            }
+        }
         if(token){
             try{
                 const userToken =await jwt.verify(token,process.env.SECRET_KEY)
