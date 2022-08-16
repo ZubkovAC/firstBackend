@@ -134,23 +134,6 @@ RouterAuth06.post('/login',
         return
     })
 
-
-// if(!req.cookies?.refreshToken){
-//     const user = await jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
-//     const listUser :Array<{userId:string,token:string}> = await backListToken.find({userId:user.userId}).lean()
-//     if(listUser?.length > 0) {
-//         const test =listUser.some( user=> user.token === req.cookies?.refreshToken)
-//         res.send(401)
-//         return
-//     }
-//     try{
-//         const refreshToken =  jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
-//     }catch (e){
-//         res.send(401)
-//         return
-//     }
-// }
-
 RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const cookies = req.cookies?.refreshToken
