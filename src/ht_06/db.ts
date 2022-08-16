@@ -47,13 +47,16 @@ const RegistrationSchema = new mongoose.Schema({
         isConfirmed:Boolean
     }
 });
-
+const BlackListTokenSchema = new mongoose.Schema({
+    token:String
+});
 export const bloggersCollection06 = mongoose.model('bloggers', BloggersSchema);
 export const postsCollection06 = mongoose.model('posts', PostsSchema);
 // export const usersCollection06 = mongoose.model('users', UsersSchema);
 export const usersCollection06 = mongoose.model('users', RegistrationSchema);
 export const commentsCollection06 = mongoose.model('comments', CommentsSchema);
 export const registrationToken06 = mongoose.model('registrationToken', RegistrationSchema);
+export const backListToken = mongoose.model('blackListToken',BlackListTokenSchema)
 // 429 auth
 export const countRequestLogin06 = mongoose.model('countRequestLogin', CountRequestSchema);
 export const countRequestRegistration06 = mongoose.model('countRequestRegistration', CountRequestSchema);

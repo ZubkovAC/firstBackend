@@ -7,7 +7,7 @@ import {
     validationPassword6_20, validatorCounterRequest5,
     validatorRequest5
 } from "../../validation/validation";
-import {registrationToken06, registrationTokenTest} from "../db";
+import {backListToken, registrationToken06, registrationTokenTest} from "../db";
 import {EmailAdapter05} from "../adapter/emailAdapter";
 import {manager} from "../managerAuth/managerAuth";
 import * as nodemailer from "nodemailer"
@@ -141,6 +141,11 @@ RouterAuth06.post('/refresh-token',
             return
         }
         if(!req.cookies?.refreshToken){
+            const list = backListToken.findOne({token:req.cookies?.refreshToken})
+            if(list) {
+                res.send(401)
+                return
+            }
             try{
                 const refreshToken =  jwt.verify(req.cookies?.refreshToken,process.env.SECRET_KEY)
             }catch (e){
@@ -184,6 +189,7 @@ RouterAuth06.post('/logout',
            const {userId, email, login} = userCookieToken
            // const userCookie = await createJWT({userId,login,email}, dateExpired["1sec"])
            await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordAccess":"","accountData.passwordRefresh":""}})
+           await backListToken.insertMany([tokenRefresh])
            res.clearCookie("refreshToken")
            res.send(204)
        }catch (e) {
