@@ -1,12 +1,12 @@
 require('dotenv').config()
 var cookieParser = require('cookie-parser')
-import {runDb} from "./ht_06/db";
-import {RouterAuth07} from "./ht_06/routers/auth06";
-import {RouterBloggers07} from "./ht_06/routers/routerBloggers07";
-import {RouterPosts07} from "./ht_06/routers/routerPosts07";
-import {RouterComments07} from "./ht_06/routers/routerComments07";
-import { RouterUsers07 } from "./ht_06/routers/routerUsers07";
-import { RouterTesting07 } from "./ht_06/routers/routerTesting07";
+import {runDb} from "./ht_07/db";
+import {RouterAuth07} from "./ht_07/routers/auth07";
+import {RouterBloggers07} from "./ht_07/routers/routerBloggers07";
+import {RouterPosts07} from "./ht_07/routers/routerPosts07";
+import {RouterComments07} from "./ht_07/routers/routerComments07";
+import { RouterUsers07 } from "./ht_07/routers/routerUsers07";
+import { RouterTesting07 } from "./ht_07/routers/routerTesting07";
 
 const express = require('express')
 const cors = require('cors')
@@ -41,6 +41,7 @@ startApp()
 // app.use('/ht_06/api/comments',RouterComments06)
 // app.use('/ht_06/api/testing',RouterTesting06)
 // app.use('/ht_06/api/users',RouterUsers06)
+
 
 app.use('/ht_07/api/bloggers',RouterBloggers07)
 app.use('/ht_07/api/posts',RouterPosts07)

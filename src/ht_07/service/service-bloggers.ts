@@ -1,4 +1,4 @@
-import {BloggerGetPostType, BloggersGetType, bloggersRepositoryDb04} from "../repositories/bloggers-repositories06";
+import {BloggerGetPostType, BloggersGetType, bloggersRepositoryDb04} from "../repositories/bloggers-repositories07";
 import {BloggerMongoType} from "../convert/convert";
 
 export const bloggersServiceDb04 = {

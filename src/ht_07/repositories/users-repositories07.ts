@@ -4,11 +4,11 @@ var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
 import {RegistrationTokenType} from "../types";
 import {manager} from "../managerAuth/managerAuth";
-import {dateExpired} from "../routers/auth06";
+import {dateExpired} from "../routers/auth07";
 
 
 
-export const usersRepositories06 ={
+export const usersRepositories07 ={
     async findUserId(userId:string){
         return await usersCollection06.findOne({id:userId})
     },

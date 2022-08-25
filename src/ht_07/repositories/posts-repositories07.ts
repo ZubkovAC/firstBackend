@@ -3,7 +3,7 @@ import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
 import {PostsType} from "../types";
 
-export const postsRepositories06 ={
+export const postsRepositories07 ={
     async findPosts(pageNumber:number, pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await postsCollection06.countDocuments()

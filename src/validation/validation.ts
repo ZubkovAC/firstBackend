@@ -1,8 +1,8 @@
-import {CountRepositories06} from "../ht_06/repositories/count-repositories06";
+import {CountRepositories07} from "../ht_07/repositories/count-repositories07";
 const requestIp = require('request-ip')
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {bloggersCollection06, commentsCollection06, postsCollection06, registrationToken06} from "../ht_06/db";
+import {bloggersCollection06, commentsCollection06, postsCollection06, registrationToken06} from "../ht_07/db";
 var jwt = require('jsonwebtoken')
 
 export let errorBloggerId =[]
@@ -187,13 +187,13 @@ export const validatorPostIdComments = async (req: Request, res: Response,next:N
 }
 export const validatorCounterRequest5 = async (req: Request, res: Response,next:NextFunction) => {
     const clientIp = requestIp.getClientIp(req)
-    const countIp = await CountRepositories06.count(clientIp,req.path)
+    const countIp = await CountRepositories07.count(clientIp,req.path)
     next()
     return
 }
 export const validatorRequest5 = async (req: Request, res: Response,next:NextFunction) => {
     const clientIp = requestIp.getClientIp(req)
-    const countIp = await CountRepositories06.count5Error(clientIp,req.path)
+    const countIp = await CountRepositories07.count5Error(clientIp,req.path)
     if(!countIp){
         next()
         return

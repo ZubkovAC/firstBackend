@@ -5,7 +5,7 @@ import {CommentsType} from "../types";
 // import jwt from "jsonwebtoken";
 var jwt = require('jsonwebtoken')
 
-export const commentsRepositories06 ={
+export const commentsRepositories07 ={
     async getComments(idComments:string){
         const commentsId = await commentsCollection06.findOne({id:idComments})
         return {

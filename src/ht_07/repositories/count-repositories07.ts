@@ -13,7 +13,7 @@ export const searchRepo = (path:string) => {
     if(path==='/registration') return  countRequestRegistration06
 }
 
-export const CountRepositories06 ={
+export const CountRepositories07 ={
     async count(ip:string,path:string){
         const date = new Date()
         const repo = await searchRepo(path)

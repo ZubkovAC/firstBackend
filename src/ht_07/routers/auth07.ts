@@ -17,7 +17,7 @@ import {RegistrationTokenType} from "../types";
 import {createJWT} from "../helpers/helpers";
 const bcrypt = require('bcrypt')
 
-export const RouterAuth06 = Router({})
+export const RouterAuth07 = Router({})
 
 export const dateExpired={
     "0":"0sec",
@@ -29,7 +29,8 @@ export const dateExpired={
     '2h':'2h'
 }
 
-RouterAuth06.post("/registration-confirmation",
+
+RouterAuth07.post("/registration-confirmation",
     validatorRequest5,
     validatorCounterRequest5,
     async (req, res) => {
@@ -57,7 +58,7 @@ RouterAuth06.post("/registration-confirmation",
         return
     })
 
-RouterAuth06.post("/registration",
+RouterAuth07.post("/registration",
     validatorRequest5,
     validatorCounterRequest5,
     validationLogin3_10,
@@ -87,7 +88,7 @@ RouterAuth06.post("/registration",
         res.send(204)
         return
     })
-RouterAuth06.post("/registration-email-resending",
+RouterAuth07.post("/registration-email-resending",
     validatorRequest5,
     validatorCounterRequest5,
     validationEmailPattern,
@@ -103,7 +104,7 @@ RouterAuth06.post("/registration-email-resending",
         res.send(204)
         return
     })
-RouterAuth06.post('/login',
+RouterAuth07.post('/login',
     validatorRequest5,
     validatorCounterRequest5,
     async (req: Request, res: Response) => {
@@ -132,7 +133,7 @@ RouterAuth06.post('/login',
         return
     })
 
-RouterAuth06.post('/refresh-token',
+RouterAuth07.post('/refresh-token',
     async (req: Request, res: Response) => {
         const cookies = req.cookies?.refreshToken
         if(cookies){
@@ -176,7 +177,7 @@ RouterAuth06.post('/refresh-token',
         return
     })
 
-RouterAuth06.post('/logout',
+RouterAuth07.post('/logout',
     async (req: Request, res: Response) => {
        const tokenRefresh = req.cookies.refreshToken
 
@@ -205,7 +206,7 @@ RouterAuth06.post('/logout',
            return
        }
     })
-RouterAuth06.get('/me',
+RouterAuth07.get('/me',
     // authorizationMiddleware06,
     async (req: Request, res: Response) => {
         const token = req.headers?.authorization

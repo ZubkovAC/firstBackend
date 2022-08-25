@@ -6,12 +6,12 @@ import {validationErrorCreatePosts, validationLogin3_10, validationPassword6_20}
 var jwt = require('jsonwebtoken')
 import { v4 as uuidv4 } from 'uuid'
 import {createJWT} from "../helpers/helpers";
-import {dateExpired} from "./auth06";
+import {dateExpired} from "./auth07";
 const bcrypt = require('bcrypt')
 
-export const RouterUsers06 = Router({})
+export const RouterUsers07 = Router({})
 
-RouterUsers06.get('/',
+RouterUsers07.get('/',
     async (req: Request, res: Response) => {
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
@@ -19,7 +19,7 @@ RouterUsers06.get('/',
         res.send(users)
         return;
     })
-RouterUsers06.post('/',
+RouterUsers07.post('/',
     authorizationMiddleware03,
     validationLogin3_10,
     validationPassword6_20,
@@ -38,7 +38,7 @@ RouterUsers06.post('/',
         return;
     })
 
-RouterUsers06.delete('/:id',
+RouterUsers07.delete('/:id',
     authorizationMiddleware03,
     async (req: Request, res: Response) => {
         const id = req.params.id
