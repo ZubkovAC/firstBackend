@@ -17,7 +17,7 @@ import {RegistrationTokenType} from "../types";
 import {createJWT} from "../helpers/helpers";
 const bcrypt = require('bcrypt')
 
-export const RouterAuth07 = Router({})
+export const RouterAuth06 = Router({})
 
 export const dateExpired={
     "0":"0sec",
@@ -29,7 +29,7 @@ export const dateExpired={
     '2h':'2h'
 }
 
-RouterAuth07.post("/registration-confirmation",
+RouterAuth06.post("/registration-confirmation",
     validatorRequest5,
     validatorCounterRequest5,
     async (req, res) => {
@@ -57,7 +57,7 @@ RouterAuth07.post("/registration-confirmation",
         return
     })
 
-RouterAuth07.post("/registration",
+RouterAuth06.post("/registration",
     validatorRequest5,
     validatorCounterRequest5,
     validationLogin3_10,
@@ -87,7 +87,7 @@ RouterAuth07.post("/registration",
         res.send(204)
         return
     })
-RouterAuth07.post("/registration-email-resending",
+RouterAuth06.post("/registration-email-resending",
     validatorRequest5,
     validatorCounterRequest5,
     validationEmailPattern,
@@ -103,7 +103,7 @@ RouterAuth07.post("/registration-email-resending",
         res.send(204)
         return
     })
-RouterAuth07.post('/login',
+RouterAuth06.post('/login',
     validatorRequest5,
     validatorCounterRequest5,
     async (req: Request, res: Response) => {
@@ -132,7 +132,7 @@ RouterAuth07.post('/login',
         return
     })
 
-RouterAuth07.post('/refresh-token',
+RouterAuth06.post('/refresh-token',
     async (req: Request, res: Response) => {
         const cookies = req.cookies?.refreshToken
         if(cookies){
@@ -176,7 +176,7 @@ RouterAuth07.post('/refresh-token',
         return
     })
 
-RouterAuth07.post('/logout',
+RouterAuth06.post('/logout',
     async (req: Request, res: Response) => {
        const tokenRefresh = req.cookies.refreshToken
 
@@ -205,7 +205,7 @@ RouterAuth07.post('/logout',
            return
        }
     })
-RouterAuth07.get('/me',
+RouterAuth06.get('/me',
     // authorizationMiddleware06,
     async (req: Request, res: Response) => {
         const token = req.headers?.authorization
