@@ -51,3 +51,8 @@ export type dateUserJwtType ={
     login:string
     email:string
 }
+
+export class BloggerMongoDBType {
+    constructor(public id:string,public name:string, public youtubeUrl:string) {
+    }
+}

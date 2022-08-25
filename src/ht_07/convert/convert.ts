@@ -1,11 +1,11 @@
-import { CommentsType } from "../types"
+import {BloggerMongoDBType, CommentsType } from "../types"
 
 
-export type BloggerMongoType = {
-    id:string
-    name:string
-    youtubeUrl:string
-}
+// export type BloggerMongoType = {
+//     id:string
+//     name:string
+//     youtubeUrl:string
+// }
 type BloggerPostsMongoType = {
     "id": string
     "title": string
@@ -21,17 +21,17 @@ type PostsCommentsMongoType= {
     "userLogin": string
     "addedAt": string
 }
-export const convertBloggers = (bloggersMongo:Array<BloggerMongoType>) =>{
+export const convertBloggers = (bloggersMongo:Array<BloggerMongoDBType>) =>{
     return bloggersMongo.map(b =>(convertBlogger(b)))
 }
-export const convertBlogger = (bloggerMongo:BloggerMongoType) => {
+export const convertBlogger = (bloggerMongo:BloggerMongoDBType) => {
     return {
         id:bloggerMongo.id,
         name:bloggerMongo.name,
         youtubeUrl:bloggerMongo.youtubeUrl
     }
 }
-export const convertBloggerId = (bloggerId:BloggerMongoType) =>{
+export const convertBloggerId = (bloggerId:BloggerMongoDBType) =>{
     return  {
         id:bloggerId.id,
         name:bloggerId.name,

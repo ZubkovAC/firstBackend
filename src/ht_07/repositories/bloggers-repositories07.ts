@@ -1,12 +1,12 @@
 import {bloggersCollection06, postsCollection06} from "../db";
 import {
-    BloggerMongoType,
     convertBlogger,
     convertBloggerId,
     convertBloggers,
     convertBloggersPosts
 } from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
+import {BloggerMongoDBType} from "../types";
 
 export type BloggersType = {
     id:string
@@ -42,7 +42,7 @@ export type BloggerPostType={
     bloggerName: string
 }
 
-export const bloggersRepositoryDb04 = {
+class BloggerRepositoryDB07 {
     async findBloggers(pageNumber,pageSize,searchNameTerm) : Promise<BloggersGetType >{
         let skipCount = (pageNumber-1) * pageSize
         const query = {name: {$regex:searchNameTerm}}
@@ -61,14 +61,14 @@ export const bloggersRepositoryDb04 = {
             totalCount : totalCount,
             items: convertBloggers(bloggersRestrict)
         }
-    },
+    }
     async findBloggerId(bloggerId:string): Promise<BloggersType | string >{
         let searchBloggerId : BloggersType | null = await bloggersCollection06.findOne({id:bloggerId})
         if(searchBloggerId){
             return convertBloggerId(searchBloggerId)
         }
         return  ""
-    },
+    }
     async findBloggerIdPosts(pageNumber:number, pageSize:number ,bloggerId:string): Promise< BloggerGetPostType | string >{
         let searchBloggerId : BloggersType | null = await bloggersCollection06.findOne({id:bloggerId})
         let skipCount = (pageNumber-1) * pageSize
@@ -89,26 +89,23 @@ export const bloggersRepositoryDb04 = {
             }
         }
         return  ""
-    },
+    }
     async removeBloggerId(bloggerId:string) : Promise<boolean>{
         const  findBloggerId =  await bloggersCollection06.deleteOne({id:bloggerId})
         return findBloggerId.deletedCount === 1
-    },
-    async createBlogger(name:string, youtubeUrl:string) : Promise<BloggerMongoType>{
-        const newBlogger = {
-            "id":  uuidv4(),
-            "name":name,
-            "youtubeUrl": youtubeUrl
-        }
+    }
+    async createBlogger(newBlogger :BloggerMongoDBType) : Promise<BloggerMongoDBType>{
         await bloggersCollection06.insertMany([newBlogger])
         return convertBlogger(newBlogger)
-    },
+    }
     async updateBlogger(bloggerId:string,newName:string,newYoutubeUrl:string){
         const newBloggerId = await bloggersCollection06.updateOne({id:bloggerId},{ $set:{name:newName,youtubeUrl:newYoutubeUrl}})
         if(newBloggerId.matchedCount === 1){
             return {newBloggerId:newBloggerId,error:204}
         }
         return {error: 404}
-    },
+    }
 }
+
+export const bloggersRepositoryDb04 = new BloggerRepositoryDB07()
 

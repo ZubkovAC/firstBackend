@@ -15,41 +15,33 @@ const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
 const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 
-RouterBloggers07.get('/',
-    async (req: Request, res: Response) => {
+class BloggerController{
+    async getBloggers (req: Request, res: Response){
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
         const searchNT = searchNameTerm(req.query.SearchNameTerm as string)
         const bloggers = await bloggersServiceDb04.findBloggers(pageN,pageS,searchNT)
         res.status(200).send(bloggers)
-    })
-RouterBloggers07.get('/:id',async (req: Request, res: Response) => {
-    const bloggers = await bloggersServiceDb04.findBloggerId(req.params.id)
-    if(bloggers){
+    }
+    async getBloggerId (req: Request, res: Response){
+        const pageN = pageNumber(req.query.PageNumber as string)
+        const pageS = pageSize(req.query.PageSize as string)
+        const searchNT = searchNameTerm(req.query.SearchNameTerm as string)
+        const bloggers = await bloggersServiceDb04.findBloggers(pageN,pageS,searchNT)
         res.status(200).send(bloggers)
+    }
+    async getBloggerIdPosts(req: Request, res: Response){
+        const pageN = pageNumber(req.query.PageNumber as string)
+        const pageS = pageSize(req.query.PageSize as string)
+        const bloggers = await bloggersServiceDb04.findIdBloggerPosts(pageN, pageS,req.params.idBloggers)
+        if(bloggers){
+            res.status(200).send(bloggers)
+            return
+        }
+        res.status(404).send("If video for passed id doesn't exist")
         return
     }
-    res.status(404).send("If video for passed id doesn't exist")
-    return
-})
-RouterBloggers07.get('/:idBloggers/posts',async (req: Request, res: Response) => {
-    const pageN = pageNumber(req.query.PageNumber as string)
-    const pageS = pageSize(req.query.PageSize as string)
-    const bloggers = await bloggersServiceDb04.findIdBloggerPosts(pageN, pageS,req.params.idBloggers)
-    if(bloggers){
-        res.status(200).send(bloggers)
-        return
-    }
-    res.status(404).send("If video for passed id doesn't exist")
-    return
-})
-RouterBloggers07.post('/:idBlogger/posts',
-    authorizationMiddleware03,
-    validationTitle,
-    validationShortDescription,
-    validationContent,
-    validationErrorCreatePosts,
-    async (req: Request, res: Response) => {
+    async createBloggerIdPosts(req: Request, res: Response){
         const postsBlogger = await postsService04.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
         if(postsBlogger.status === 201){
             res.status(201).send(postsBlogger.newPost)
@@ -57,24 +49,14 @@ RouterBloggers07.post('/:idBlogger/posts',
         }
         res.status(404).send("If video for passed id doesn't exist")
         return
-    })
-RouterBloggers07.post('/',
-    authorizationMiddleware03,
-    validationName15,
-    validationYoutubeUrl,
-    validationError,
-    async (req: Request, res: Response) => {
+    }
+    async createBlogger(req: Request, res: Response){
         let name = req.body.name.trim()
         let youtubeUrl = req.body.youtubeUrl.trim()
         const createBlogger = await bloggersServiceDb04.createBlogger(name,youtubeUrl)
         res.status(201).send(createBlogger)
-    })
-RouterBloggers07.put('/:id',
-    authorizationMiddleware03,
-    validationName15,
-    validationYoutubeUrl,
-    validationError,
-    async (req: Request, res: Response) => {
+    }
+    async updateBloggerId(req: Request, res: Response){
         const id = req.params.id
         const newName = req.body.name
         const newYoutubeUrl = req.body.youtubeUrl
@@ -87,10 +69,8 @@ RouterBloggers07.put('/:id',
             res.send(404)
             return
         }
-    })
-RouterBloggers07.delete('/:id',
-    authorizationMiddleware03,
-    async (req: Request, res: Response) => {
+    }
+    async deleteBloggerId(req: Request, res: Response){
         const bloggerDeleteId = req.params.id
         const removeBlogger = await bloggersServiceDb04.removeBloggerId(bloggerDeleteId)
         if(removeBlogger){
@@ -99,4 +79,36 @@ RouterBloggers07.delete('/:id',
         }
         res.send(404)
         return;
-    })
+    }
+}
+
+export const bloggerControllerInstance = new BloggerController()
+
+RouterBloggers07.get('/',
+    bloggerControllerInstance.getBloggers)
+RouterBloggers07.get('/:id',
+    bloggerControllerInstance.getBloggerId)
+RouterBloggers07.get('/:idBloggers/posts',
+    bloggerControllerInstance.getBloggerIdPosts)
+RouterBloggers07.post('/:idBlogger/posts',
+    authorizationMiddleware03,
+    validationTitle,
+    validationShortDescription,
+    validationContent,
+    validationErrorCreatePosts,
+    bloggerControllerInstance.createBloggerIdPosts)
+RouterBloggers07.post('/',
+    authorizationMiddleware03,
+    validationName15,
+    validationYoutubeUrl,
+    validationError,
+    bloggerControllerInstance.createBlogger)
+RouterBloggers07.put('/:id',
+    authorizationMiddleware03,
+    validationName15,
+    validationYoutubeUrl,
+    validationError,
+    bloggerControllerInstance.updateBloggerId)
+RouterBloggers07.delete('/:id',
+    authorizationMiddleware03,
+    bloggerControllerInstance.deleteBloggerId)
