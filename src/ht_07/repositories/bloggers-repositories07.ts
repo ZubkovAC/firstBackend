@@ -42,7 +42,7 @@ export type BloggerPostType={
     bloggerName: string
 }
 
-class BloggerRepositoryDB07 {
+export class BloggerRepositoryDB07 {
     async findBloggers(pageNumber,pageSize,searchNameTerm) : Promise<BloggersGetType >{
         let skipCount = (pageNumber-1) * pageSize
         const query = {name: {$regex:searchNameTerm}}
@@ -107,5 +107,5 @@ class BloggerRepositoryDB07 {
     }
 }
 
-export const bloggersRepositoryDb04 = new BloggerRepositoryDB07()
+// export const bloggersRepositoryDb04 = new BloggerRepositoryDB07()
 
