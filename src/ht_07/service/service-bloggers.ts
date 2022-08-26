@@ -5,9 +5,11 @@ import {
 } from "../repositories/bloggers-repositories07";
 import {BloggerMongoDBType} from "../types";
 import {v4 as uuidv4} from "uuid";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BloggersService07 {
-    constructor(protected bloggersRepository:BloggerRepositoryDB07) {}
+    constructor(@inject(BloggerRepositoryDB07) protected bloggersRepository:BloggerRepositoryDB07) {}
 
     async findBloggers(pageNumber:number, pageSize:number,searchNameTerm:string) : Promise<BloggersGetType>{
         return this.bloggersRepository.findBloggers(pageNumber,pageSize,searchNameTerm)

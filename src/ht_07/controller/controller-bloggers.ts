@@ -1,16 +1,20 @@
 import {BloggersService07} from "../service/service-bloggers";
 import {Request, Response} from "express";
-import {postsService04} from "../service/service-posts";
+import {inject, injectable} from "inversify";
+import { PostsService } from "../service/service-posts";
 
 
 const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
 const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 
-
+@injectable()
 export class BloggerController{
-    constructor(protected bloggerService:BloggersService07) {}
-
+    constructor(
+                 @inject(BloggersService07)
+                protected bloggerService:BloggersService07,
+                protected postsService:PostsService
+    ) {}
     async getBloggers (req: Request, res: Response){
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
@@ -37,7 +41,8 @@ export class BloggerController{
         return
     }
     async createBloggerIdPosts(req: Request, res: Response){
-        const postsBlogger = await postsService04.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
+        // const postsBlogger = await this.postsService.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
+        const postsBlogger = await this.postsService.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
         if(postsBlogger.status === 201){
             res.status(201).send(postsBlogger.newPost)
             return

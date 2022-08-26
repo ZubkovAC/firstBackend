@@ -7,6 +7,8 @@ import {
 } from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
 import {BloggerMongoDBType} from "../types";
+import {injectable} from "inversify";
+
 
 export type BloggersType = {
     id:string
@@ -41,7 +43,7 @@ export type BloggerPostType={
     bloggerId: string
     bloggerName: string
 }
-
+@injectable()
 export class BloggerRepositoryDB07 {
     async findBloggers(pageNumber,pageSize,searchNameTerm) : Promise<BloggersGetType >{
         let skipCount = (pageNumber-1) * pageSize
