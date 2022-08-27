@@ -5,7 +5,6 @@ import {
     convertBloggers,
     convertBloggersPosts
 } from "../convert/convert";
-import { v4 as uuidv4 } from 'uuid'
 import {BloggerMongoDBType} from "../types";
 import {injectable} from "inversify";
 
@@ -109,5 +108,4 @@ export class BloggerRepositoryDB07 {
     }
 }
 
-// export const bloggersRepositoryDb04 = new BloggerRepositoryDB07()
 

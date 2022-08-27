@@ -2,8 +2,15 @@ import {CountRepositories07} from "../ht_07/repositories/count-repositories07";
 const requestIp = require('request-ip')
 import {body, validationResult} from "express-validator";
 import {NextFunction, Request, Response} from "express";
-import {bloggersCollection06, commentsCollection06, postsCollection06, registrationToken06} from "../ht_07/db";
+import {
+    backListToken,
+    bloggersCollection06,
+    commentsCollection06,
+    postsCollection06,
+    registrationToken06
+} from "../ht_07/db";
 var jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 export let errorBloggerId =[]
 export let errorPostId =[]
@@ -234,4 +241,78 @@ export const validationFindLogin = async (req: Request, res: Response, next:Next
      errorsMessages: [{ message: 'this login is busy', field: "login" }]
     })
     return
+}
+export const validationFindAndCheckCode = async (req: Request, res: Response, next:NextFunction) => {
+    const code = req.body.code
+    const infoCode = await registrationToken06.findOne({"emailConformation.conformationCode":code})
+    if(infoCode === null) {
+        res.status(400).send({
+            errorsMessages: [{ message: 'not find code', field: "code" }]
+        })
+        return
+    }
+    if(infoCode.emailConformation.isConfirmed){
+        res.status(400).send({
+            errorsMessages: [{ message: 'email is Conformed', field: "code" }]
+        })
+        return
+    }
+    if(infoCode && infoCode.emailConformation.expirationDate < new Date()){
+        res.send(400)
+        return
+    }
+    next()
+    return
+}
+export const validationFindUser = async (req: Request, res: Response, next:NextFunction) => {
+    const login = req.body.login.trim()
+    const password = req.body.password.trim()
+    const searchLogin = await registrationToken06.findOne({"accountData.login": login})
+    if (searchLogin ) {
+        const verify = await bcrypt.compare(password,searchLogin.accountData.hash)
+        if(verify){
+            next()
+            return
+        }
+    }
+    res.send(401)
+    return
+}
+export const validationRefreshToken = async (req: Request, res: Response, next:NextFunction) => {
+    const cookies = req.cookies?.refreshToken
+    if(cookies){
+        const t = await backListToken.findOne({token:cookies})
+        if(t){
+            res.send(401)
+            return
+        }
+    }
+    if(!cookies){
+        res.send(401)
+        return
+    }
+    next()
+    return
+}
+export const validationLogout = async (req: Request, res: Response, next:NextFunction) => {
+    const tokenRefresh = req.cookies.refreshToken
+    if(tokenRefresh){
+        const t = await backListToken.findOne({token:tokenRefresh})
+        if(t){
+            res.send(401)
+            return
+        }
+    }
+    if(!tokenRefresh){
+        res.send(401)
+        return
+    }
+    try{
+        const userCookieToken = await jwt.verify(tokenRefresh, process.env.SECRET_KEY)
+        next()
+        return
+    }catch (e){
+        res.send(401)
+        return
+    }
 }

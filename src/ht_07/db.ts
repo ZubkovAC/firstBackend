@@ -30,7 +30,7 @@ const CountRequestSchema = new mongoose.Schema({
     id: String,
     date: Date
 });
-const RegistrationSchema = new mongoose.Schema({
+export const RegistrationSchema = new mongoose.Schema({
     accountData:{
         userId:String,
         login:String,
@@ -64,7 +64,6 @@ export const countRequestRegistration06 = mongoose.model('countRequestRegistrati
 export const countRequestEmailResending06 = mongoose.model('countRequestEmailResending', CountRequestSchema);
 export const countRequestRegistrationConformation06 = mongoose.model('countRequestRegistrationConformation', CountRequestSchema);
 
-export const usersCollectionTest = mongoose.model('usersTest', UsersSchema);
 export const registrationTokenTest = mongoose.model('registrationTokenTest', RegistrationSchema);
 
 export const secret = {

@@ -2,10 +2,11 @@ import {commentsCollection06, registrationToken06} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {convertPostsComments} from "../convert/convert";
 import {CommentsType} from "../types";
-// import jwt from "jsonwebtoken";
+import {injectable} from "inversify";
 var jwt = require('jsonwebtoken')
 
-export const commentsRepositories07 ={
+@injectable()
+export class CommentsRepositories{
     async getComments(idComments:string){
         const commentsId = await commentsCollection06.findOne({id:idComments})
         return {
@@ -15,7 +16,7 @@ export const commentsRepositories07 ={
             "userLogin": commentsId.userLogin,
             "addedAt": commentsId.addedAt
         }
-    },
+    }
     async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
         const allCommentsPost = await commentsCollection06.find({idPostComment:idComments}).lean()
@@ -31,7 +32,7 @@ export const commentsRepositories07 ={
             "totalCount": allCommentsPost.length,
             "items": convertPostsComments(commentsPost)
         }
-    },
+    }
     async createCommentsPost(idPosts:string,content:string,token:string){
         const parse = await jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
         const userId = await registrationToken06.findOne({"accountData.login":parse.login})
@@ -52,11 +53,11 @@ export const commentsRepositories07 ={
             "userLogin": newCommentPost.userLogin,
             "addedAt": newCommentPost.addedAt
         }
-    },
+    }
     async updateComments(idComments:string,content:string){
         const res = await commentsCollection06.updateOne({id:idComments},{ $set:{content:content}})
         return res.matchedCount===1
-    },
+    }
     async deleteComments(idComments:string){
         return  await commentsCollection06.deleteOne({id:idComments})
     }

@@ -48,8 +48,12 @@ startApp()
 app.use('/ht_07/api/bloggers',RouterBloggers07)
 app.use('/ht_07/api/posts',RouterPosts07)
 
-app.use('/ht_07/api/auth',RouterAuth07)
-app.use('/ht_07/api/comments',RouterComments07)
 app.use('/ht_07/api/testing',RouterTesting07)
 app.use('/ht_07/api/users',RouterUsers07)
+app.use('/ht_07/api/comments',RouterComments07)
+
+app.use('/ht_07/api/auth',RouterAuth07)
+
+
+
 

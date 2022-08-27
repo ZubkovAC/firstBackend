@@ -1,17 +1,15 @@
-import {registrationToken06, secret, usersCollection06, usersCollectionTest} from "../db";
-// import jwt from 'jsonwebtoken'
-var jwt = require('jsonwebtoken')
+import {registrationToken06,usersCollection06} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {RegistrationTokenType} from "../types";
 import {manager} from "../managerAuth/managerAuth";
-import {dateExpired} from "../routers/auth07";
+import {injectable} from "inversify";
 
 
-
-export const usersRepositories07 ={
+@injectable()
+export class UsersRepositories {
     async findUserId(userId:string){
-        return await usersCollection06.findOne({id:userId})
-    },
+        return usersCollection06.findOne({id:userId})
+    }
     async getUsers(pageNumber: number, pageSize: number) {
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await usersCollection06.countDocuments()
@@ -27,7 +25,7 @@ export const usersRepositories07 ={
             "totalCount": totalCount,
             "items": allUsers.map(u=>({id:u.accountData.userId,login:u.accountData.login}) )
         }
-    },
+    }
     async createUser (userId:string,login:string, email:string,passwordAccess:string,passwordRefresh:string,hash:string,salt:string, isConfirmed?:boolean) {
         const conformationCode = uuidv4()
         const user :RegistrationTokenType = await manager.createUser(login,email,passwordAccess,passwordRefresh,hash,salt,userId,conformationCode,isConfirmed)
@@ -37,7 +35,7 @@ export const usersRepositories07 ={
             id: userId,
             login:login
         }
-    },
+    }
     async deleteUser (idUser:string){
         await usersCollection06.deleteOne({id:idUser})
         return

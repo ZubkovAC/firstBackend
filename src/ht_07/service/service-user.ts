@@ -1,16 +1,20 @@
-import {usersRepositories07} from "../repositories/users-repositories07";
+import {UsersRepositories} from "../repositories/users-repositories07";
+import {inject, injectable} from "inversify";
 
-export const serviceUser04 ={
+@injectable()
+export class UserService {
+    constructor(@inject(UsersRepositories) protected usersRepositories:UsersRepositories ) {
+    }
     async findUserId(userId:string){
-        return  await usersRepositories07.findUserId(userId)
-    },
+        return  await this.usersRepositories.findUserId(userId)
+    }
     async getUsers(pageNumber:number, pageSize:number){
-       return  await usersRepositories07.getUsers(pageNumber,pageSize)
-    },
+       return  await this.usersRepositories.getUsers(pageNumber,pageSize)
+    }
     async createUsers(userId:string,login:string, email:string,passwordAccess:string,passwordRefresh:string,hash:string,salt:string ,isConfirmed?:boolean){
-       return  await usersRepositories07.createUser(userId,login,email,passwordAccess,passwordRefresh,hash,salt,isConfirmed)
-    },
+       return  await this.usersRepositories.createUser(userId,login,email,passwordAccess,passwordRefresh,hash,salt,isConfirmed)
+    }
     async deleteUsers(userId:string){
-       return  await usersRepositories07.deleteUser(userId)
+       return  await this.usersRepositories.deleteUser(userId)
     }
 }
