@@ -10,6 +10,7 @@ export type PostsType = {
     "content": string
     "bloggerId": string
     "bloggerName": string
+    addedAt:string
 }
 export type UsersType = {
     "id": string

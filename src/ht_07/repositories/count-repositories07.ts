@@ -1,16 +1,16 @@
 import {
-    countRequestEmailResending06,
-    countRequestLogin06,
-    countRequestRegistration06,
-    countRequestRegistrationConformation06
+    countRequestEmailResendingModel,
+    countRequestLoginModel,
+    countRequestRegistrationModel,
+    countRequestRegistrationConformationModel
 } from "../db";
 import {  addSeconds } from 'date-fns'
 
 export const searchRepo = (path:string) => {
-    if(path==='/registration-confirmation') return  countRequestRegistrationConformation06
-    if(path==='/login') return  countRequestLogin06
-    if(path==='/registration-email-resending') return  countRequestEmailResending06
-    if(path==='/registration') return  countRequestRegistration06
+    if(path==='/registration-confirmation') return  countRequestRegistrationConformationModel
+    if(path==='/login') return  countRequestLoginModel
+    if(path==='/registration-email-resending') return  countRequestEmailResendingModel
+    if(path==='/registration') return  countRequestRegistrationModel
 }
 
 export const CountRepositories07 ={

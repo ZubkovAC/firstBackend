@@ -1,4 +1,4 @@
-import {backListToken, registrationToken06} from "../db";
+import {backListTokenModel, userRegistrationModel} from "../db";
 import {v4 as uuidv4} from "uuid";
 import {createJWT} from "../helpers/helpers";
 import {RegistrationTokenType} from "../types";
@@ -26,8 +26,8 @@ export class AuthController {
     }
     async registrationConfirmation(req, res){
         const code = req.body.code
-        await registrationToken06.updateOne({"emailConformation.conformationCode":code},{ $set:{"emailConformation.isConfirmed":true}})
-        const infoCode = await registrationToken06.findOne({"emailConformation.conformationCode":code})
+        await userRegistrationModel.updateOne({"emailConformation.conformationCode":code},{ $set:{"emailConformation.isConfirmed":true}})
+        const infoCode = await userRegistrationModel.findOne({"emailConformation.conformationCode":code})
         res.send(204)
         return
     }
@@ -40,7 +40,7 @@ export class AuthController {
         const passwordAccess = await this.authService.createToken(userId,login,email,dateExpired["1h"])
         const passwordRefresh = await this.authService.createToken(userId,login,email,dateExpired["2h"])
         const user :RegistrationTokenType = await this.authService.createUser(login,email,password,passwordAccess,passwordRefresh,userId,conformationCode)
-        await registrationToken06.insertMany([user])
+        await userRegistrationModel.insertMany([user])
         const emails = await this.authService.sendEmail(email,conformationCode)
         res.send(204)
         return
@@ -55,11 +55,11 @@ export class AuthController {
     }
     async login(req, res){
         const login = req.body.login.trim()
-        const searchLogin = await registrationToken06.findOne({"accountData.login": login})
+        const searchLogin = await userRegistrationModel.findOne({"accountData.login": login})
         const {userId,email} = searchLogin.accountData
-        const passwordAccess = await this.authService.createToken(userId,login,email,dateExpired["10sec"])
-        const passwordRefresh = await this.authService.createToken(userId,login,email,dateExpired["20sec"])
-        await registrationToken06.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
+        const passwordAccess = await this.authService.createToken(userId,login,email,dateExpired["1h"])
+        const passwordRefresh = await this.authService.createToken(userId,login,email,dateExpired["2h"])
+        await userRegistrationModel.updateOne({"accountData.login": login},{$set: {"accountData.passwordAccess":passwordAccess,"accountData.passwordRefresh":passwordRefresh}})
         res.cookie("refreshToken",passwordRefresh,{
               secure:true,
               httpOnly:true
@@ -72,14 +72,14 @@ export class AuthController {
         try{
             const userToken = await jwt.verify(cookies,process.env.SECRET_KEY)
             const userId = userToken.userId
-            const user = await registrationToken06.findOne({"accountData.userId":userId})
+            const user = await userRegistrationModel.findOne({"accountData.userId":userId})
             if(user){
                 const {login,userId,email} = user.accountData
                 const passwordRefresh = await this.authService.createToken(userId,login,email,dateExpired["20sec"])
                 const passwordAccess = await this.authService.createToken(userId,login,email,dateExpired["10sec"])
-                await registrationToken06.updateOne({"accountData.login": login},
+                await userRegistrationModel.updateOne({"accountData.login": login},
                     {$set: {"accountData.passwordRefresh":passwordRefresh }})
-                await backListToken.insertMany([{userId,token:cookies}])
+                await backListTokenModel.insertMany([{userId,token:cookies}])
                 res.cookie("refreshToken",passwordRefresh,{
                     secure:true,
                     httpOnly:true
@@ -98,8 +98,8 @@ export class AuthController {
         const tokenRefresh = req.cookies.refreshToken
         const userCookieToken = await jwt.verify(tokenRefresh, process.env.SECRET_KEY)
         const {userId} = userCookieToken
-        await registrationToken06.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordAccess":"","accountData.passwordRefresh":""}})
-        await backListToken.insertMany([{userId:userId,token:tokenRefresh}])
+        await userRegistrationModel.updateOne({"accountData.login": userCookieToken.login},{$set: {"accountData.passwordAccess":"","accountData.passwordRefresh":""}})
+        await backListTokenModel.insertMany([{userId:userId,token:tokenRefresh}])
         res.clearCookie("refreshToken")
         res.send(204)
     }

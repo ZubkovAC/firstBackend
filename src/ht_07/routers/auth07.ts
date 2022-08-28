@@ -1,4 +1,4 @@
-import {Request, Response, Router} from "express";
+import {Router} from "express";
 import {
     validationEmail, validationEmailPattern,
     validationError, validationFindAndCheckCode,
@@ -7,10 +7,9 @@ import {
     validationPassword6_20, validationRefreshToken, validatorCounterRequest5,
     validatorRequest5
 } from "../../validation/validation";
-var jwt = require('jsonwebtoken')
 import {container} from "../composition-root";
 import {AuthController} from "../controller/controller-auth";
-const bcrypt = require('bcrypt')
+
 
 export const RouterAuth07 = Router({})
 

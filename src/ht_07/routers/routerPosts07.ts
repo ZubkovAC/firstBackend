@@ -2,9 +2,9 @@ import {Router} from "express";
 import {
     validationBloggerId,
     validationContent,
-    validationContent20_300,
+    validationContent20_300, validationError,
     validationErrorCreatePosts,
-    validationErrorUpdatePosts,
+    validationErrorUpdatePosts, validationFindBlogger, validationLikeStatus,
     validationPostId,
     validationShortDescription,
     validationTitle,
@@ -22,6 +22,8 @@ RouterPosts07.get('',
          postsController.getPosts.bind(postsController)
 )
 RouterPosts07.get('/:id',
+        validationPostId,
+        validationErrorUpdatePosts,
         postsController.getPostId.bind(postsController)
 )
 RouterPosts07.get('/:id/comments',
@@ -42,6 +44,7 @@ RouterPosts07.post('/',
     validationTitle,
     validationContent,
     validationErrorCreatePosts,
+    validationFindBlogger,
     postsController.createPosts.bind(postsController)
 )
 RouterPosts07.put('/:id',
@@ -54,7 +57,15 @@ RouterPosts07.put('/:id',
     validationErrorUpdatePosts,
     postsController.updatePostId.bind(postsController)
 )
+RouterPosts07.put('/:id/like-status',
+    authorizationMiddleware06,
+    validationLikeStatus,
+    validationPostId,
+    validationErrorUpdatePosts,
+    postsController.likeStatus.bind(postsController)
+)
 RouterPosts07.delete('/:id',
     authorizationMiddleware03,
     postsController.deletePostId.bind(postsController)
 )
+

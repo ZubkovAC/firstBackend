@@ -11,26 +11,35 @@ const PostsSchema = new mongoose.Schema({
     shortDescription: String,
     content: String,
     bloggerId: String,
-    bloggerName: String
+    bloggerName: String,
+    addedAt:String,
 });
-const UsersSchema = new mongoose.Schema({
-    id:String,
-    login:String,
-    password:String
-});
+
 const CommentsSchema = new mongoose.Schema({
-    idPostComment :String,
+    idPostComment: String,
     id: String,
     content: String,
     userId: String,
     userLogin: String,
     addedAt: String
 });
+const LikesSchema = new mongoose.Schema({
+        id:String,
+        newestLikes: [
+            {
+                addedAt: Date,
+                userId: String,
+                login: String,
+                myStatus: String
+                // myStatus: "None" || "Like" || "Dislike",
+            }
+        ]
+});
 const CountRequestSchema = new mongoose.Schema({
     id: String,
     date: Date
 });
-export const RegistrationSchema = new mongoose.Schema({
+const RegistrationSchema = new mongoose.Schema({
     accountData:{
         userId:String,
         login:String,
@@ -39,7 +48,7 @@ export const RegistrationSchema = new mongoose.Schema({
         passwordAccess:String,
         passwordRefresh:String,
         hash:String,
-        salt:String // for test BCRUPT
+        salt:String
     },
     emailConformation:{
         conformationCode:String,
@@ -51,20 +60,21 @@ const BlackListTokenSchema = new mongoose.Schema({
     userId:String,
     token:String
 });
-export const bloggersCollection06 = mongoose.model('bloggers', BloggersSchema);
-export const postsCollection06 = mongoose.model('posts', PostsSchema);
-// export const usersCollection06 = mongoose.model('users', UsersSchema);
-export const usersCollection06 = mongoose.model('users', RegistrationSchema);
-export const commentsCollection06 = mongoose.model('comments', CommentsSchema);
-export const registrationToken06 = mongoose.model('registrationToken', RegistrationSchema);
-export const backListToken = mongoose.model('blackListToken',BlackListTokenSchema)
-// 429 auth
-export const countRequestLogin06 = mongoose.model('countRequestLogin', CountRequestSchema);
-export const countRequestRegistration06 = mongoose.model('countRequestRegistration', CountRequestSchema);
-export const countRequestEmailResending06 = mongoose.model('countRequestEmailResending', CountRequestSchema);
-export const countRequestRegistrationConformation06 = mongoose.model('countRequestRegistrationConformation', CountRequestSchema);
 
-export const registrationTokenTest = mongoose.model('registrationTokenTest', RegistrationSchema);
+
+export const likesCollectionModel = mongoose.model('likes', LikesSchema);
+
+export const bloggersCollectionModel = mongoose.model('bloggers', BloggersSchema);
+export const postsCollectionModel = mongoose.model('posts', PostsSchema);
+export const commentsCollectionModel = mongoose.model('comments', CommentsSchema);
+export const backListTokenModel = mongoose.model('blackListToken',BlackListTokenSchema)
+export const userRegistrationModel = mongoose.model('registrationToken', RegistrationSchema);
+// 429 auth
+export const countRequestLoginModel = mongoose.model('countRequestLogin', CountRequestSchema);
+export const countRequestRegistrationModel = mongoose.model('countRequestRegistration', CountRequestSchema);
+export const countRequestEmailResendingModel = mongoose.model('countRequestEmailResending', CountRequestSchema);
+export const countRequestRegistrationConformationModel = mongoose.model('countRequestRegistrationConformation', CountRequestSchema);
+
 
 export const secret = {
     key : process.env.SECRET_KEY

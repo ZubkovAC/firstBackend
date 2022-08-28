@@ -14,6 +14,8 @@ import {CommentsService} from "./service/service-comments";
 import {CommentsRepositories} from "./repositories/comments-repositories07";
 import {AuthController} from "./controller/controller-auth";
 import {AuthService} from "./service/service-auth";
+import {LikesRepositories} from "./repositories/likes-repositories";
+import {LikesService} from "./service/likes-service";
 
 // bloggers
 export const container = new Container();
@@ -38,3 +40,6 @@ container.bind<CommentsRepositories>(CommentsRepositories).to(CommentsRepositori
 container.bind<AuthController>(AuthController).to(AuthController);
 container.bind<AuthService>(AuthService).to(AuthService);
 // container.bind<CommentsRepositories>(CommentsRepositories).to(CommentsRepositories);
+// likes
+container.bind<LikesRepositories>(LikesRepositories).to(LikesRepositories)
+container.bind<LikesService>(LikesService).to(LikesService)
