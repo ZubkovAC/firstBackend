@@ -1,4 +1,4 @@
-import {bloggersCollectionModel, postsCollectionModel} from "../db";
+import {bloggersCollectionModel, likesCollectionModel, postsCollectionModel} from "../db";
 import {convertBloggerPost, convertBloggerPostCreate, convertBloggersPosts} from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
 import {PostsType} from "../types";
@@ -32,6 +32,11 @@ export class PostsRepositories {
     }
     async createPost(newPost){
         await postsCollectionModel.insertMany([newPost])
+        const newLikesObject = {
+            id:newPost.id,
+            newestLikes: []
+        }
+        await likesCollectionModel.insertMany([newLikesObject])
         const posts = await Promise.all([convertBloggerPostCreate(newPost)])
         return  posts[0]
     }

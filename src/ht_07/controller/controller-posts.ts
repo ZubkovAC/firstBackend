@@ -92,7 +92,7 @@ export class PostsController{
         let bloggerId = req.body.bloggerId
         const newPost = await this.postsService.createPost(title,shortDescription,content,bloggerId)
         validationErrorCreatePostsv2(req,res,newPost)
-        res.status(200).send(newPost)
+        res.status(201).send(newPost)
     }
     async updatePostId(req: Request, res: Response){
         const postId = req.params.id
