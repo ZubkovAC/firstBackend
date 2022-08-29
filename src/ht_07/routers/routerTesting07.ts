@@ -6,7 +6,7 @@ import {
         countRequestLoginModel,
         countRequestRegistrationModel,
         countRequestRegistrationConformationModel,
-        postsCollectionModel, userRegistrationModel
+        postsCollectionModel, userRegistrationModel, likesCollectionModel
 } from "../db";
 
 export const RouterTesting07 = Router({})
@@ -21,6 +21,7 @@ RouterTesting07.delete("/all-data",
         await  countRequestEmailResendingModel.deleteMany({})
         await  countRequestRegistrationConformationModel.deleteMany({})
         await  userRegistrationModel.deleteMany({})
+        await  likesCollectionModel.deleteMany({})
         res.send(204)
         return
     })

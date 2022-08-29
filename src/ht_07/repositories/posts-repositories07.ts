@@ -1,5 +1,5 @@
 import {bloggersCollectionModel, postsCollectionModel} from "../db";
-import {convertBloggerPost, convertBloggersPosts} from "../convert/convert";
+import {convertBloggerPost, convertBloggerPostCreate, convertBloggersPosts} from "../convert/convert";
 import { v4 as uuidv4 } from 'uuid'
 import {PostsType} from "../types";
 import {injectable} from "inversify";
@@ -12,6 +12,7 @@ export class PostsRepositories {
         const postsMongo:PostsType[] = await postsCollectionModel.find({}).skip(skipCount).limit(pageSize).lean()
 
         const items = await Promise.all([convertBloggersPosts(postsMongo)])
+
         return {
             totalCount : totalCount,
             pageSize : pageSize,
@@ -31,9 +32,8 @@ export class PostsRepositories {
     }
     async createPost(newPost){
         await postsCollectionModel.insertMany([newPost])
-        const posts = await Promise.all([convertBloggerPost(newPost)])
-        console.log("posts",posts)
-        return  posts
+        const posts = await Promise.all([convertBloggerPostCreate(newPost)])
+        return  posts[0]
     }
     async updatePostId(postId:string,title:string,content:string,shortDescription:string,bloggerId:string){
         let searchBlogger = await bloggersCollectionModel.findOne({id:bloggerId})

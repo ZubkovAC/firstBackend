@@ -46,9 +46,19 @@ export const convertBloggersPosts = async (bloggersPostsMongo:Array<BloggerPosts
 }
 
 export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType) =>{
-    const lastLikes = await likesCollectionModel.findOne({id:bloggerPostMongo.id}).lean()
+    const lastLikes = await likesCollectionModel.findOne({id:bloggerPostMongo.id})
     const like =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Dislike").filter(l=>l.myStatus !== "None").length
     const dislike =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Like").filter(l=>l.myStatus !== "None").length
+
+    const newestLikes = lastLikes.newestLikes
+        .filter(l=>l.myStatus !== "Dislike")
+        .filter(l=>l.myStatus !== "None")
+        .map(l=>({
+            "addedAt": l.addedAt,
+            "userId": l.userId,
+            "login":l.login,
+        }))
+        .slice(-3)
 
     return {
         "id": bloggerPostMongo.id,
@@ -62,7 +72,24 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
             "likesCount": like,
             "dislikesCount": dislike,
             "myStatus": "None",
-            "newestLikes": like
+            "newestLikes": newestLikes
+        }
+    }
+}
+export const convertBloggerPostCreate = async (bloggerPostMongo:BloggerPostsMongoType) =>{
+    return {
+        "id": bloggerPostMongo.id,
+        "title": bloggerPostMongo.title,
+        "shortDescription": bloggerPostMongo.shortDescription,
+        "content": bloggerPostMongo.content,
+        "bloggerId": bloggerPostMongo.bloggerId,
+        "bloggerName": bloggerPostMongo.bloggerName,
+        addedAt:bloggerPostMongo.addedAt,
+        "extendedLikesInfo": {
+            "likesCount": 0,
+            "dislikesCount": 0,
+            "myStatus": "None",
+            "newestLikes":[]
         }
     }
 }

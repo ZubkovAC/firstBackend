@@ -43,7 +43,7 @@ export class PostsService {
         const likes = await this.likesRepositories.createLikesId(newLikesObject)
         const post = await this.postsRepositories.createPost(newPost)
         const reLikes = await this.serviceLikes.baseLikesSchema()
-        return {...post,...reLikes}
+        return post
     }
     async createBloggerIdPost(title:string,shortDescription:string,content:string ,bloggerId:string){
         let searchBlogger = await bloggersCollectionModel.findOne({id:bloggerId})

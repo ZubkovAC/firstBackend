@@ -27,7 +27,7 @@ export class CommentsRepositories{
             "userId": commentsId.userId,
             "userLogin": commentsId.userLogin,
             "addedAt": commentsId.addedAt,
-            "extendedLikesInfo": {
+            likesInfo: {
                 "likesCount": likesCount,
                 "dislikesCount": dislikesCount,
                 "myStatus": "None",
