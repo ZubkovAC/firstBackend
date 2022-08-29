@@ -1,7 +1,7 @@
 import {CommentsRepositories} from "../repositories/comments-repositories07";
 import {inject, injectable} from "inversify";
 var jwt = require('jsonwebtoken')
-import {userRegistrationModel} from "../db";
+import {likesCollectionModel, userRegistrationModel} from "../db";
 import {v4 as uuidv4} from "uuid";
 
 @injectable()
@@ -17,18 +17,22 @@ export class CommentsService {
     async createCommentsPost(idComments:string,content:string,token:string){
         const parse = await jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)
         const userId = await userRegistrationModel.findOne({"accountData.login":parse.login})
-
+        const id = uuidv4()
         const newCommentPost ={
             idPostComment: idComments ,
-            id: uuidv4(),
+            id: id ,
             content: content,
             userId: userId.accountData.userId,
             userLogin: userId.accountData.login,
             addedAt: new Date().toISOString()
         }
         await this.commentsRepositories.createCommentsPost(newCommentPost)
+        await likesCollectionModel.insertMany([{
+                id:id,
+                newestLikes: []
+        }])
         return{
-            id:newCommentPost.id,
+            id:id,
             content: newCommentPost.content,
             userId: newCommentPost.userId,
             userLogin: newCommentPost.userLogin,
@@ -42,6 +46,9 @@ export class CommentsService {
     }
     async updateComments(idComments:string,content:string){
        return await this.commentsRepositories.updateComments(idComments,content)
+    }
+    async updateCommentsLikeStatus(idComments:string,likeStatus:string,userId:string, login:string){
+       return await this.commentsRepositories.updateCommentsLikeStatus(idComments,likeStatus,userId,login)
     }
     async deleteComments(idComments:string){
        return await this.commentsRepositories.deleteComments(idComments)

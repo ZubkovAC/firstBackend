@@ -12,13 +12,6 @@ export class PostsRepositories {
         const postsMongo:PostsType[] = await postsCollectionModel.find({}).skip(skipCount).limit(pageSize).lean()
 
         const items = await Promise.all([convertBloggersPosts(postsMongo)])
-        console.log(5555,{
-            totalCount : totalCount,
-            pageSize : pageSize,
-            page:pageNumber,
-            pagesCount: Math.ceil(totalCount/ pageSize),
-            items:items.flat(1)
-        })
         return {
             totalCount : totalCount,
             pageSize : pageSize,

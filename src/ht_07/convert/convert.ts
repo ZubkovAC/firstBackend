@@ -43,44 +43,13 @@ export const convertBloggerId = (bloggerId:BloggerMongoDBType) =>{
 
 export const convertBloggersPosts = async (bloggersPostsMongo:Array<BloggerPostsMongoType>) =>{
     return Promise.all( bloggersPostsMongo.map(b =>(convertBloggerPost(b))))
-
-    // const promises = bloggersPostsMongo.map(async (b) => {
-    //     try {
-    //         const res = await convertBloggerPost(b)
-    //         return res
-    //     } catch (e) {
-    //         return "a"
-    //     }
-    //     console.log("promises",promises)
-    //     const res =await Promise.all(promises);
-    //     console.log("res",res)
-    //     return res
-    //     }
-    // )
-
 }
 
 export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType) =>{
-    console.log("bloggerPostMongo",bloggerPostMongo)
     const lastLikes = await likesCollectionModel.findOne({id:bloggerPostMongo.id}).lean()
-    const like =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Like")
-    const dislike =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Dislike")
+    const like =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Dislike").filter(l=>l.myStatus !== "None").length
+    const dislike =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Like").filter(l=>l.myStatus !== "None").length
 
-    // console.log("lastLikes",{
-    //     "id": bloggerPostMongo.id,
-    //     "title": bloggerPostMongo.title,
-    //     "shortDescription": bloggerPostMongo.shortDescription,
-    //     "content": bloggerPostMongo.content,
-    //     "bloggerId": bloggerPostMongo.bloggerId,
-    //     "bloggerName": bloggerPostMongo.bloggerName,
-    //     addedAt:bloggerPostMongo.addedAt,
-    //     "extendedLikesInfo": {
-    //         "likesCount": like.length,
-    //         "dislikesCount": dislike.length,
-    //         "myStatus": "None",
-    //         "newestLikes": like
-    //     }
-    // })
     return {
         "id": bloggerPostMongo.id,
         "title": bloggerPostMongo.title,
@@ -90,20 +59,34 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
         "bloggerName": bloggerPostMongo.bloggerName,
         addedAt:bloggerPostMongo.addedAt,
         "extendedLikesInfo": {
-            "likesCount": like.length,
-            "dislikesCount": dislike.length,
+            "likesCount": like,
+            "dislikesCount": dislike,
             "myStatus": "None",
             "newestLikes": like
         }
     }
 }
-export const convertPostsComments = (postsCommentsMongo:Array<CommentsType>) =>{
-    return postsCommentsMongo.map(p =>({
-        "id": p.id,
-        "content": p.content,
-        "userId": p.userId,
-        "userLogin": p.userLogin,
-        "addedAt": p.addedAt
-    }))
+export const convertPostsComments = async (postsCommentsMongo:Array<CommentsType>) =>{
+    return Promise.all(postsCommentsMongo.map(p =>(convertPostsMapComments(p))))
 }
+export const convertPostsMapComments = async (postsComments:any)=>{
+    const lastLikes = await likesCollectionModel.findOne({id:postsComments.id}).lean()
+    const like =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Dislike").filter(l=>l.myStatus !== "None").length
+    const dislike =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Like").filter(l=>l.myStatus !== "None").length
+    console.log('123',lastLikes)
+    return {
+        "id": postsComments.id,
+        "content": postsComments.content,
+        "userId": postsComments.userId,
+        "userLogin":postsComments.userLogin,
+        "addedAt": postsComments.addedAt,
+        "likesInfo": {
+            "likesCount": like,
+            "dislikesCount": dislike,
+            "myStatus": "None"
+        }
+    }
+}
+
+
 

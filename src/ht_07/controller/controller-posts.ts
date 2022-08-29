@@ -30,10 +30,11 @@ export class PostsController{
     async getPostId (req: Request, res: Response){
         const id = req.params.id
         const post = await this.postsService.findPostId(id)
-        const likes  = await likesCollectionModel.findOne({id:id},"-newestLikes._id -newestLikes.myStatus").lean()
+        const likes  = await likesCollectionModel.findOne({id:id},"-newestLikes._id").lean()
 
         let likeCount = 0
         let dislikeCount = 0
+        console.log('likes',likes.newestLikes)
         for (let x =0; likes.newestLikes.length > x; x++){
             if(likes.newestLikes[x].myStatus === "Like" ){
                 likeCount += 1
@@ -49,16 +50,19 @@ export class PostsController{
             const {userId}= await jwt.verify(token,process.env.SECRET_KEY)
             myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus || "None"
         }
-        let newestLikes = likes.newestLikes.filter(l=>l.myStatus !== "Dislike" || "None")
+        let newestLikes = likes.newestLikes
+            .filter(l=>l.myStatus !== "Dislike" || "None")
+            .map(s=>({"addedAt": s.addedAt,
+            "userId": s.userId,
+            "login": s.login}))
         let asdf
         if(newestLikes.length > 3){
-            console.log(123)
             asdf = newestLikes[length - 3]
         }
         const extendedLikesInfo ={
             "likesCount": likeCount,
             "dislikesCount": dislikeCount,
-            "myStatus": myStatus, // need refactor
+            "myStatus": myStatus,
             "newestLikes":asdf ? asdf : newestLikes
         }
         res.status(200).send({...post,extendedLikesInfo})
@@ -69,6 +73,7 @@ export class PostsController{
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
         const commentsPost = await this.commentsService.getCommentsPost(id,pageN,pageS)
+
         res.status(200).send(commentsPost)
         return;
 

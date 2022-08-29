@@ -27,12 +27,12 @@ export class PostsService {
         let searchBlogger = await bloggersCollectionModel.findOne({id:bloggerId})
         const id = uuidv4()
         const newPost = {
-            "id": id,
-            "title": title,
-            "shortDescription": shortDescription,
-            "content": content,
-            "bloggerId": bloggerId,
-            "bloggerName": searchBlogger.name,
+            id: id,
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            bloggerId: bloggerId,
+            bloggerName: searchBlogger.name,
             addedAt:new Date().toISOString()
         }
         const newLikesObject = {

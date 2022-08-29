@@ -1,6 +1,7 @@
 import {Request, Response} from "express";
 import {inject, injectable} from "inversify";
 import {CommentsService} from "../service/service-comments";
+var jwt = require('jsonwebtoken')
 
 @injectable()
 export class CommentsController {
@@ -15,6 +16,14 @@ export class CommentsController {
     async updateCommentsId (req: Request, res: Response){
         const idComment = req.params.id
         const updateComment = await this.commentsService.updateComments(idComment,req.body.content)
+        res.send(204)
+        return;
+    }
+    async updateCommentsIdLikeStatus (req: Request, res: Response){
+        const idComment = req.params.id
+        const token = req.headers.authorization.split(" ")[1]
+        const {login, userId } = await jwt.verify(token,process.env.SECRET_KEY)
+        const updateComment = await this.commentsService.updateCommentsLikeStatus(idComment,req.body.likeStatus,userId,login)
         res.send(204)
         return;
     }

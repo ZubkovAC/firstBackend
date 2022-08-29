@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {
-    validationContent20_300, validationErrorCreatePosts,
+    validationContent20_300, validationErrorCreatePosts, validationLikeStatus,
     validatorAccessUserCommentId,
     validatorFindCommentId
 } from "../../validation/validation";
@@ -22,6 +22,15 @@ RouterComments07.put('/:id',
     validatorAccessUserCommentId,
     validationErrorCreatePosts,
     commentsController.updateCommentsId.bind(commentsController)
+)
+RouterComments07.put('/:id/like-status',
+    authorizationMiddleware06,
+    // validationContent20_300,
+    validatorFindCommentId,
+    validatorAccessUserCommentId,
+    validationErrorCreatePosts,
+    validationLikeStatus,
+    commentsController.updateCommentsIdLikeStatus.bind(commentsController)
 )
 RouterComments07.delete('/:id',
     authorizationMiddleware06,
