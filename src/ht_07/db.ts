@@ -24,7 +24,7 @@ const CommentsSchema = new mongoose.Schema({
     addedAt: String
 });
 const LikesSchema = new mongoose.Schema({
-        id:String,
+        id:String, // post comments
         newestLikes: [
             {
                 addedAt: Date,

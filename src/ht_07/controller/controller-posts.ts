@@ -113,8 +113,9 @@ export class PostsController{
         const {email,login,userId } = await jwt.verify(token,process.env.SECRET_KEY)
         const likesCollection = await likesCollectionModel.findOne({id:req.params.id}).lean()
         const likesPost = likesCollection.newestLikes.find(user=>user.userId ===userId)
-            if(!likesPost){
-                await likesCollectionModel.updateOne({id:req.params.id},
+
+            if(!likesPost){ // delete?
+                await likesCollectionModel.updateOne({id:req.params.id },
                     { $push: { newestLikes: {
                                 addedAt: new Date().toISOString(),
                                 userId: userId,
@@ -123,15 +124,15 @@ export class PostsController{
                             } } }
                 )
             }else{
-                await likesCollectionModel.updateOne({id:req.params.id},
+                await likesCollectionModel.updateOne({$and:[{id:req.params.id}, {"newestLikes.userId":userId }]},
                     { $set:
-                            { newestLikes:
-                                    {
-                                        addedAt: new Date().toISOString(),
-                                        userId: userId,
-                                        login: login,
-                                        myStatus: likeStatus
-                                    }}}
+                            {"newestLikes.$":{
+                                addedAt: new Date().toISOString(),
+                                userId: userId,
+                                login: login,
+                                myStatus: likeStatus
+                            }
+                        }}
                 )
             }
         res.send(204)
