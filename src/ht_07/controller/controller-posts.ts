@@ -34,7 +34,7 @@ export class PostsController{
 
         let likeCount = 0
         let dislikeCount = 0
-        console.log('likes',likes.newestLikes)
+        // console.log('likes',likes.newestLikes)
         for (let x =0; likes.newestLikes.length > x; x++){
             if(likes.newestLikes[x].myStatus === "Like" ){
                 likeCount += 1
@@ -50,12 +50,21 @@ export class PostsController{
             const {userId}= await jwt.verify(token,process.env.SECRET_KEY)
             myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus || "None"
         }
+
+
+        function byDate (a, b) {
+            if (a.addedAt < b.addedAt) return 1;
+            if (a.addedAt > b.addedAt) return -1;
+            return 0;
+        }
         let newestLikes = likes.newestLikes
             .filter(l=>l.myStatus !== "Dislike" || "None")
             .map(s=>({"addedAt": s.addedAt,
             "userId": s.userId,
             "login": s.login}))
+            .sort(byDate)
         let asdf
+
         if(newestLikes.length > 3){
             asdf = newestLikes[length - 3]
         }

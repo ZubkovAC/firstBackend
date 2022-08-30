@@ -27,7 +27,7 @@ const LikesSchema = new mongoose.Schema({
         id:String, // post comments
         newestLikes: [
             {
-                addedAt: Date,
+                addedAt: String,
                 userId: String,
                 login: String,
                 myStatus: String
