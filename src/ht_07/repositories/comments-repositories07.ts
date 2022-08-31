@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import {convertPostsComments} from "../convert/convert";
 import {CommentsType} from "../types";
 import {injectable} from "inversify";
+import {userIdGlobal} from "../../validation/validation";
 
 export type CommentsCollectionType = {
     idPostComment: string,
@@ -18,8 +19,17 @@ export class CommentsRepositories{
         const commentsId = await commentsCollectionModel.findOne({id:idComments})
         const likes = await likesCollectionModel.findOne({id:idComments})
 
-        const likesCount = likes.newestLikes?.filter(l=>l.myStatus !== "Like")?.length || 0
-        const dislikesCount = likes.newestLikes?.filter(l=>l.myStatus !== "Dislike")?.length || 0
+        const likesCount = likes.newestLikes?.filter(l=>l.myStatus !== "Dislike")?.filter(l=>l.myStatus !== "None")?.length || 0
+        const dislikesCount = likes.newestLikes?.filter(l=>l.myStatus !== "Like")?.filter(l=>l.myStatus !== "None")?.length || 0
+
+        let myStatus =  "None"
+        if(userIdGlobal){
+            myStatus = likes.newestLikes?.find(s=>s.userId === userIdGlobal)?.myStatus || "None"
+        }
+
+        // @ts-ignore
+        userIdGlobal = ''
+
         return {
             "id":commentsId.id,
             "content": commentsId.content,
@@ -29,7 +39,7 @@ export class CommentsRepositories{
             likesInfo: {
                 "likesCount": likesCount,
                 "dislikesCount": dislikesCount,
-                "myStatus": "None",
+                "myStatus": myStatus,
             }
         }
     }
