@@ -2,7 +2,7 @@
 import {Router} from "express";
 import {
     validationContent, validationError,
-    validationErrorCreatePosts, validationName15,
+    validationErrorCreatePosts, validationName15, validationSaveUserId,
     validationShortDescription,
     validationTitle, validationYoutubeUrl
 } from "../../validation/validation";
@@ -22,6 +22,7 @@ RouterBloggers07.get('/',
 RouterBloggers07.get('/:id',
     bloggerController.getBloggerId.bind(bloggerController))
 RouterBloggers07.get('/:idBloggers/posts',
+    validationSaveUserId,
     bloggerController.getBloggerIdPosts.bind(bloggerController))
 RouterBloggers07.post('/:idBlogger/posts',
     authorizationMiddleware03,
