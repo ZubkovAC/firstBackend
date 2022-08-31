@@ -12,7 +12,6 @@ const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
 const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 
 export function byDate (a, b) {
-    console.log(123,a,b)
     if (a.addedAt < b.addedAt) return 1;
     if (a.addedAt > b.addedAt) return -1;
     return 0;
@@ -41,7 +40,7 @@ export class PostsController{
 
         let likeCount = 0
         let dislikeCount = 0
-        // console.log('likes',likes.newestLikes)
+
         for (let x =0; likes.newestLikes.length > x; x++){
             if(likes.newestLikes[x].myStatus === "Like" ){
                 likeCount += 1

@@ -62,11 +62,12 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
         }))
         .sort(byDate)
         .slice(0, 3)
-    console.log("userIdGlobal",userIdGlobal)
+
     let myStatus =  "None"
      if(userIdGlobal){
-            myStatus  = lastLikes.newestLikes.find(s=>s.userId === userIdGlobal).myStatus || "None"
+            myStatus = lastLikes.newestLikes?.find(s=>s.userId === userIdGlobal)?.myStatus || "None"
      }
+
     // @ts-ignore
     userIdGlobal = ''
     return {
