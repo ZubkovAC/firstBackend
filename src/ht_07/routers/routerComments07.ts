@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {
-    validationContent20_300, validationErrorCreatePosts, validationLikeStatus,
+    validationContent20_300, validationErrorCreatePosts, validationLikeStatus, validationSaveUserId,
     validatorAccessUserCommentId,
     validatorFindCommentId
 } from "../../validation/validation";
@@ -13,6 +13,7 @@ export const RouterComments07 = Router({})
 
 RouterComments07.get('/:id',
     validatorFindCommentId,
+    validationSaveUserId,
     commentsController.getCommentsId.bind(commentsController)
 )
 RouterComments07.put('/:id',

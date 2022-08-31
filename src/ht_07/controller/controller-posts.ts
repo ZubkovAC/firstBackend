@@ -54,7 +54,7 @@ export class PostsController{
         let myStatus
         if(token){
             const {userId}= await jwt.verify(token,process.env.SECRET_KEY)
-            myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus
+            myStatus = likes.newestLikes?.find(l=>l.userId === userId)?.myStatus
         }
         let newestLikes = likes.newestLikes
             .filter(l=>l.myStatus !== "Dislike")
@@ -74,6 +74,8 @@ export class PostsController{
         res.status(200).send({...post,extendedLikesInfo})
         return
     }
+
+
     async getPostsIdComments(req: Request, res: Response){
         const id = req.params.id
         const pageN = pageNumber(req.query.PageNumber as string)
