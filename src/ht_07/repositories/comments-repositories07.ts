@@ -34,6 +34,7 @@ export class CommentsRepositories{
         }
     }
 
+
     async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
         let skipCount = (pageNumber-1) * pageSize
         const allCommentsPost = await commentsCollectionModel.find({idPostComment:idComments}).lean()

@@ -125,22 +125,25 @@ export class PostsController{
 
             if(!likesPost){ // delete?
                 await likesCollectionModel.updateOne({id:req.params.id },
-                    { $push: { newestLikes: {
-                                addedAt: new Date().toISOString(),
-                                userId: userId,
-                                login: login,
-                                myStatus: likeStatus
-                            } } }
+                    { $push:
+                                { newestLikes: {
+                                    addedAt: new Date().toISOString(),
+                                    userId: userId,
+                                    login: login,
+                                    myStatus: likeStatus
+                                    }
+                                }
+                    }
                 )
             }else{
                 await likesCollectionModel.updateOne({$and:[{id:req.params.id}, {"newestLikes.userId":userId }]},
                     { $set:
-                            {"newestLikes.$":{
-                                addedAt: new Date().toISOString(),
-                                userId: userId,
-                                login: login,
-                                myStatus: likeStatus
-                            }
+                                {"newestLikes.$":{
+                                    addedAt: new Date().toISOString(),
+                                    userId: userId,
+                                    login: login,
+                                    myStatus: likeStatus
+                                }
                         }}
                 )
             }

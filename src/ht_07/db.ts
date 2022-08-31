@@ -35,10 +35,12 @@ const LikesSchema = new mongoose.Schema({
             }
         ]
 });
+
 const CountRequestSchema = new mongoose.Schema({
     id: String,
     date: Date
 });
+
 const RegistrationSchema = new mongoose.Schema({
     accountData:{
         userId:String,
