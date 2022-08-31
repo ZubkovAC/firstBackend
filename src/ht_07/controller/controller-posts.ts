@@ -55,10 +55,8 @@ export class PostsController{
         let myStatus
         if(token){
             const {userId}= await jwt.verify(token,process.env.SECRET_KEY)
-            console.log("userId",userId)
             myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus
         }
-        console.log("myStatus",myStatus)
         let newestLikes = likes.newestLikes
             .filter(l=>l.myStatus !== "Dislike")
             .filter(l=>l.myStatus !== "None")
