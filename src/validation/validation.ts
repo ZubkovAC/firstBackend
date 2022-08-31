@@ -127,6 +127,7 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
             // @ts-ignore
             errorPostId = []
             res.send(404)
+            return
         }
         return res.status(400).json({errorsMessages:errorsMessages})
     }

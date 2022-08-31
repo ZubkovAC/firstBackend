@@ -121,7 +121,7 @@ export class PostsController{
         const token = req.headers.authorization.split(" ")[1]
         const {email,login,userId } = await jwt.verify(token,process.env.SECRET_KEY)
         const likesCollection = await likesCollectionModel.findOne({id:req.params.id}).lean()
-        const likesPost = likesCollection.newestLikes.find(user=>user.userId ===userId)
+        const likesPost = likesCollection.newestLikes.find(user=>user.userId === userId)
 
             if(!likesPost){ // delete?
                 await likesCollectionModel.updateOne({id:req.params.id },
