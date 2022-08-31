@@ -58,16 +58,15 @@ export class PostsController{
             myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus || "None"
         }
 
-
-
         let newestLikes = likes.newestLikes
-            .filter(l=>l.myStatus !== "Dislike" || "None")
+            .filter(l=>l.myStatus !== "Dislike")
+            .filter(l=>l.myStatus !== "None")
             .map(s=>({"addedAt": s.addedAt,
             "userId": s.userId,
             "login": s.login}))
             .sort(byDate)
             .slice(0, 3)
-
+        console.log("newestLikes",newestLikes)
         const extendedLikesInfo ={
             "likesCount": likeCount,
             "dislikesCount": dislikeCount,
