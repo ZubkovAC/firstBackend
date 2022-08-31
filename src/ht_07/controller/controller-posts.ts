@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {inject, injectable} from "inversify";
-import {validationErrorCreatePostsv2} from "../../validation/validation";
+import {userIdGlobal, validationErrorCreatePostsv2} from "../../validation/validation";
 import {PostsService} from "../service/service-posts";
 import {CommentsService} from "../service/service-comments";
 import {likesCollectionModel} from "../db";
@@ -52,12 +52,13 @@ export class PostsController{
         }
 
         const token = req.headers?.authorization?.split(" ")[1]
-        let myStatus = "None"
+        let myStatus
         if(token){
             const {userId}= await jwt.verify(token,process.env.SECRET_KEY)
-            myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus || "None"
+            console.log("userId",userId)
+            myStatus = likes.newestLikes.find(l=>l.userId === userId)?.myStatus
         }
-
+        console.log("myStatus",myStatus)
         let newestLikes = likes.newestLikes
             .filter(l=>l.myStatus !== "Dislike")
             .filter(l=>l.myStatus !== "None")
@@ -66,11 +67,11 @@ export class PostsController{
             "login": s.login}))
             .sort(byDate)
             .slice(0, 3)
-        console.log("newestLikes",newestLikes)
+
         const extendedLikesInfo ={
             "likesCount": likeCount,
             "dislikesCount": dislikeCount,
-            "myStatus": myStatus,
+            "myStatus": myStatus || "None",
             "newestLikes": newestLikes
         }
         res.status(200).send({...post,extendedLikesInfo})

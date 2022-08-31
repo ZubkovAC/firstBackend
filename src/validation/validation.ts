@@ -14,7 +14,7 @@ const bcrypt = require('bcrypt')
 
 export let errorBloggerId =[]
 export let errorPostId =[]
-
+export let userIdGlobal :string =''
 export const validationName15 =
     body('name')
         .trim()
@@ -342,4 +342,20 @@ export const validationFindBlogger = async (req: Request, res: Response, next:Ne
     }
     next()
     return
+}
+export const validationSaveUserId = async (req: Request, res: Response, next:NextFunction)=>{
+    const token = req.headers?.authorization?.split(" ")[1]
+    if(token){
+        try{
+            const {userId} = jwt.verify(token, process.env.SECRET_KEY)
+            userIdGlobal = userId
+        }
+        catch (e){
+            next()
+            return
+        }
+    }
+    next()
+    return
+
 }

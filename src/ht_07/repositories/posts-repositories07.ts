@@ -14,10 +14,10 @@ export class PostsRepositories {
         const items = await Promise.all([convertBloggersPosts(postsMongo)])
 
         return {
-            totalCount : totalCount,
-            pageSize : pageSize,
-            page:pageNumber,
             pagesCount: Math.ceil(totalCount/ pageSize),
+            page:pageNumber,
+            pageSize : pageSize,
+            totalCount : totalCount,
             items: items.flat(1)
         }
     }

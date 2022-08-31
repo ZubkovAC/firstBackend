@@ -5,7 +5,7 @@ import {
     validationContent20_300, validationError,
     validationErrorCreatePosts,
     validationErrorUpdatePosts, validationFindBlogger, validationLikeStatus,
-    validationPostId,
+    validationPostId, validationSaveUserId,
     validationShortDescription,
     validationTitle,
     validatorPostIdComments
@@ -19,11 +19,13 @@ const postsController = container.resolve(PostsController)
 export const RouterPosts07 = Router({})
 
 RouterPosts07.get('',
+         validationSaveUserId,
          postsController.getPosts.bind(postsController)
 )
 RouterPosts07.get('/:id',
         validationPostId,
         validationErrorUpdatePosts,
+        validationSaveUserId,
         postsController.getPostId.bind(postsController)
 )
 RouterPosts07.get('/:id/comments',

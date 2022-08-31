@@ -2,6 +2,7 @@ import {BloggerMongoDBType, CommentsType } from "../types"
 import {LikesRepositories} from "../repositories/likes-repositories";
 import {likesCollectionModel} from "../db";
 import {byDate} from "../controller/controller-posts";
+import {userIdGlobal} from "../../validation/validation";
 
 // export type BloggerMongoType = {
 //     id:string
@@ -61,7 +62,13 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
         }))
         .sort(byDate)
         .slice(0, 3)
-
+    console.log("userIdGlobal",userIdGlobal)
+    let myStatus =  "None"
+     if(userIdGlobal){
+            myStatus  = lastLikes.newestLikes.find(s=>s.userId === userIdGlobal).myStatus || "None"
+     }
+    // @ts-ignore
+    userIdGlobal = ''
     return {
         "id": bloggerPostMongo.id,
         "title": bloggerPostMongo.title,
@@ -73,7 +80,7 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
         "extendedLikesInfo": {
             "likesCount": like,
             "dislikesCount": dislike,
-            "myStatus": "None",
+            "myStatus": myStatus ,
             "newestLikes": newestLikes
         }
     }
