@@ -66,7 +66,7 @@ export class PostsController{
         let asdf
 
         if(newestLikes.length > 3){
-            asdf = newestLikes[length - 3]
+            asdf = newestLikes[newestLikes.length - 3]
         }
         const extendedLikesInfo ={
             "likesCount": likeCount,
