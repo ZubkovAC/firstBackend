@@ -1,6 +1,7 @@
 import {BloggerMongoDBType, CommentsType } from "../types"
 import {LikesRepositories} from "../repositories/likes-repositories";
 import {likesCollectionModel} from "../db";
+import {byDate} from "../controller/controller-posts";
 
 // export type BloggerMongoType = {
 //     id:string
@@ -58,7 +59,8 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
             "userId": l.userId,
             "login":l.login,
         }))
-        .slice(-3)
+        .sort(byDate)
+        .slice(0, 3)
 
     return {
         "id": bloggerPostMongo.id,

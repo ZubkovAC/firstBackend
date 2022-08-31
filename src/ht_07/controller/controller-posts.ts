@@ -11,6 +11,13 @@ const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
 const pageSize = (pageSiz :string) => pageSiz ? +pageSiz : 10
 const searchNameTerm = (searchName :string) => searchName ? searchName : ''
 
+export function byDate (a, b) {
+    console.log(123,a,b)
+    if (a.addedAt < b.addedAt) return 1;
+    if (a.addedAt > b.addedAt) return -1;
+    return 0;
+}
+
 @injectable()
 export class PostsController{
     constructor(
@@ -52,27 +59,20 @@ export class PostsController{
         }
 
 
-        function byDate (a, b) {
-            if (a.addedAt < b.addedAt) return 1;
-            if (a.addedAt > b.addedAt) return -1;
-            return 0;
-        }
+
         let newestLikes = likes.newestLikes
             .filter(l=>l.myStatus !== "Dislike" || "None")
             .map(s=>({"addedAt": s.addedAt,
             "userId": s.userId,
             "login": s.login}))
             .sort(byDate)
-        let asdf
+            .slice(0, 3)
 
-        if(newestLikes.length > 3){
-            asdf = newestLikes[newestLikes.length - 3]
-        }
         const extendedLikesInfo ={
             "likesCount": likeCount,
             "dislikesCount": dislikeCount,
             "myStatus": myStatus,
-            "newestLikes":asdf ? asdf : newestLikes
+            "newestLikes": newestLikes
         }
         res.status(200).send({...post,extendedLikesInfo})
         return
