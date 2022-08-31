@@ -12,7 +12,6 @@ export type CommentsCollectionType = {
         userLogin: string
         addedAt: string}
 
-
 @injectable()
 export class CommentsRepositories{
     async getComments(idComments:string){
