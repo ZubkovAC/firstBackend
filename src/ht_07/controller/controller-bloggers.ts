@@ -2,6 +2,7 @@ import {BloggersService07} from "../service/service-bloggers";
 import {Request, Response} from "express";
 import {inject, injectable} from "inversify";
 import { PostsService } from "../service/service-posts";
+var jwt = require('jsonwebtoken')
 
 
 const pageNumber = (pageNum :string) => pageNum ? +pageNum : 1
@@ -30,9 +31,15 @@ export class BloggerController{
         res.status(200).send(bloggers)
     }
     async getBloggerIdPosts(req: Request, res: Response){
+        const token = req.headers.authorization?.split(" ")[1]
+        let userId = ''
+        if(token){
+            userId = jwt.verify(token,process.env.SECRET_KEY).userId
+        }
+
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
-        const bloggers = await this.bloggerService.findIdBloggerPosts(pageN, pageS,req.params.idBloggers)
+        const bloggers = await this.bloggerService.findIdBloggerPosts(pageN, pageS,req.params.idBloggers , userId)
         if(bloggers){
             res.status(200).send(bloggers)
             return

@@ -71,7 +71,7 @@ export class BloggerRepositoryDB07 {
         }
         return  ""
     }
-    async findBloggerIdPosts(pageNumber:number, pageSize:number ,bloggerId:string): Promise< BloggerGetPostType | string >{
+    async findBloggerIdPosts(pageNumber:number, pageSize:number ,bloggerId:string,userId:string): Promise< BloggerGetPostType | string >{
         let searchBloggerId : BloggersType | null = await bloggersCollectionModel.findOne({id:bloggerId})
         let skipCount = (pageNumber-1) * pageSize
         const allPostsBlogger = await postsCollectionModel.find({bloggerId:bloggerId}).lean()
@@ -81,7 +81,7 @@ export class BloggerRepositoryDB07 {
             .skip(skipCount)
             .limit(pageSize)
             .lean()
-        const items = await Promise.all([convertBloggersPosts(postsBlogger)])
+        const items = await Promise.all([convertBloggersPosts(postsBlogger,userId)])
         if(searchBloggerId && postsBlogger){
             return {
                 pagesCount: Math.ceil(allPostsBloggerLength / pageSize),
