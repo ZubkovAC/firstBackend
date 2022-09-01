@@ -14,11 +14,11 @@ export class PostsService {
                 @inject(LikesService)
                 protected serviceLikes : LikesService
     ) {}
-    async findPosts(pageNumber:number, pageSize:number){
-        return this.postsRepositories.findPosts(pageNumber,pageSize)
+    async findPosts(pageNumber:number, pageSize:number,userId:string){
+        return this.postsRepositories.findPosts(pageNumber,pageSize,userId)
     }
-    async findPostId(postId:string){
-        return this.postsRepositories.findPostId(postId)
+    async findPostId(postId:string,userId:string){
+        return this.postsRepositories.findPostId(postId,userId)
     }
     async deletePostId(postId:string){
         return this.postsRepositories.deletePostId(postId)

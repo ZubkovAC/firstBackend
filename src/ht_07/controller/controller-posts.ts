@@ -26,16 +26,26 @@ export class PostsController{
     ) {}
 
     async getPosts (req: Request, res: Response){
+        const token = req.headers.authorization?.split(" ")[1]
+        let userId = ''
+        if(token){
+            userId = jwt.verify(token,process.env.SECRET_KEY).userId
+        }
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
-        const posts = await this.postsService.findPosts(pageN,pageS)
+        const posts = await this.postsService.findPosts(pageN,pageS ,userId)
         res.status(200).send(posts)
         return
     }
 
     async getPostId (req: Request, res: Response){
         const id = req.params.id
-        const post = await this.postsService.findPostId(id)
+        const token = req.headers.authorization?.split(" ")[1]
+        let userId = ''
+        if(token){
+            userId = jwt.verify(token,process.env.SECRET_KEY).userId
+        }
+        const post = await this.postsService.findPostId(id,userId)
         const likes  = await likesCollectionModel.findOne({id:id},"-newestLikes._id").lean()
 
         let likeCount = 0
@@ -49,8 +59,6 @@ export class PostsController{
                 dislikeCount += 1
             }
         }
-
-        const token = req.headers?.authorization?.split(" ")[1]
         let myStatus
         if(token){
             const {userId}= await jwt.verify(token,process.env.SECRET_KEY)

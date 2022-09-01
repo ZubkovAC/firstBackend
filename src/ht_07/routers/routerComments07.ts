@@ -26,9 +26,8 @@ RouterComments07.put('/:id',
 )
 RouterComments07.put('/:id/like-status',
     authorizationMiddleware06,
-    // validationContent20_300,
     validatorFindCommentId,
-    validatorAccessUserCommentId,
+    // validatorAccessUserCommentId,
     validationErrorCreatePosts,
     validationLikeStatus,
     commentsController.updateCommentsIdLikeStatus.bind(commentsController)

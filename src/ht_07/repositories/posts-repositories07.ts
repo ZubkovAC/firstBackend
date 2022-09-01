@@ -6,12 +6,12 @@ import {injectable} from "inversify";
 
 @injectable()
 export class PostsRepositories {
-    async findPosts(pageNumber:number, pageSize:number){
+    async findPosts(pageNumber:number, pageSize:number,userId:string){
         let skipCount = (pageNumber-1) * pageSize
         const totalCount = await postsCollectionModel.countDocuments()
         const postsMongo:PostsType[] = await postsCollectionModel.find({}).skip(skipCount).limit(pageSize).lean()
 
-        const items = await Promise.all([convertBloggersPosts(postsMongo)])
+        const items = await Promise.all([convertBloggersPosts(postsMongo ,userId)])
 
         return {
             pagesCount: Math.ceil(totalCount/ pageSize),
@@ -21,9 +21,9 @@ export class PostsRepositories {
             items: items.flat(1)
         }
     }
-    async findPostId(postId:string)  {
+    async findPostId(postId:string,userId:string)  {
         const post:PostsType = await postsCollectionModel.findOne({id:postId}).lean()
-        return convertBloggerPost(post)
+        return convertBloggerPost(post,userId)
 
     }
     async deletePostId(postId:string){

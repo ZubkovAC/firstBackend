@@ -43,11 +43,12 @@ export const convertBloggerId = (bloggerId:BloggerMongoDBType) =>{
     }
 }
 
-export const convertBloggersPosts = async (bloggersPostsMongo:Array<BloggerPostsMongoType>) =>{
-    return Promise.all( bloggersPostsMongo.map(b =>(convertBloggerPost(b))))
+export const convertBloggersPosts = async (bloggersPostsMongo:Array<BloggerPostsMongoType>,userId:string) =>{
+    return Promise.all( bloggersPostsMongo.map(b =>(convertBloggerPost(b,userId))))
 }
 
-export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType) =>{
+export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType,userId:string) =>{
+
     const lastLikes = await likesCollectionModel.findOne({id:bloggerPostMongo.id})
     const like =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Dislike").filter(l=>l.myStatus !== "None").length
     const dislike =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Like").filter(l=>l.myStatus !== "None").length
@@ -63,18 +64,10 @@ export const convertBloggerPost = async (bloggerPostMongo:BloggerPostsMongoType)
         .sort(byDate)
         .slice(0, 3)
 
-    console.log("dislike",dislike)
-    console.log("like",like)
-
     let myStatus =  "None"
-     if(userIdGlobal){
-         console.log('userIdGloval', userIdGlobal)
-            myStatus = lastLikes.newestLikes?.find(s=>s.userId === userIdGlobal)?.myStatus || "None"
-         console.log('my status', myStatus)
+     if(userId){
+         myStatus = lastLikes.newestLikes?.find(s=>s.userId === userId)?.myStatus || "None"
      }
-    console.log('===========my status========', myStatus)
-    // @ts-ignore
-    userIdGlobal = ''
     return {
         "id": bloggerPostMongo.id,
         "title": bloggerPostMongo.title,
