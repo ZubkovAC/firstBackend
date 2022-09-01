@@ -11,8 +11,8 @@ export class CommentsService {
     async getComments(idComments:string){
        return await this.commentsRepositories.getComments(idComments)
     }
-    async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
-      return  await this.commentsRepositories.getCommentsPost(idComments,pageNumber,pageSize)
+    async getCommentsPost(idComments:string,pageNumber:number,pageSize:number,userId:string){
+      return  await this.commentsRepositories.getCommentsPost(idComments,pageNumber,pageSize,userId)
     }
     async createCommentsPost(idComments:string,content:string,token:string){
         const parse = await jwt.verify(token.split(" ")[1],process.env.SECRET_KEY)

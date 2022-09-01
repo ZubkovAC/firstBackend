@@ -45,7 +45,7 @@ export class CommentsRepositories{
     }
 
 
-    async getCommentsPost(idComments:string,pageNumber:number,pageSize:number){
+    async getCommentsPost(idComments:string,pageNumber:number,pageSize:number,userId:string){
         let skipCount = (pageNumber-1) * pageSize
         const allCommentsPost = await commentsCollectionModel.find({idPostComment:idComments}).lean()
         const commentsPost :Array<CommentsType> = await commentsCollectionModel
@@ -54,7 +54,7 @@ export class CommentsRepositories{
             .limit(pageSize)
             .lean()
 
-        const items =  await Promise.all([convertPostsComments(commentsPost)])
+        const items =  await Promise.all([convertPostsComments(commentsPost,userId)])
 
         return {
             "pagesCount": Math.ceil( allCommentsPost.length / pageSize),

@@ -101,14 +101,18 @@ export const convertBloggerPostCreate = async (bloggerPostMongo:BloggerPostsMong
         }
     }
 }
-export const convertPostsComments = async (postsCommentsMongo:Array<CommentsType>) =>{
-    return Promise.all(postsCommentsMongo.map(p =>(convertPostsMapComments(p))))
+export const convertPostsComments = async (postsCommentsMongo:Array<CommentsType>,userId:string) =>{
+    return Promise.all(postsCommentsMongo.map(p =>(convertPostsMapComments(p,userId))))
 }
-export const convertPostsMapComments = async (postsComments:any)=>{
+export const convertPostsMapComments = async (postsComments:any,userId:string)=>{
     const lastLikes = await likesCollectionModel.findOne({id:postsComments.id}).lean()
     const like =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Dislike").filter(l=>l.myStatus !== "None").length
     const dislike =  lastLikes.newestLikes.filter(l=>l.myStatus !== "Like").filter(l=>l.myStatus !== "None").length
-    console.log('123',lastLikes)
+
+    let myStatus =  "None"
+    if(userId){
+        myStatus = lastLikes.newestLikes?.find(s=>s.userId === userId)?.myStatus || "None"
+    }
     return {
         "id": postsComments.id,
         "content": postsComments.content,
@@ -118,7 +122,7 @@ export const convertPostsMapComments = async (postsComments:any)=>{
         "likesInfo": {
             "likesCount": like,
             "dislikesCount": dislike,
-            "myStatus": "None"
+            "myStatus": myStatus
         }
     }
 }

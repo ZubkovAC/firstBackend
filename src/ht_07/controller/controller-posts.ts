@@ -85,10 +85,15 @@ export class PostsController{
 
 
     async getPostsIdComments(req: Request, res: Response){
+        const token = req.headers.authorization?.split(" ")[1]
+        let userId = ''
+        if(token){
+            userId = jwt.verify(token,process.env.SECRET_KEY).userId
+        }
         const id = req.params.id
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
-        const commentsPost = await this.commentsService.getCommentsPost(id,pageN,pageS)
+        const commentsPost = await this.commentsService.getCommentsPost(id,pageN,pageS,userId)
 
         res.status(200).send(commentsPost)
         return;
