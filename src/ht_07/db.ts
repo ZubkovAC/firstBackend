@@ -81,7 +81,7 @@ export const countRequestRegistrationConformationModel = mongoose.model('countRe
 export const secret = {
     key : process.env.SECRET_KEY
 }
-const mongoUri = process.env.MONGO_DB || 'mongodb://0.0.0.0:27017'
+export const mongoUri = process.env.MONGO_DB || 'mongodb://0.0.0.0:27017'
 
 export async function runDb(){
     try{

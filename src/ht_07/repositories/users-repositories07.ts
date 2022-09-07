@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import {userRegistrationModel} from "../db";
 import { v4 as uuidv4 } from 'uuid'
 import {RegistrationTokenType} from "../types";

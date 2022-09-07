@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import {UsersRepositories} from "../repositories/users-repositories07";
 import {inject, injectable} from "inversify";
 

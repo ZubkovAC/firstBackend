@@ -8,5 +8,6 @@ export const authorizationMiddleware03 = (req: Request, res: Response , next: Ne
         next()
         return
     }
-    res.send(401)
+    res.sendStatus(401)
+    return;
 }

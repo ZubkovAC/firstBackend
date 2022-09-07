@@ -1,10 +1,18 @@
 
 import {Router} from "express";
 import {
-    validationContent, validationError,
-    validationErrorCreatePosts, validationName15, validationSaveUserId,
+    validationBlogger404,
+    validationBloggerId,
+    validationContent,
+    validationError,
+    validationErrorCreatePosts,
+    validationErrorCreatePostsv2,
+    validationErrorUpdatePosts,
+    validationName15,
+    validationSaveUserId,
     validationShortDescription,
-    validationTitle, validationYoutubeUrl
+    validationTitle,
+    validationYoutubeUrl
 } from "../../validation/validation";
 import { authorizationMiddleware03 } from "../authorization-middleware06/authorization-middleware03";
 import {container} from "../composition-root";
@@ -20,6 +28,8 @@ export const RouterBloggers07 =  Router({})
 RouterBloggers07.get('/',
     bloggerController.getBloggers.bind(bloggerController))
 RouterBloggers07.get('/:id',
+    validationBloggerId,
+    validationBlogger404,
     bloggerController.getBloggerId.bind(bloggerController))
 RouterBloggers07.get('/:idBloggers/posts',
     validationSaveUserId,

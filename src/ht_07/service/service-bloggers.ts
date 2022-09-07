@@ -14,7 +14,7 @@ export class BloggersService07 {
     async findBloggers(pageNumber:number, pageSize:number,searchNameTerm:string) : Promise<BloggersGetType>{
         return this.bloggersRepository.findBloggers(pageNumber,pageSize,searchNameTerm)
     }
-    async findBloggerId(bloggerId:string,userId:string): Promise<{id:string, name:string,youtubeUrl:string} | string >{
+    async findBloggerId(bloggerId:string): Promise<{id:string, name:string,youtubeUrl:string} | string >{
         return this.bloggersRepository.findBloggerId(bloggerId)
     }
     async findIdBloggerPosts(pageNumber:number, pageSize:number ,bloggerId:string,userId:string): Promise< BloggerGetPostType | string >{

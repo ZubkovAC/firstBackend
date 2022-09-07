@@ -148,6 +148,15 @@ export const validationBloggerId = async (req: Request, res: Response,next:NextF
     }
     next()
 }
+export const validationBlogger404 = async (req: Request, res: Response,next:NextFunction) => {
+   if(errorBloggerId.length > 0){
+       errorBloggerId= []
+       res.sendStatus(404)
+       return
+   }
+   next()
+   return
+}
 
 export const validationLogin3_10 =
     body('login')

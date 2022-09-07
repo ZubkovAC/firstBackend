@@ -24,10 +24,7 @@ export class BloggerController{
         res.status(200).send(bloggers)
     }
     async getBloggerId (req: Request, res: Response){
-        const pageN = pageNumber(req.query.PageNumber as string)
-        const pageS = pageSize(req.query.PageSize as string)
-        const searchNT = searchNameTerm(req.query.SearchNameTerm as string)
-        const bloggers = await this.bloggerService.findBloggers(pageN,pageS,searchNT)
+        const bloggers = await this.bloggerService.findBloggerId(req.params.id)
         res.status(200).send(bloggers)
     }
     async getBloggerIdPosts(req: Request, res: Response){
@@ -48,7 +45,6 @@ export class BloggerController{
         return
     }
     async createBloggerIdPosts(req: Request, res: Response){
-        // const postsBlogger = await this.postsService.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
         const postsBlogger = await this.postsService.createBloggerIdPost(req.body.title, req.body.shortDescription,req.body.content,req.params.idBlogger)
             res.status(201).send(postsBlogger)
             return
