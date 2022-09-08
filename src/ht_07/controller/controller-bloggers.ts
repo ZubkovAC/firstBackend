@@ -65,7 +65,7 @@ export class BloggerController{
             return
         }
         if(updateBlogger.error === 404){
-            res.send(404)
+            res.sendStatus(404)
             return
         }
     }
@@ -73,10 +73,10 @@ export class BloggerController{
         const bloggerDeleteId = req.params.id
         const removeBlogger = await this.bloggerService.removeBloggerId(bloggerDeleteId)
         if(removeBlogger){
-            res.send(204)
+            res.sendStatus(204)
             return
         }
-        res.send(404)
+        res.sendStatus(404)
         return;
     }
 }

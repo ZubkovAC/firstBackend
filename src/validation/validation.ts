@@ -142,11 +142,12 @@ export const validationPostId = async (req: Request, res: Response,next:NextFunc
     return
 }
 export const validationBloggerId = async (req: Request, res: Response,next:NextFunction) => {
-    let searchBlogger =  await bloggersCollectionModel.findOne({id:req.body.bloggerId})
+    let searchBlogger =  await bloggersCollectionModel.findOne({id:req.params.id})
     if (searchBlogger === null){
         errorBloggerId.push({ message: "non found bloggerId ", field: "bloggerId" })
     }
     next()
+    return
 }
 export const validationBlogger404 = async (req: Request, res: Response,next:NextFunction) => {
    if(errorBloggerId.length > 0){
