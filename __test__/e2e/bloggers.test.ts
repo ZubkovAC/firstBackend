@@ -203,7 +203,8 @@ describe('bloggers', () => {
             })
             // create blogger
             const res2 = await request(app)
-                .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
+                .post(`/ht_07/api/bloggers`,)
+                .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "name": "Kavabanga",
                     "youtubeUrl": "https://someurlomeu.com"

@@ -36,10 +36,10 @@ export class UserController {
         const userId = await this.userService.findUserId(id)
         if(userId){
             await this.userService.deleteUsers(id)
-            res.send(204)
+            res.sendStatus(204)
             return
         }
-        res.send(404)
+        res.sendStatus(404)
         return;
     }
 

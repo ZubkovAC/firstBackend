@@ -1,6 +1,11 @@
 import {Router} from "express";
 import {authorizationMiddleware03} from "../authorization-middleware06/authorization-middleware03";
-import {validationErrorCreatePosts, validationLogin3_10, validationPassword6_20} from "../../validation/validation";
+import {
+    validationEmail,
+    validationErrorCreatePosts,
+    validationLogin3_10,
+    validationPassword6_20
+} from "../../validation/validation";
 import {UserController} from "../controller/controller-users";
 import {container} from "../composition-root";
 
@@ -14,6 +19,7 @@ RouterUsers07.post('/',
     authorizationMiddleware03,
     validationLogin3_10,
     validationPassword6_20,
+    validationEmail,
     validationErrorCreatePosts,
     userController.createUser.bind(userController)
 )
