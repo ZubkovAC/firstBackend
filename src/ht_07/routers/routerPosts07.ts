@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {
-    validationBloggerId,
+    validationBloggerId, validationBloggerIdUpdate,
     validationContent,
     validationContent20_300, validationError,
     validationErrorCreatePosts,
@@ -55,7 +55,7 @@ RouterPosts07.put('/:id',
     validationTitle,
     validationContent,
     validationPostId,
-    validationBloggerId,
+    validationBloggerIdUpdate,
     validationErrorUpdatePosts,
     postsController.updatePostId.bind(postsController)
 )

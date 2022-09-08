@@ -59,7 +59,8 @@ export const startApp = async (test?:string) => {
         console.log(`Example app listening on port ${port}`)
     })
 }
-// startApp()
+startApp()
+
 
 
 

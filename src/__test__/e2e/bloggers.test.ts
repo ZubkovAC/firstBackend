@@ -5,11 +5,9 @@ const supertest = require('supertest');
 import {
     app,
     startApp
-} from "../../src";
+} from "../../index";
 
 const request = require('supertest')
-
-let blogger
 
 
 // need get bloggers/bloggerId/posts
@@ -181,13 +179,16 @@ describe('bloggers', () => {
                     }
                 ]
             })
-            blogger = bodyRes.items[0]
+            let blogger = bodyRes.items[0]
             const testBloggerData = await request(app)
                     .get(`/ht_07/api/bloggers/${blogger.id}`)
                     .expect(200)
             expect(blogger).toEqual(testBloggerData.body)
         });
         it("get bloggers - create - get - update - get", async () => {
+            await request(app)
+                .delete(`/ht_07/api/testing/all-data`)
+                .expect(204)
             // get bloggers
             const res = await request(app)
                 .get(`/ht_07/api/bloggers`)
@@ -247,6 +248,10 @@ describe('bloggers', () => {
 
         });
         it("create - get - delete - get BloggerId", async () => {
+            await request(app)
+                .delete(`/ht_07/api/testing/all-data`)
+                .expect(204)
+
             const res1 = await request(app)
                 .post(`/ht_07/api/bloggers`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')

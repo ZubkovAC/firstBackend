@@ -1,10 +1,10 @@
-import {app, startApp} from "../../src";
+import {app, startApp} from "../../index";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 const supertest = require('supertest');
 const request = require('supertest')
 
-describe('bloggers', () => {
+describe('users', () => {
     beforeAll(async () => {
         await startApp('test');
         const mongoServer = await MongoMemoryServer.create();
@@ -171,7 +171,7 @@ describe('bloggers', () => {
                 })
                 .expect(201)
             expect(newUser.body).toEqual({
-                id:expect.any(String),
+                id:newUser.body.id,
                 login:"testUser"
             })
             // get Users

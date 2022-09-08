@@ -126,7 +126,7 @@ export const validationErrorUpdatePosts = (req: Request, res: Response,next:Next
         if(errorPostId.length > 0){
             // @ts-ignore
             errorPostId = []
-            res.send(404)
+            res.sendStatus(404)
             return
         }
         return res.status(400).json({errorsMessages:errorsMessages})
@@ -143,6 +143,14 @@ export const validationPostId = async (req: Request, res: Response,next:NextFunc
 }
 export const validationBloggerId = async (req: Request, res: Response,next:NextFunction) => {
     let searchBlogger =  await bloggersCollectionModel.findOne({id:req.params.id})
+    if (searchBlogger === null){
+        errorBloggerId.push({ message: "non found bloggerId ", field: "bloggerId" })
+    }
+    next()
+    return
+}
+export const validationBloggerIdUpdate = async (req: Request, res: Response,next:NextFunction) => {
+    let searchBlogger =  await bloggersCollectionModel.findOne({id:req.body.bloggerId})
     if (searchBlogger === null){
         errorBloggerId.push({ message: "non found bloggerId ", field: "bloggerId" })
     }

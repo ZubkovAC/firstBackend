@@ -28,11 +28,13 @@ export class PostsController{
     async getPosts (req: Request, res: Response){
         const token = req.headers.authorization?.split(" ")[1]
         let userId = ''
+
         if(token){
             userId = jwt.verify(token,process.env.SECRET_KEY).userId
         }
         const pageN = pageNumber(req.query.PageNumber as string)
         const pageS = pageSize(req.query.PageSize as string)
+
         const posts = await this.postsService.findPosts(pageN,pageS ,userId)
         res.status(200).send(posts)
         return
@@ -121,11 +123,14 @@ export class PostsController{
         let title = req.body.title.trim()
         let content = req.body.content.trim()
         let bloggerId = req.body.bloggerId
+
         const updatePostId  = await this.postsService.updatePostId(postId,title,content,shortDescription,bloggerId)
         if(updatePostId.status === 204){
-            res.send(204)
+            res.sendStatus(204)
+            return
         }    else {
-            res.send(404)
+            res.sendStatus(404)
+            return
         }
     }
     async likeStatus(req: Request, res: Response){
@@ -166,10 +171,10 @@ export class PostsController{
         const postDeleteId = req.params.id
         const statusRemovePostId = await this.postsService.deletePostId(postDeleteId)
         if(statusRemovePostId){
-            res.send(204)
+            res.sendStatus(204)
             return
         }
-        res.send(404)
+        res.sendStatus(404)
         return;
     }
 }
