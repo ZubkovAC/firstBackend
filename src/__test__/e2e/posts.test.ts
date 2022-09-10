@@ -1,12 +1,13 @@
-import {app, startApp} from "../../index";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
+import { restAPI } from "./users.test";
 const supertest = require('supertest');
 const request = require('supertest')
 
+// let restAPI = supertest(app)
+
 describe('posts', () => {
     beforeAll(async () => {
-        await startApp('test');
         const mongoServer = await MongoMemoryServer.create();
         await mongoose.connect(mongoServer.getUri());
     })
@@ -17,7 +18,7 @@ describe('posts', () => {
     describe('posts get', () => {
         beforeAll(async () => {
             // create user
-            const newUser = await request(app)
+            const newUser = await restAPI
                 .post(`/ht_07/api/users/`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -29,7 +30,7 @@ describe('posts', () => {
         })
         it('get posts',async()=>{
             // no test query params ( pageNumber/pageSize )
-            const posts = await request(app)
+            const posts = await restAPI
                 .get(`/ht_07/api/posts/`)
                 .expect(200)
             expect(posts.body).toEqual({
@@ -41,7 +42,7 @@ describe('posts', () => {
             })
         })
         it('postsId test 404', async ()=>{
-            const posts = await request(app)
+            const posts = await restAPI
                 .get(`/ht_07/api/posts/12312213asdf`)
                 .expect(404)
         })
@@ -61,7 +62,7 @@ describe('posts', () => {
               const youtubeUrl = "https://someurlomeu.com"
             // create user
 
-            const testLogin = await request(app)
+            const testLogin = await restAPI
                 .post(`/ht_07/api/users/`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -76,7 +77,7 @@ describe('posts', () => {
                 login:login
             })
             // create blogger
-            const blogger = await request(app)
+            const blogger = await restAPI
                 .post(`/ht_07/api/bloggers`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -90,7 +91,7 @@ describe('posts', () => {
                 "youtubeUrl": youtubeUrl
             })
             // create post
-            await request(app)
+            await restAPI
                 .post(`/ht_07/api/posts`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -101,11 +102,11 @@ describe('posts', () => {
                 })
                 .expect(201)
             // get post Id
-            const postId = await request(app)
+            const postId = await restAPI
                 .get(`/ht_07/api/posts/`)
                 .expect(200)
             // get postId
-            const testDataPost = await request(app)
+            const testDataPost = await restAPI
                 .get(`/ht_07/api/posts/${postId.body.items[0].id}`)
                 .expect(200)
                 expect(testDataPost.body).toEqual({
@@ -125,7 +126,7 @@ describe('posts', () => {
                 })
 
             //update Posts/{id}
-            const updatePost = await request(app)
+            const updatePost = await restAPI
                 .put(`/ht_07/api/posts/${postId.body.items[0].id}`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -136,7 +137,7 @@ describe('posts', () => {
                 })
                 .expect(204)
             // correct updatePostId
-            const upPost = await request(app)
+            const upPost = await restAPI
                 .get(`/ht_07/api/posts/${postId.body.items[0].id}`)
                 .expect(200)
             expect(upPost.body).toEqual(
@@ -156,22 +157,22 @@ describe('posts', () => {
                     }
                 })
             // delete 401
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/posts/${postId.body.items[0].id}`)
                 .expect(401)
             // delete 404
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/posts/asdfasdf213123asdfasdf`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .expect(404)
 
            // delete post Id
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/posts/${postId.body.items[0].id}`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .expect(204)
             // get postsId - 404
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/posts/${postId.body.items[0].id}`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .expect(404)

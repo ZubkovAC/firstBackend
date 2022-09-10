@@ -2,20 +2,18 @@ import {MongoMemoryServer} from 'mongodb-memory-server'
 import mongoose from "mongoose";
 
 const supertest = require('supertest');
-import {
-    app,
-    startApp
-} from "../../index";
+import {restAPI} from "./users.test";
 
 const request = require('supertest')
 
 
 // need get bloggers/bloggerId/posts
 // need post bloggers/bloggerId/posts
+
 describe('bloggers', () => {
 
     beforeAll(async () => {
-        await startApp('test');
+        // await startApp();
         const mongoServer = await MongoMemoryServer.create();
         await mongoose.connect(mongoServer.getUri());
     });
@@ -27,7 +25,7 @@ describe('bloggers', () => {
 
     describe('get bloggers test', () => {
         it("get bloggers", async () => {
-            await supertest(app)
+            await restAPI
                 .get(`/ht_07/api/bloggers`)
                 .expect(200, {
                     "pagesCount": 0,
@@ -41,14 +39,14 @@ describe('bloggers', () => {
     describe('get bloggersId test', () => {
         it("bloggersId should return a 404", async () => {
             const bloggerId = "f1990839-e1ea-464f-a611-01a8b201a168";
-            await supertest(app)
+            await restAPI
                 .get(`/ht_07/api/bloggers/${bloggerId}`)
                 .expect(404)
         });
     })
     describe('test authorization bloggers ', () => {
         it("create blogger error authorization ", async () => {
-            await supertest(app)
+            await restAPI
                 .post(`/ht_07/api/bloggers`)
                 .send({
                     "name": "string_string",
@@ -59,7 +57,7 @@ describe('bloggers', () => {
     })
     describe('test create blogger ', () => {
         it("create blogger validation error name length 15", async () => {
-            await supertest(app)
+            await restAPI
                 .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "name": "string_string_string",
@@ -75,7 +73,7 @@ describe('bloggers', () => {
                 })
         });
         it("create blogger validation error no name body", async () => {
-            await supertest(app)
+            await restAPI
                 .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "nam": "string_",
@@ -91,7 +89,7 @@ describe('bloggers', () => {
                 })
         });
         it("create blogger validation error youtubeUrl ", async () => {
-            await supertest(app)
+            await restAPI
                 .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "name": "Kavabanga",
@@ -107,7 +105,7 @@ describe('bloggers', () => {
                 })
         });
         it("create blogger validation error no youtubeUrl body", async () => {
-            await supertest(app)
+            await restAPI
                 .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "name": "Kavabanga",
@@ -123,7 +121,7 @@ describe('bloggers', () => {
                 })
         });
         it("create blogger validation error youtubeUrl length 100+ ", async () => {
-            await supertest(app)
+            await restAPI
                 .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "name": "Kavabanga",
@@ -142,7 +140,7 @@ describe('bloggers', () => {
 
         it("create blogger", async () => {
             const string = expect.any(String)
-            const res = await request(app)
+            const res = await restAPI
                 .post(`/ht_07/api/bloggers`,).set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
                     "name": "Kavabanga",
@@ -161,7 +159,7 @@ describe('bloggers', () => {
 
         it("get bloggers", async () => {
             const string = expect.any(String)
-            const res = await request(app)
+            const res = await restAPI
                 .get(`/ht_07/api/bloggers`)
                 .expect(200)
 
@@ -180,17 +178,17 @@ describe('bloggers', () => {
                 ]
             })
             let blogger = bodyRes.items[0]
-            const testBloggerData = await request(app)
+            const testBloggerData = await restAPI
                     .get(`/ht_07/api/bloggers/${blogger.id}`)
                     .expect(200)
             expect(blogger).toEqual(testBloggerData.body)
         });
         it("get bloggers - create - get - update - get", async () => {
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/testing/all-data`)
                 .expect(204)
             // get bloggers
-            const res = await request(app)
+            const res = await restAPI
                 .get(`/ht_07/api/bloggers`)
                 .expect(200)
 
@@ -203,7 +201,7 @@ describe('bloggers', () => {
                 "items": []
             })
             // create blogger
-            const res2 = await request(app)
+            const res2 = await restAPI
                 .post(`/ht_07/api/bloggers`,)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -212,12 +210,12 @@ describe('bloggers', () => {
                 })
                 .expect(201)
             // get bloggerId
-            const res3 = await request(app)
+            const res3 = await restAPI
                 .get(`/ht_07/api/bloggers`)
                 .expect(200)
 
             const bloggerId = res3.body.items[0].id
-            const res4 = await request(app)
+            const res4 = await restAPI
                 .get(`/ht_07/api/bloggers/${bloggerId}`)
                 .expect(200)
 
@@ -228,14 +226,14 @@ describe('bloggers', () => {
                 }
             )
             // update blogerId
-            const res5 = await request(app)
+            const res5 = await restAPI
                 .put(`/ht_07/api/bloggers/${bloggerId}`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({"name": "Kavabanga1",
                     "youtubeUrl": "https://someurlomeu1.com"})
                 .expect(204)
             // get BloggerId - update
-            const res6 = await request(app)
+            const res6 = await restAPI
                 .get(`/ht_07/api/bloggers/${bloggerId}`)
                 .expect(200)
 
@@ -248,11 +246,11 @@ describe('bloggers', () => {
 
         });
         it("create - get - delete - get BloggerId", async () => {
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/testing/all-data`)
                 .expect(204)
 
-            const res1 = await request(app)
+            const res1 = await restAPI
                 .post(`/ht_07/api/bloggers`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -260,11 +258,11 @@ describe('bloggers', () => {
                     "youtubeUrl": "https://someurlomeu.com"
                 })
                 .expect(201)
-            const res2 = await request(app)
+            const res2 = await restAPI
                 .get(`/ht_07/api/bloggers`,)
                 .expect(200)
             const bloggerId = res2.body.items[0].id
-            const res3 = await request(app)
+            const res3 = await restAPI
                 .get(`/ht_07/api/bloggers/${bloggerId}`,)
                 .expect(200)
             expect(res3.body).toEqual({
@@ -273,16 +271,16 @@ describe('bloggers', () => {
                 "youtubeUrl": "https://someurlomeu.com"
             })
             // no Authorization
-            const res4 = await request(app)
+            const res4 = await restAPI
                 .delete(`/ht_07/api/bloggers/${bloggerId}`,)
                 .expect(401)
             // delete
-            const res5 = await request(app)
+            const res5 = await restAPI
                 .delete(`/ht_07/api/bloggers/${bloggerId}`,)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .expect(204)
             // test 404
-            const res6 = await request(app)
+            const res6 = await restAPI
                 .get(`/ht_07/api/bloggers/${bloggerId}`,)
                 .expect(404)
         });

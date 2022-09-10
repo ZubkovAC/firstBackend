@@ -4,9 +4,11 @@ import mongoose from "mongoose";
 const supertest = require('supertest');
 const request = require('supertest')
 
+
+export let restAPI = supertest(app)
+
 describe('users', () => {
     beforeAll(async () => {
-        await startApp('test');
         const mongoServer = await MongoMemoryServer.create();
         await mongoose.connect(mongoServer.getUri());
     });
@@ -18,7 +20,7 @@ describe('users', () => {
     describe('get users test', () => {
         // no test validation
         it('get users',async ()=>{
-            await request(app)
+            await restAPI
                 .get(`/ht_07/api/users`)
                 .expect(200,{
                     "pagesCount": 0,
@@ -32,7 +34,7 @@ describe('users', () => {
 
     describe('users create test validation',()=>{
         it('users create - validation login 2 symbol error',async ()=>{
-            const res =await request(app)
+            const res =await restAPI
                 .post('/ht_07/api/users')
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -51,7 +53,7 @@ describe('users', () => {
                 })
         })
         it('users create - validation login 10+ symbol error',async ()=>{
-            const res =await request(app)
+            const res =await restAPI
                 .post('/ht_07/api/users')
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -70,7 +72,7 @@ describe('users', () => {
                 })
         })
         it('users create - validation password 5 symbol error',async ()=>{
-            const res =await request(app)
+            const res =await restAPI
                 .post('/ht_07/api/users')
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -89,7 +91,7 @@ describe('users', () => {
                 })
         })
         it('users create - validation password 20+ symbol error',async ()=>{
-            const res =await request(app)
+            const res =await restAPI
                 .post('/ht_07/api/users')
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -108,7 +110,7 @@ describe('users', () => {
                 })
         })
         it('users create - validation email symbol error',async ()=>{
-            const res =await request(app)
+            const res =await restAPI
                 .post('/ht_07/api/users')
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -127,7 +129,7 @@ describe('users', () => {
                 })
         })
         it('users create - validation email2 symbol error',async ()=>{
-            const res =await request(app)
+            const res =await restAPI
                 .post('/ht_07/api/users')
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -149,19 +151,19 @@ describe('users', () => {
 
     describe('delete users test', () => {
         it('delete users no authrozation',async ()=>{
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/users/${123}`)
                 .expect(401)
         })
         it('delete users 404',async ()=>{
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/users/${123}`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .expect(404)
         })
         it('delete users create - delete - get',async ()=>{
             // create User
-            const newUser =await request(app)
+            const newUser =await restAPI
                 .post(`/ht_07/api/users/`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .send({
@@ -175,7 +177,7 @@ describe('users', () => {
                 login:"testUser"
             })
             // get Users
-            const users = await request(app)
+            const users = await restAPI
                 .get(`/ht_07/api/users/`)
                 .expect(200)
             const user = await users.body.items[0]
@@ -184,12 +186,12 @@ describe('users', () => {
                 login:user.login
             })
             // delete Users
-            await request(app)
+            await restAPI
                 .delete(`/ht_07/api/users/${user.id}`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
                 .expect(204)
             // users = 0
-            const usersCount = await request(app)
+            const usersCount = await restAPI
                 .get(`/ht_07/api/users/`)
                 .expect(200)
             const userLength = usersCount.body.items.length
